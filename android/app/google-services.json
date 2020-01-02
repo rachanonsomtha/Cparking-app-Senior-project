@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "247138558143",
+    "firebase_url": "https://cparking-ecee0.firebaseio.com",
+    "project_id": "cparking-ecee0",
+    "storage_bucket": "cparking-ecee0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:247138558143:android:8bfc2afd0f5c510680660a",
+        "android_client_info": {
+          "package_name": "com.company.cparking"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "247138558143-q8alfn8uhst5uh0icll8q90ji9ng9b47.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.company.cparking",
+            "certificate_hash": "7c92e198719fc9befce753a622e3c94f597b0de0"
+          }
+        },
+        {
+          "client_id": "247138558143-fn0pppi5gvta838u1pnm3tu7rqg6bovs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDP1H3JxWqMJvAalvR1kis48ofUfcoGQlQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "247138558143-fn0pppi5gvta838u1pnm3tu7rqg6bovs.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "247138558143-ugi9fjrkr0gen1os8m0cg7jav1epla7n.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.compamy.cparking"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -12,6 +12,8 @@ import 'package:path/path.dart' as Path;
 class ReportsProvider with ChangeNotifier {
   List<Report> _reports = [];
 
+  String authToken;
+  String userId;
   // var _showFavourtiesOnly = false;
 
   List<Report> get reports {
@@ -84,7 +86,8 @@ class ReportsProvider with ChangeNotifier {
   // }
 
   Future<void> fetchReport() async {
-    const url = 'https://cparking-ecee0.firebaseio.com/reports.json';
+    final url =
+        'https://cparking-ecee0.firebaseio.com/reports.json?auth=$authToken';
 
     //fetch and decode data
 
@@ -111,7 +114,8 @@ class ReportsProvider with ChangeNotifier {
   }
 
   Future<void> addReport(Report report) async {
-    const url = 'https://cparking-ecee0.firebaseio.com/reports.json';
+    final url =
+        'https://cparking-ecee0.firebaseio.com/reports.json?auth=$authToken';
     final add_date = DateFormat('yyyy-MM-dd').format(DateTime.now()).toString();
     // print(add_date);
     // create products collection in firebase
@@ -123,15 +127,18 @@ class ReportsProvider with ChangeNotifier {
           'imageUrl': report.imageUrl,
           'lifeTime': report.lifeTime,
           'dateTime': add_date,
+          'isPromote': report.isPromoted,
+          'score': 0
         }),
       );
       print(json.decode(response.body));
       final rep = Report(
-        userName: report.userName,
-        imageUrl: report.imageUrl,
-        lifeTime: report.lifeTime,
-        dateTime: add_date,
         id: json.decode(response.body)['name'],
+        userName: report.userName,
+        lifeTime: report.lifeTime,
+        imageUrl: report.imageUrl,
+        dateTime: add_date,
+        availability: report.availability,
       );
       _reports.add(rep);
       notifyListeners();

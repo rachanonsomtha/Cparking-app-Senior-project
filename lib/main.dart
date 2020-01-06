@@ -1,3 +1,4 @@
+import 'package:cparking/provider/report.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -10,6 +11,7 @@ import './screens/splash-screen.dart';
 import './screens/auth_screen.dart';
 import './provider/auth.dart';
 import './provider/parkingLotProvider.dart';
+import './provider/report_provider.dart';
 
 // import 'package:firebase/firebase.dart';
 // import 'package:firebase/firestore.dart' as fs;
@@ -23,10 +25,15 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider.value(
-            value: ReportsProvider(),
-          ),
-          ChangeNotifierProvider.value(
             value: Auth(),
+          ),
+          ChangeNotifierProxyProvider<Auth, ReportsProvider>(
+            initialBuilder: (_) => ReportsProvider(),
+            builder: (_, auth, previousReports) {
+              previousReports.authToken = auth.token;
+              previousReports.reports == null ? [] : previousReports.reports;
+              return previousReports;
+            },
           ),
           ChangeNotifierProvider.value(
             value: ParkingLotProvider(),

@@ -25,9 +25,13 @@ class Parkability extends StatefulWidget {
 class _ParkabilityState extends State<Parkability> {
   var _editReport = Report(
     id: null,
-    userName: '',
+    userName: 'non', // temporary
     lifeTime: 0,
+    dateTime: '',
     imageUrl: '',
+    isPromoted: false,
+    availability: 0,
+    score: 0,
   );
 
   File _image;
@@ -42,7 +46,7 @@ class _ParkabilityState extends State<Parkability> {
   var _isLoading = false;
   var _isUploadImage = false;
 
-  int _currentValue = 0;
+  int _currentValue = 0; // Number slider value
 
   @override
   void didChangeDependencies() {
@@ -55,35 +59,27 @@ class _ParkabilityState extends State<Parkability> {
   void initState() {
     // TODO: implement initState
 
-    _imageUrlFocusNode.addListener(_updateImageUrl);
     super.initState();
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
-    _imageUrlFocusNode.removeListener(_updateImageUrl);
-    _lifeTimeFocusNode.dispose();
-    _imageUrlFocusNode.dispose();
-
     super.dispose();
   }
 
-  void _updateImageUrl() {
-    if (!_imageUrlFocusNode.hasFocus) {
-      setState(() {});
-    }
-  }
+  Future<void> _saveForm(context) async {
+    // final _isValid = _form.currentState.validate();
 
-  void _saveForm(context) {
-    final _isValid = _form.currentState.validate();
-
-    if (!_isValid) {
-      return;
-    }
-
-    _form.currentState.save();
-    Provider.of<ReportsProvider>(context, listen: false).addReport(_editReport);
+    // if (!_isValid) {
+    //   return;
+    // }
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      await Provider.of<ReportsProvider>(context, listen: false)
+          .addReport(_editReport);
+    } catch (error) {}
     Navigator.of(context).pop();
   }
 
@@ -235,14 +231,25 @@ class _ParkabilityState extends State<Parkability> {
                   Container(
                     width: double.infinity,
                     child: NumberPicker.integer(
-                      initialValue: _currentValue,
-                      minValue: 0,
-                      maxValue: int.parse(
-                        parkingInfo.max.toStringAsFixed(0),
-                      ),
-                      onChanged: (newValue) =>
-                          setState(() => _currentValue = newValue),
-                    ),
+                        initialValue: _currentValue,
+                        minValue: 0,
+                        maxValue: int.parse(
+                          parkingInfo.max.toStringAsFixed(0),
+                        ),
+                        onChanged: (newValue) {
+                          _editReport = Report(
+                            id: _editReport.id,
+                            userName: _editReport.userName,
+                            lifeTime: _editReport.lifeTime,
+                            dateTime: _editReport.dateTime,
+                            imageUrl: _uploadedFileURL,
+                            isPromoted: _editReport.isPromoted,
+                            availability: newValue,
+                            score: _editReport.score,
+                          );
+                          print(_editReport.userName);
+                          setState(() => _currentValue = newValue);
+                        }),
                   ),
                 ],
               ),

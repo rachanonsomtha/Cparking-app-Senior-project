@@ -153,7 +153,7 @@ class _ParkabilityState extends State<Parkability> {
                 height: 200,
                 width: double.infinity,
                 child: Image.network(
-                  'https://www.jll.co.th/content/dam/jll-com/images/global/hong-kongs-pricey-parking-spaces-carpark-HK-reszied-teaser.jpg.rendition/cq5dam.web.1280.1280.jpeg',
+                  parkingInfo.imageUrl,
                   fit: BoxFit.cover,
                 ),
               ),

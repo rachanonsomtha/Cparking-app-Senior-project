@@ -59,6 +59,7 @@ class _ReportOverViewScreenState extends State<ReportOverViewScreen> {
                       report.reports[index].lifeTime,
                       report.reports[index].dateTime.toString(),
                       report.reports[index].imageUrl,
+                      report.reports[index].availability,
                     ),
                   ],
                 ),

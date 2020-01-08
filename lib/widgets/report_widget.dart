@@ -9,12 +9,14 @@ class ReportItem extends StatelessWidget {
   final double lifeTime;
   final String dateTime;
   final String imageUrl;
+  final int availability;
 
   ReportItem(
     this.userName,
     this.lifeTime,
     this.dateTime,
     this.imageUrl,
+    this.availability,
   );
   @override
   Widget build(BuildContext context) {
@@ -48,6 +50,11 @@ class ReportItem extends StatelessWidget {
                   ),
                 ),
                 trailing: Text(dateTime),
+                title: Text(availability.toString(),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    )),
               ),
             )
           ],

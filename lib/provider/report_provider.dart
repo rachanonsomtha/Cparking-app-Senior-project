@@ -40,8 +40,6 @@ class ReportsProvider with ChangeNotifier {
   ///update products
   ///
 
-
-
   int get reportCount {
     return _reports.length;
   }
@@ -99,13 +97,15 @@ class ReportsProvider with ChangeNotifier {
       final decodeData = json.decode(response.body) as Map<String, dynamic>;
       final List<Report> loadedProducts = [];
       decodeData.forEach((reportId, reportData) {
-        loadedProducts.add(Report(
-            id: reportId,
-            userName: reportData['userName'],
-            imageUrl: reportData['imageUrl'],
-            lifeTime: reportData['lifeTime'],
-            dateTime: reportData['dateTime'],
-            availability: reportData['avai']));
+        loadedProducts.add(
+          Report(
+              id: reportId,
+              userName: reportData['userName'],
+              imageUrl: reportData['imageUrl'],
+              lifeTime: reportData['lifeTime'],
+              dateTime: reportData['dateTime'],
+              availability: reportData['availability']),
+        );
       });
       _reports = loadedProducts;
       notifyListeners();
@@ -117,7 +117,8 @@ class ReportsProvider with ChangeNotifier {
   }
 
   Future<void> addReport(Report report) async {
-    final url = 'https://cparking-ecee0.firebaseio.com/reports.json?auth=$authToken';
+    final url =
+        'https://cparking-ecee0.firebaseio.com/reports.json?auth=$authToken';
     final add_date = DateFormat('yyyy-MM-dd').format(DateTime.now()).toString();
     // print(add_date);
     // create products collection in firebase

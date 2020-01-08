@@ -1,4 +1,6 @@
 // import 'package:cparking491/widgets/drawer.dart';
+// import 'dart:html';
+
 import 'package:provider/provider.dart';
 import '../provider/report.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +11,7 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart';
 import 'package:numberpicker/numberpicker.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 //provider
 import '../provider/report_provider.dart';
@@ -36,6 +39,7 @@ class _ParkabilityState extends State<Parkability> {
 
   File _image;
   String _uploadedFileURL;
+  String _locImage;
 
   final _form = GlobalKey<FormState>();
 
@@ -45,13 +49,14 @@ class _ParkabilityState extends State<Parkability> {
 
   var _isLoading = false;
   var _isUploadImage = false;
+  var _locPicloaded = false;
+  var _isPickedImage = false;
 
   int _currentValue = 0; // Number slider value
 
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
-
     super.didChangeDependencies();
   }
 
@@ -67,7 +72,7 @@ class _ParkabilityState extends State<Parkability> {
     super.dispose();
   }
 
-  Future<void> _saveForm(context) async {
+  Future<void> _saveForm(context, name) async {
     // final _isValid = _form.currentState.validate();
 
     // if (!_isValid) {
@@ -76,22 +81,94 @@ class _ParkabilityState extends State<Parkability> {
     setState(() {
       _isLoading = true;
     });
-    try {
-      await Provider.of<ReportsProvider>(context, listen: false)
-          .addReport(_editReport);
-    } catch (error) {}
-    Navigator.of(context).pop();
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(
+          'Confirmed?',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        content: Text('Do you confirmed your reports?'),
+        actions: <Widget>[
+          FlatButton(
+            child: Text('Discard'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          FlatButton(
+            child: Text('Okay'),
+            onPressed: () {
+              uploadFile(context, name);
+            },
+          )
+        ],
+      ),
+    );
+    // Navigator.of(context).pop();
   }
 
   Future getImage() async {
     _image = await ImagePicker.pickImage(source: ImageSource.gallery);
 
     setState(() {
+      _isPickedImage = true;
       _image = _image;
+      print(_image);
     });
   }
 
   Future uploadFile(context, name) async {
+    try {
+      StorageReference storageReference = FirebaseStorage.instance
+          .ref()
+          .child('reports/$name/${basename(_image.path)}');
+      StorageUploadTask uploadTask = storageReference.putFile(_image);
+      setState(() {
+        _isLoading = true;
+      });
+      await uploadTask.onComplete;
+      print('File Uploaded');
+      storageReference.getDownloadURL().then((fileURL) {
+        // print(fileURL);
+        setState(() {
+          _uploadedFileURL = fileURL;
+          _editReport = Report(
+            id: _editReport.id,
+            userName: _editReport.userName,
+            lifeTime: _editReport.lifeTime,
+            dateTime: _editReport.dateTime,
+            imageUrl: _uploadedFileURL,
+            isPromoted: _editReport.isPromoted,
+            availability: _editReport.availability,
+            score: _editReport.score,
+          );
+          // print(_uploadedFileURL);
+          // print(_uploadedFileURL + "eiei");
+        });
+      });
+      await Provider.of<ReportsProvider>(context, listen: false)
+          .addReport(_editReport);
+    } catch (error) {
+      await showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text('An error occurred!'),
+          content: Text('Something went wrong.'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Okay'),
+              onPressed: () {
+                Navigator.of(ctx).pop();
+              },
+            )
+          ],
+        ),
+      );
+    }
     final snackBar = SnackBar(
       content: Text('Upload image complete'),
       duration: Duration(
@@ -99,24 +176,7 @@ class _ParkabilityState extends State<Parkability> {
       ),
     );
 
-    StorageReference storageReference = FirebaseStorage.instance
-        .ref()
-        .child('reports/${name}/${basename(_image.path)}');
-    StorageUploadTask uploadTask = storageReference.putFile(_image);
-    setState(() {
-      _isLoading = true;
-    });
-    await uploadTask.onComplete;
-    print('File Uploaded');
-    storageReference.getDownloadURL().then((fileURL) {
-      setState(() {
-        _uploadedFileURL = fileURL;
-        print(_uploadedFileURL);
-        _isLoading = false;
-        _isUploadImage = true;
-      });
-    });
-    // Navigator.of(context).pop();
+    Navigator.of(context).pop();
     // Scaffold.of(context).showSnackBar(snackBar);
   }
 
@@ -125,6 +185,9 @@ class _ParkabilityState extends State<Parkability> {
     final name = ModalRoute.of(context).settings.arguments as String;
     final parkingInfo =
         Provider.of<ParkingLotProvider>(context, listen: false).findById(name);
+    // final locUrl = Provider.of<ParkingLotProvider>(context, listen: false)
+    //     .getLocImage(name);
+    // print(locUrl.toString());
     return Scaffold(
       appBar: AppBar(
         title: Text(name),
@@ -132,131 +195,113 @@ class _ParkabilityState extends State<Parkability> {
           IconButton(
             icon: Icon(Icons.save),
             onPressed: () {
-              if (_isUploadImage) {
-                _saveForm(context);
+              if (_isPickedImage) {
+                _saveForm(context, name);
               }
             },
           )
         ],
       ),
       drawer: AppDrawer(),
-      body: Padding(
-        padding: const EdgeInsets.all(10),
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              Container(
-                height: 200,
-                width: double.infinity,
-                child: Image.network(
-                  parkingInfo.imageUrl,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              Column(
-                children: <Widget>[
-                  Container(
-                    width: 300,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+      body: _locPicloaded
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : Padding(
+              padding: const EdgeInsets.all(10),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      height: 200,
+                      width: double.infinity,
+                      child: FadeInImage.memoryNetwork(
+                        placeholder: kTransparentImage,
+                        image: parkingInfo.imageUrl,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    Column(
                       children: <Widget>[
-                        _image == null
-                            ? Container(
-                                width: 100,
-                                height: 100,
-                                margin: EdgeInsets.all(10),
-                                child: new FloatingActionButton(
-                                  elevation: 0,
-                                  backgroundColor: Colors.grey,
-                                  onPressed: getImage,
-                                  tooltip: 'Add Image',
-                                  child: new Icon(
-                                    Icons.camera_alt,
-                                    color: Colors.white,
-                                    size: 50,
-                                  ),
-                                ),
-                              )
-                            : Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                              width: 1, color: Colors.grey),
+                        Container(
+                          width: 300,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              _image == null
+                                  ? Container(
+                                      width: 100,
+                                      height: 100,
+                                      margin: EdgeInsets.all(10),
+                                      child: FloatingActionButton(
+                                        elevation: 1,
+                                        backgroundColor: Colors.grey,
+                                        onPressed: getImage,
+                                        tooltip: 'Add Image',
+                                        child: Icon(
+                                          Icons.camera_alt,
+                                          color: Colors.white,
+                                          size: 50,
                                         ),
-                                        height: 200,
-                                        width: 200,
-                                        child: _uploadedFileURL != null
-                                            ? Image.network(_uploadedFileURL)
-                                            : Image.file(_image),
                                       ),
-                                      _isLoading
-                                          ? Padding(
-                                              padding: EdgeInsets.all(10),
-                                              child:
-                                                  CircularProgressIndicator(),
-                                            )
-                                          : Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: FloatingActionButton(
-                                                tooltip: "upload new image",
-                                                onPressed: getImage,
-                                                child: Icon(Icons.photo),
+                                    )
+                                  : Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    width: 1,
+                                                    color: Colors.grey),
                                               ),
+                                              height: 200,
+                                              width: 200,
+                                              child: Image.file(_image),
                                             ),
-                                      RaisedButton(
-                                        child: Text("Submit"),
-                                        color: Color(0xff476cfb),
-                                        onPressed: () {
-                                          print("Uploading image");
-                                          uploadFile(context, name);
-                                        },
-                                      ),
-                                    ]),
+                                          ]),
+                                    ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Text(
+                            "Parkability: $_currentValue",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ),
+                        Container(
+                          width: double.infinity,
+                          child: NumberPicker.integer(
+                              initialValue: _currentValue,
+                              minValue: 0,
+                              maxValue: int.parse(
+                                parkingInfo.max.toStringAsFixed(0),
                               ),
+                              onChanged: (newValue) {
+                                _editReport = Report(
+                                  id: _editReport.id,
+                                  userName: _editReport.userName,
+                                  lifeTime: _editReport.lifeTime,
+                                  dateTime: _editReport.dateTime,
+                                  imageUrl: _editReport.imageUrl,
+                                  isPromoted: _editReport.isPromoted,
+                                  availability: newValue,
+                                  score: _editReport.score,
+                                );
+                                // print(_editReport.imageUrl);
+                                setState(() => _currentValue = newValue);
+                              }),
+                        ),
                       ],
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: Text(
-                      "Parkability: $_currentValue",
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ),
-                  Container(
-                    width: double.infinity,
-                    child: NumberPicker.integer(
-                        initialValue: _currentValue,
-                        minValue: 0,
-                        maxValue: int.parse(
-                          parkingInfo.max.toStringAsFixed(0),
-                        ),
-                        onChanged: (newValue) {
-                          _editReport = Report(
-                            id: _editReport.id,
-                            userName: _editReport.userName,
-                            lifeTime: _editReport.lifeTime,
-                            dateTime: _editReport.dateTime,
-                            imageUrl: _uploadedFileURL,
-                            isPromoted: _editReport.isPromoted,
-                            availability: newValue,
-                            score: _editReport.score,
-                          );
-                          print(_editReport.userName);
-                          setState(() => _currentValue = newValue);
-                        }),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 }

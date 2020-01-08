@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import './parkingLot.dart';
+import 'package:firebase_storage/firebase_storage.dart'; // For File Upload To Firestore
 
 class ParkingLotProvider with ChangeNotifier {
   List<ParkLot> _parkingLots = [
@@ -9,7 +10,7 @@ class ParkingLotProvider with ChangeNotifier {
       title: 'ตึกสามสิบปี#1',
       max: 3,
       imageUrl:
-          'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
+          'https://firebasestorage.googleapis.com/v0/b/cparking-ecee0.appspot.com/o/parkingLot%2F30%231.jpg?alt=media&token=562a41d9-f87d-425e-9da5-301a651ab498',
       lat: '18.795484',
       lon: '98.952698',
     ),
@@ -18,7 +19,7 @@ class ParkingLotProvider with ChangeNotifier {
       title: 'ตึกสามสิบปี#2',
       max: 10,
       imageUrl:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
+          'https://firebasestorage.googleapis.com/v0/b/cparking-ecee0.appspot.com/o/parkingLot%2F30%232.jpg?alt=media&token=148927d0-ca2f-4ca2-8ce2-06768b9eab1d',
       lat: '18.795353',
       lon: '98.952700',
     ),
@@ -27,7 +28,7 @@ class ParkingLotProvider with ChangeNotifier {
       title: 'ตึกเซอร์เวย์#1',
       max: 10,
       imageUrl:
-          'https://live.staticflickr.com/4043/4438260868_cc79b3369d_z.jpg',
+          'https://firebasestorage.googleapis.com/v0/b/cparking-ecee0.appspot.com/o/parkingLot%2FSUR%231.jpg?alt=media&token=79b954db-0775-4c74-9a26-ca9dba63353d',
       lat: '18.795051',
       lon: '98.952685',
     ),
@@ -36,11 +37,22 @@ class ParkingLotProvider with ChangeNotifier {
       title: 'ตึกเซอร์เวย์#2',
       max: 12,
       imageUrl:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
+          'https://firebasestorage.googleapis.com/v0/b/cparking-ecee0.appspot.com/o/parkingLot%2FSUR%232.jpg?alt=media&token=00bd71c9-dc89-4e71-8526-38cde35dde19',
       lat: '18.795033',
       lon: '98.952969',
     ),
   ];
+
+  Future<String> getLocImage(String title) async {
+    var imageFile;
+    StorageReference ref =
+        FirebaseStorage.instance.ref().child('parkingLot/$title.jpg');
+    StorageUploadTask uploadTask = ref.putFile(imageFile);
+
+    var dowurl = await (await uploadTask.onComplete).ref.getDownloadURL();
+    String url = dowurl.toString();
+    return url;
+  }
 
   ParkLot findById(String id) {
     return _parkingLots.firstWhere((lot) => lot.id == id);

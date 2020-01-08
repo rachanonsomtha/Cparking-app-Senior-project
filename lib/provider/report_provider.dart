@@ -38,6 +38,9 @@ class ReportsProvider with ChangeNotifier {
   // }
 
   ///update products
+  ///
+
+
 
   int get reportCount {
     return _reports.length;
@@ -97,12 +100,12 @@ class ReportsProvider with ChangeNotifier {
       final List<Report> loadedProducts = [];
       decodeData.forEach((reportId, reportData) {
         loadedProducts.add(Report(
-          id: reportId,
-          userName: reportData['userName'],
-          imageUrl: reportData['imageUrl'],
-          lifeTime: reportData['lifeTime'],
-          dateTime: reportData['dateTime'],
-        ));
+            id: reportId,
+            userName: reportData['userName'],
+            imageUrl: reportData['imageUrl'],
+            lifeTime: reportData['lifeTime'],
+            dateTime: reportData['dateTime'],
+            availability: reportData['avai']));
       });
       _reports = loadedProducts;
       notifyListeners();
@@ -114,8 +117,7 @@ class ReportsProvider with ChangeNotifier {
   }
 
   Future<void> addReport(Report report) async {
-    final url =
-        'https://cparking-ecee0.firebaseio.com/reports.json?auth=$authToken';
+    final url = 'https://cparking-ecee0.firebaseio.com/reports.json?auth=$authToken';
     final add_date = DateFormat('yyyy-MM-dd').format(DateTime.now()).toString();
     // print(add_date);
     // create products collection in firebase
@@ -128,16 +130,19 @@ class ReportsProvider with ChangeNotifier {
           'lifeTime': report.lifeTime,
           'dateTime': add_date,
           'isPromote': report.isPromoted,
-          'score': 0
+          'score': 0,
+          'availability': report.availability,
         }),
       );
-      print(json.decode(response.body));
+      // print(json.decode(response.body));
       final rep = Report(
         id: json.decode(response.body)['name'],
         userName: report.userName,
         lifeTime: report.lifeTime,
         imageUrl: report.imageUrl,
         dateTime: add_date,
+        score: report.score,
+        isPromoted: report.isPromoted,
         availability: report.availability,
       );
       _reports.add(rep);

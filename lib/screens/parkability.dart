@@ -99,12 +99,12 @@ class _ParkabilityState extends State<Parkability> {
               Navigator.of(context).pop();
             },
           ),
-          FlatButton(
-            child: Text('Okay'),
-            onPressed: () {
-              uploadFile(context, name);
-            },
-          )
+          _isLoading
+              ? CircularProgressIndicator()
+              : FlatButton(
+                  child: Text('Confirmed'),
+                  onPressed: () {},
+                )
         ],
       ),
     );
@@ -115,7 +115,6 @@ class _ParkabilityState extends State<Parkability> {
     _image = await ImagePicker.pickImage(source: ImageSource.gallery);
 
     setState(() {
-      _isPickedImage = true;
       _image = _image;
       print(_image);
     });
@@ -131,7 +130,9 @@ class _ParkabilityState extends State<Parkability> {
         _isLoading = true;
       });
       await uploadTask.onComplete;
-      print('File Uploaded');
+      setState(() {
+        _isLoading = false;
+      });
       storageReference.getDownloadURL().then((fileURL) {
         // print(fileURL);
         setState(() {
@@ -149,9 +150,13 @@ class _ParkabilityState extends State<Parkability> {
           // print(_uploadedFileURL);
           // print(_uploadedFileURL + "eiei");
         });
+      }).then((_) async {
+        await Provider.of<ReportsProvider>(context, listen: false)
+            .addReport(_editReport);
       });
-      await Provider.of<ReportsProvider>(context, listen: false)
-          .addReport(_editReport);
+// print('File Uploaded');
+      _image = null;
+      _currentValue = 0;
     } catch (error) {
       await showDialog(
         context: context,
@@ -176,7 +181,7 @@ class _ParkabilityState extends State<Parkability> {
       ),
     );
 
-    Navigator.of(context).pop();
+    // Navigator.of(context).pop();
     // Scaffold.of(context).showSnackBar(snackBar);
   }
 
@@ -191,19 +196,9 @@ class _ParkabilityState extends State<Parkability> {
     return Scaffold(
       appBar: AppBar(
         title: Text(name),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.save),
-            onPressed: () {
-              if (_isPickedImage) {
-                _saveForm(context, name);
-              }
-            },
-          )
-        ],
       ),
       drawer: AppDrawer(),
-      body: _locPicloaded
+      body: _isLoading
           ? Center(
               child: CircularProgressIndicator(),
             )
@@ -296,6 +291,13 @@ class _ParkabilityState extends State<Parkability> {
                                 setState(() => _currentValue = newValue);
                               }),
                         ),
+                        Center(
+                            child: FlatButton(
+                          onPressed: () async {
+                            await uploadFile(context, name);
+                          },
+                          child: Text('Confirm report'),
+                        )),
                       ],
                     ),
                   ],

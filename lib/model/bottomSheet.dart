@@ -36,8 +36,8 @@ class Modal {
                 ),
                 ListTile(
                   leading: Icon(Icons.pageview),
-                  subtitle: Text("Shared your report with us"),
-                  title: Text('Parkability'),
+                  subtitle: Text("Look back"),
+                  title: Text('View history'),
                   onTap: () => {},
                 ),
               ],

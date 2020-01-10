@@ -16,6 +16,11 @@ class ReportsProvider with ChangeNotifier {
   String userId;
   // var _showFavourtiesOnly = false;
 
+  ReportsProvider(
+    this.authToken,
+    this.userId,
+    // this._reports,
+  );
   List<Report> get reports {
     //getters
     // if (_showFavourtiesOnly) {
@@ -90,11 +95,20 @@ class ReportsProvider with ChangeNotifier {
     final url =
         'https://cparking-ecee0.firebaseio.com/reports.json?auth=$authToken';
 
+    final favUrl =
+        'https://cparking-ecee0.firebaseio.com/userPromoted/$userId.json?auth=$authToken';
     //fetch and decode data
 
     try {
       final response = await http.get(url);
       final decodeData = json.decode(response.body) as Map<String, dynamic>;
+      if (decodeData == null) {
+        return;
+      }
+      final favResponse = await http.get(favUrl);
+      final favData = json.decode(favResponse.body);
+      print(favData);
+
       final List<Report> loadedProducts = [];
       decodeData.forEach((reportId, reportData) {
         loadedProducts.add(
@@ -103,13 +117,15 @@ class ReportsProvider with ChangeNotifier {
               userName: reportData['userName'],
               imageUrl: reportData['imageUrl'],
               lifeTime: reportData['lifeTime'],
+              isPromoted: favData == null ? false : favData[reportId] ?? false,
+              score: reportData['score'],
               dateTime: reportData['dateTime'],
               availability: reportData['availability']),
         );
       });
       _reports = loadedProducts;
       notifyListeners();
-      print(json.decode(response.body));
+      // print(loadedProducts);
     } catch (error) {
       print(error);
       throw error;
@@ -130,7 +146,7 @@ class ReportsProvider with ChangeNotifier {
           'imageUrl': report.imageUrl,
           'lifeTime': report.lifeTime,
           'dateTime': add_date,
-          'isPromote': report.isPromoted,
+          // 'isPromote': report.isPromoted,
           'score': 0,
           'availability': report.availability,
         }),
@@ -143,7 +159,7 @@ class ReportsProvider with ChangeNotifier {
         imageUrl: report.imageUrl,
         dateTime: add_date,
         score: report.score,
-        isPromoted: report.isPromoted,
+        // isPromoted: report.isPromoted,
         availability: report.availability,
       );
       _reports.add(rep);

@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import '../screens/report_overview_screen.dart';
 import '../screens/Parkability.dart';
 import '../screens/auth_screen.dart';
+import '../screens/home.dart';
+import '../provider/auth.dart';
+
+import 'package:provider/provider.dart';
 
 class AppDrawer extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -17,7 +20,9 @@ class AppDrawer extends StatelessWidget {
             child: Image.asset(
               'images/logo_cpark.png',
             ),
-            decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+            decoration: BoxDecoration(
+              color: Theme.of(context).primaryColor,
+            ),
           ),
           ListTile(
             leading: Icon(Icons.home),
@@ -42,7 +47,19 @@ class AppDrawer extends StatelessWidget {
               Navigator.of(context)
                   .pushReplacementNamed(ReportOverViewScreen.routeName);
             },
-          )
+          ),
+          Divider(),
+          ListTile(
+            leading: Icon(Icons.exit_to_app),
+            title: Text('Logout'),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pushReplacementNamed('/');
+              // Navigator.of(context)
+              //     .pushReplacementNamed(UserProductsScreen.routeName);
+              Provider.of<Auth>(context, listen: false).logOut();
+            },
+          ),
         ],
       ),
     );

@@ -17,6 +17,8 @@ import 'package:transparent_image/transparent_image.dart';
 import '../provider/report_provider.dart';
 import 'package:provider/provider.dart';
 import '../provider/parkingLotProvider.dart';
+import '../provider/auth.dart';
+import '../provider/report_provider.dart';
 
 class Parkability extends StatefulWidget {
   static const routeName = '/park-ability';
@@ -190,6 +192,8 @@ class _ParkabilityState extends State<Parkability> {
     final name = ModalRoute.of(context).settings.arguments as String;
     final parkingInfo =
         Provider.of<ParkingLotProvider>(context, listen: false).findById(name);
+    final authData = Provider.of<Auth>(context, listen: false);
+    final report = Provider.of<ReportsProvider>(context, listen: false);
     // final locUrl = Provider.of<ParkingLotProvider>(context, listen: false)
     //     .getLocImage(name);
     // print(locUrl.toString());
@@ -293,6 +297,7 @@ class _ParkabilityState extends State<Parkability> {
                         ),
                         Center(
                             child: FlatButton(
+                          color: Colors.grey,
                           onPressed: () async {
                             await uploadFile(context, name);
                           },

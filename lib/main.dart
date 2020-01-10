@@ -12,6 +12,7 @@ import './screens/auth_screen.dart';
 import './provider/auth.dart';
 import './provider/parkingLotProvider.dart';
 import './provider/report_provider.dart';
+import './provider/report.dart';
 
 // import 'package:firebase/firebase.dart';
 // import 'package:firebase/firestore.dart' as fs;
@@ -23,49 +24,54 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-        providers: [
-          ChangeNotifierProvider.value(
-            value: Auth(),
+      providers: [
+        ChangeNotifierProvider.value(
+          value: Auth(),
+        ),
+        ChangeNotifierProxyProvider<Auth, ReportsProvider>(
+          initialBuilder: (_) => ReportsProvider(
+            null,
+            null,
           ),
-          ChangeNotifierProxyProvider<Auth, ReportsProvider>(
-            initialBuilder: (_) => ReportsProvider(),
-            builder: (_, auth, previousReports) {
-              previousReports.authToken = auth.token;
-              previousReports.reports == null ? [] : previousReports.reports;
-              return previousReports;
-            },
+          builder: (_, auth, previousReports) {
+            previousReports.authToken = auth.token;
+            previousReports.userId = auth.userId;
+            previousReports.reports == null ? [] : previousReports.reports;
+            return previousReports;
+          },
+        ),
+        ChangeNotifierProvider.value(
+          value: ParkingLotProvider(),
+        ),
+      ],
+      child: Consumer<Auth>(
+        builder: (ctx, auth, _) => MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            primaryColor: CompanyColors.blue[500],
+            accentColor: Colors.indigo,
+            primarySwatch: Colors.green,
+            fontFamily: 'Lato',
           ),
-          ChangeNotifierProvider.value(
-            value: ParkingLotProvider(),
-          )
-        ],
-        child: Consumer<Auth>(
-          builder: (ctx, auth, _) => MaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'Flutter Demo',
-            theme: ThemeData(
-              primaryColor: CompanyColors.blue[500],
-              accentColor: Colors.indigo,
-              primarySwatch: Colors.blue,
-              fontFamily: 'Lato',
-            ),
-            home: auth.isAuth
-                ? HomeScreen()
-                : FutureBuilder(
-                    future: auth.tryAutoLogin(),
-                    builder: (ctx, authResultSnapshot) =>
-                        authResultSnapshot.connectionState ==
-                                ConnectionState.waiting
-                            ? SplashScreen()
-                            : AuthScreen(),
-                  ),
-            routes: {
-              Parkability.routeName: (ctx) => Parkability(),
-              ReportOverViewScreen.routeName: (ctx) => ReportOverViewScreen(),
-              AuthScreen.routeName: (ctx) => AuthScreen(),
-            },
-          ),
-        ));
+          home: auth.isAuth
+              ? HomeScreen()
+              : FutureBuilder(
+                  future: auth.tryAutoLogin(),
+                  builder: (ctx, authResultSnapshot) =>
+                      authResultSnapshot.connectionState ==
+                              ConnectionState.waiting
+                          ? SplashScreen()
+                          : AuthScreen(),
+                ),
+          routes: {
+            // HomeScreen.routeName: (ctx) => HomeScreen(),
+            Parkability.routeName: (ctx) => Parkability(),
+            ReportOverViewScreen.routeName: (ctx) => ReportOverViewScreen(),
+            // AuthScreen.routeName: (ctx) => AuthScreen(),
+          },
+        ),
+      ),
+    );
   }
 }
 

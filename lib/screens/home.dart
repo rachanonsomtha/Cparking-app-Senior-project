@@ -8,6 +8,8 @@ import 'package:provider/provider.dart';
 import '../provider/parkingLotProvider.dart';
 
 class HomeScreen extends StatefulWidget {
+  // static const routeName = '/home-screeen';
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }

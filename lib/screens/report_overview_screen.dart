@@ -37,6 +37,7 @@ class _ReportOverViewScreenState extends State<ReportOverViewScreen> {
   @override
   Widget build(BuildContext context) {
     final report = Provider.of<ReportsProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Reports"),
@@ -45,23 +46,28 @@ class _ReportOverViewScreenState extends State<ReportOverViewScreen> {
       body: _isLoading
           ? Center(
               child: CircularProgressIndicator(
-                backgroundColor: Colors.indigoAccent,
+                backgroundColor: Colors.white,
               ),
             )
           : Padding(
               padding: EdgeInsets.all(8),
               child: ListView.builder(
                 itemCount: report.reportCount,
-                itemBuilder: (_, index) => Column(
-                  children: <Widget>[
-                    ReportItem(
-                      report.reports[index].userName,
-                      report.reports[index].lifeTime,
-                      report.reports[index].dateTime.toString(),
-                      report.reports[index].imageUrl,
-                      report.reports[index].availability,
-                    ),
-                  ],
+                itemBuilder: (_, index) => ChangeNotifierProvider.value(
+                  child: Column(
+                    children: <Widget>[
+                      ReportItem(
+                        report.reports[index].userName,
+                        report.reports[index].lifeTime,
+                        report.reports[index].dateTime.toString(),
+                        report.reports[index].imageUrl,
+                        report.reports[index].availability,
+                        report.reports[index].isPromoted,
+                        report.reports[index].score,
+                      ),
+                    ],
+                  ),
+                  value: report.reports[index],
                 ),
               ),
             ),

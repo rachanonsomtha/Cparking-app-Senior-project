@@ -18,6 +18,8 @@ class Report with ChangeNotifier {
   int score;
   @required
   int availability;
+  @required
+  final String loc;
 
   Report({
     @required this.id,
@@ -28,6 +30,7 @@ class Report with ChangeNotifier {
     this.isPromoted = false,
     this.score = 0,
     @required this.availability,
+    @required this.loc,
   });
 
   void _setNewPromoteValue(bool newValue) {
@@ -38,7 +41,7 @@ class Report with ChangeNotifier {
   Future<void> scoreManagement(String authToken, String userId) async {
     bool oldStatus = isPromoted;
     int oldScore = score;
-    print(isPromoted);
+    // print(isPromoted);
     if (oldStatus && oldScore >= 1) {
       oldScore -= 1;
     } else if (!oldStatus) {
@@ -46,7 +49,7 @@ class Report with ChangeNotifier {
     }
     oldStatus = !oldStatus;
     isPromoted = oldStatus;
-    print(isPromoted);
+    // print(isPromoted);
     score = oldScore;
     notifyListeners();
     final url =

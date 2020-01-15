@@ -68,7 +68,7 @@ class Auth extends ChangeNotifier {
         },
       );
       prefs.setString('userData', userData);
-      print(_token);
+      // print(_token);
     } catch (error) {
       print(error);
       throw error;

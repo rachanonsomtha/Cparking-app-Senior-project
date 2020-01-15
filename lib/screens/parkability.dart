@@ -12,6 +12,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:transparent_image/transparent_image.dart';
+import '../loader/color_loader_2.dart';
+import '../loader/color_loader_3.dart';
 
 //provider
 import '../provider/report_provider.dart';
@@ -37,6 +39,7 @@ class _ParkabilityState extends State<Parkability> {
     isPromoted: false,
     availability: 0,
     score: 0,
+    loc: '',
   );
 
   File _image;
@@ -118,7 +121,7 @@ class _ParkabilityState extends State<Parkability> {
 
     setState(() {
       _image = _image;
-      print(_image);
+      // print(_image);
     });
   }
 
@@ -148,6 +151,7 @@ class _ParkabilityState extends State<Parkability> {
             isPromoted: _editReport.isPromoted,
             availability: _editReport.availability,
             score: _editReport.score,
+            loc: _editReport.loc,
           );
           // print(_uploadedFileURL);
           // print(_uploadedFileURL + "eiei");
@@ -198,13 +202,20 @@ class _ParkabilityState extends State<Parkability> {
     //     .getLocImage(name);
     // print(locUrl.toString());
     return Scaffold(
+      backgroundColor: Color.fromRGBO(67, 66, 114, 100),
       appBar: AppBar(
         title: Text(name),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
       ),
-      drawer: AppDrawer(),
+      // drawer: AppDrawer(),
       body: _isLoading
           ? Center(
-              child: CircularProgressIndicator(),
+              child: ColorLoader3(
+                dotRadius: 5,
+              ),
             )
           : Padding(
               padding: const EdgeInsets.all(10),
@@ -253,8 +264,9 @@ class _ParkabilityState extends State<Parkability> {
                                             Container(
                                               decoration: BoxDecoration(
                                                 border: Border.all(
-                                                    width: 1,
-                                                    color: Colors.grey),
+                                                  width: 1,
+                                                  color: Colors.grey,
+                                                ),
                                               ),
                                               height: 200,
                                               width: 200,
@@ -290,6 +302,7 @@ class _ParkabilityState extends State<Parkability> {
                                   isPromoted: _editReport.isPromoted,
                                   availability: newValue,
                                   score: _editReport.score,
+                                  loc: name,
                                 );
                                 // print(_editReport.imageUrl);
                                 setState(() => _currentValue = newValue);

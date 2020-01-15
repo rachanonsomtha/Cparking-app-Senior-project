@@ -1,5 +1,3 @@
-import 'package:cparking/screens/report_detail_screen.dart';
-
 import '../provider/report_provider.dart';
 import '../widgets/report_widget.dart';
 import 'package:provider/provider.dart';
@@ -10,28 +8,24 @@ import '../widgets/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flare_flutter/flare_actor.dart';
 
-class ReportOverViewScreen extends StatefulWidget {
-  static const routeName = '/report-screen';
+class UserPreviousReports extends StatefulWidget {
+  static const routeName = '/UserReport-screen';
 
   @override
-  _ReportOverViewScreenState createState() => _ReportOverViewScreenState();
+  _UserPreviousReportsState createState() => _UserPreviousReportsState();
 }
 
-class _ReportOverViewScreenState extends State<ReportOverViewScreen> {
+class _UserPreviousReportsState extends State<UserPreviousReports> {
   bool _isInit = true;
-  bool _isLoading = false;
 
+  bool _isLoading = false;
   @override
   void didChangeDependencies() {
-    final name = ModalRoute.of(context).settings.arguments as String;
-    print(name);
     if (_isInit) {
       setState(() {
         _isLoading = true;
       });
-      Provider.of<ReportsProvider>(context)
-          .fetchReportFromLocation(name)
-          .then((_) {
+      Provider.of<ReportsProvider>(context).fetchReportFromUserId().then((_) {
         setState(() {
           _isLoading = false;
         });
@@ -39,26 +33,20 @@ class _ReportOverViewScreenState extends State<ReportOverViewScreen> {
     }
     _isInit = false;
 
-    // TODO: implement didChangeDependenciess
+    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
     final report = Provider.of<ReportsProvider>(context);
-    var count = report.reportCount;
-
-    // var loadedReport = report.reports;
+    var count = report.userReportCount;
+    // print(count);
 
     return Scaffold(
       // backgroundColor: Color.fromRGBO(67, 66, 114, 100),
       appBar: AppBar(
-        title: const Text(
-          "Reports",
-          style: TextStyle(
-            fontFamily: 'Lato',
-          ),
-        ),
+        title: const Text("Previous Reports"),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
           onPressed: () => Navigator.of(context).pop(),
@@ -101,7 +89,7 @@ class _ReportOverViewScreenState extends State<ReportOverViewScreen> {
               : Padding(
                   padding: EdgeInsets.all(8),
                   child: ListView.builder(
-                    itemCount: report.reportCount,
+                    itemCount: report.userReportCount,
                     itemBuilder: (_, index) => ChangeNotifierProvider.value(
                       child: Column(
                         children: <Widget>[
@@ -116,32 +104,10 @@ class _ReportOverViewScreenState extends State<ReportOverViewScreen> {
                               ),
                         ],
                       ),
-                      value: report.reports[index],
+                      value: report.userReports[index],
                     ),
                   ),
                 ),
     );
   }
-}
-
-class CompanyColors {
-  CompanyColors._(); // this basically makes it so you can instantiate this class
-
-  static const _primaryValue = 0x829Fd9;
-
-  static const MaterialColor blue = const MaterialColor(
-    _primaryValue,
-    const <int, Color>{
-      50: const Color(0xFFe0e0e0),
-      100: const Color(0xFFb3b3b3),
-      200: const Color(0xFF808080),
-      300: const Color(0xFF4d4d4d),
-      400: const Color(0xFF262626),
-      500: const Color.fromRGBO(130, 159, 217, 100),
-      600: const Color(0xFF000000),
-      700: const Color(0xFF000000),
-      800: const Color(0xFF000000),
-      900: const Color(0xFF000000),
-    },
-  );
 }

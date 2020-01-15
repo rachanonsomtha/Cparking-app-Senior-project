@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import '../provider/parkingLotProvider.dart';
 
 class HomeScreen extends StatefulWidget {
-  // static const routeName = '/home-screeen';
+  static const routeName = '/home-screeen';
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -131,6 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: FloatingActionButton(
+                heroTag: UniqueKey(),
                 child: Icon(Icons.place),
                 onPressed: _goMyLoc,
               ),

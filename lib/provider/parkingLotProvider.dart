@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import './parkingLot.dart';
 import 'package:firebase_storage/firebase_storage.dart'; // For File Upload To Firestore
+import '../provider/report.dart';
 
 class ParkingLotProvider with ChangeNotifier {
   List<ParkLot> _parkingLots = [
@@ -42,7 +43,6 @@ class ParkingLotProvider with ChangeNotifier {
       lon: '98.952969',
     ),
   ];
-
   Future<String> getLocImage(String title) async {
     var imageFile;
     StorageReference ref =

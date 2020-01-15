@@ -12,6 +12,8 @@ import 'package:path/path.dart' as Path;
 class ReportsProvider with ChangeNotifier {
   List<Report> _reports = [];
 
+  List<Report> _userReports = [];
+
   String authToken;
   String userId;
   // var _showFavourtiesOnly = false;
@@ -26,6 +28,18 @@ class ReportsProvider with ChangeNotifier {
     // if (_showFavourtiesOnly) {
     //   return _items.where((prodItem) => prodItem.isFavorite).toList();
     return [..._reports];
+  }
+
+  int get reportCount {
+    return _reports.length;
+  }
+
+  List<Report> get userReports {
+    return [..._userReports];
+  }
+
+  int get userReportCount {
+    return _userReports.length;
   }
 
   // effect all pages scenarios
@@ -45,17 +59,13 @@ class ReportsProvider with ChangeNotifier {
   ///update products
   ///
 
-  int get reportCount {
-    return _reports.length;
-  }
-
   void updateProduct(String id, Report newProduct) {
     final prodIndex = _reports.indexWhere((prod) => prod.id == id);
     if (prodIndex >= 0) {
       _reports[prodIndex] = newProduct;
       notifyListeners();
-    } else
-      print('...');
+    }
+    // print('...');
   }
 
   void deleteProduct(String id, bool isFav) {
@@ -64,6 +74,10 @@ class ReportsProvider with ChangeNotifier {
       _reports.removeWhere((prod) => prod.id == id);
     }
     notifyListeners();
+  }
+
+  Report findById(String id) {
+    return _reports.firstWhere((rep) => rep.id == id);
   }
 
   // Future<void> fetchAndGetProducts() async {
@@ -107,20 +121,22 @@ class ReportsProvider with ChangeNotifier {
       }
       final favResponse = await http.get(favUrl);
       final favData = json.decode(favResponse.body);
-      print(favData);
+      // print(favData);
 
       final List<Report> loadedProducts = [];
       decodeData.forEach((reportId, reportData) {
         loadedProducts.add(
           Report(
-              id: reportId,
-              userName: reportData['userName'],
-              imageUrl: reportData['imageUrl'],
-              lifeTime: reportData['lifeTime'],
-              isPromoted: favData == null ? false : favData[reportId] ?? false,
-              score: reportData['score'],
-              dateTime: reportData['dateTime'],
-              availability: reportData['availability']),
+            id: reportId,
+            userName: reportData['userName'],
+            imageUrl: reportData['imageUrl'],
+            lifeTime: reportData['lifeTime'],
+            isPromoted: favData == null ? false : favData[reportId] ?? false,
+            score: reportData['score'],
+            dateTime: reportData['dateTime'].toString(),
+            availability: reportData['availability'],
+            loc: reportData['loc'],
+          ),
         );
       });
       _reports = loadedProducts;
@@ -132,10 +148,99 @@ class ReportsProvider with ChangeNotifier {
     }
   }
 
+  Future<void> fetchReportFromLocation(String loc) async {
+    final url =
+        'https://cparking-ecee0.firebaseio.com/reports.json?auth=$authToken';
+
+    final favUrl =
+        'https://cparking-ecee0.firebaseio.com/userPromoted/$userId.json?auth=$authToken';
+    //fetch and decode data
+
+    try {
+      final response = await http.get(url);
+      final decodeData = json.decode(response.body) as Map<String, dynamic>;
+      if (decodeData == null) {
+        return;
+      }
+      final favResponse = await http.get(favUrl);
+      final favData = json.decode(favResponse.body);
+      // print(favData);
+
+      final List<Report> loadedProducts = [];
+      decodeData.forEach((reportId, reportData) {
+        if (reportData['loc'] == loc)
+          loadedProducts.add(
+            Report(
+              id: reportId,
+              userName: reportData['userName'],
+              imageUrl: reportData['imageUrl'],
+              lifeTime: reportData['lifeTime'],
+              isPromoted: favData == null ? false : favData[reportId] ?? false,
+              score: reportData['score'],
+              dateTime: reportData['dateTime'].toString(),
+              availability: reportData['availability'],
+              loc: reportData['loc'],
+            ),
+          );
+      });
+      _reports = loadedProducts;
+      notifyListeners();
+      // print(loadedProducts);
+    } catch (error) {
+      print(error);
+      throw error;
+    }
+  }
+
+  Future<void> fetchReportFromUserId() async {
+    final url =
+        'https://cparking-ecee0.firebaseio.com/reports.json?auth=$authToken';
+
+    final favUrl =
+        'https://cparking-ecee0.firebaseio.com/userPromoted/$userId.json?auth=$authToken';
+    //fetch and decode data
+
+    try {
+      final response = await http.get(url);
+      final decodeData = json.decode(response.body) as Map<String, dynamic>;
+      if (decodeData == null) {
+        return;
+      }
+      final favResponse = await http.get(favUrl);
+      final favData = json.decode(favResponse.body);
+      // print(favData);
+
+      final List<Report> loadedProducts = [];
+      decodeData.forEach((reportId, reportData) {
+        if (reportData['userName'] == userId)
+          loadedProducts.add(
+            Report(
+              id: reportId,
+              userName: reportData['userName'],
+              imageUrl: reportData['imageUrl'],
+              lifeTime: reportData['lifeTime'],
+              isPromoted: favData == null ? false : favData[reportId] ?? false,
+              score: reportData['score'],
+              dateTime: reportData['dateTime'].toString(),
+              availability: reportData['availability'],
+              loc: reportData['loc'],
+            ),
+          );
+      });
+      _userReports = loadedProducts;
+      notifyListeners();
+      // print(loadedProducts);
+    } catch (error) {
+      // print(error);
+      throw error;
+    }
+  }
+
   Future<void> addReport(Report report) async {
     final url =
         'https://cparking-ecee0.firebaseio.com/reports.json?auth=$authToken';
-    final add_date = DateFormat('yyyy-MM-dd').format(DateTime.now()).toString();
+    final add_date =
+        DateFormat('yyyy-MM-dd').add_Hms().format(DateTime.now()).toString();
     // print(add_date);
     // create products collection in firebase
     try {
@@ -146,6 +251,8 @@ class ReportsProvider with ChangeNotifier {
           'imageUrl': report.imageUrl,
           'lifeTime': report.lifeTime,
           'dateTime': add_date,
+          'userName': userId,
+          'loc': report.loc,
           // 'isPromote': report.isPromoted,
           'score': 0,
           'availability': report.availability,
@@ -159,6 +266,7 @@ class ReportsProvider with ChangeNotifier {
         imageUrl: report.imageUrl,
         dateTime: add_date,
         score: report.score,
+        loc: report.loc,
         // isPromoted: report.isPromoted,
         availability: report.availability,
       );

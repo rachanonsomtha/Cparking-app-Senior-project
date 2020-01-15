@@ -38,7 +38,10 @@ class Modal {
                   leading: Icon(Icons.pageview),
                   subtitle: Text("Look back"),
                   title: Text('View history'),
-                  onTap: () => {},
+                  onTap: () => Navigator.of(context).pushReplacementNamed(
+                    ReportOverViewScreen.routeName,
+                    arguments: name,
+                  ),
                 ),
               ],
             ),
@@ -46,10 +49,16 @@ class Modal {
         });
   }
 
-  ListTile _createTile(
-      BuildContext context, String name, IconData icon, Function action) {
+  navigateToPage(BuildContext context, String page) {
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil(page, (Route<dynamic> route) => false);
+  }
+
+  ListTile _createTile(BuildContext context, String name, String subTitle,
+      IconData icon, Function action) {
     return ListTile(
       leading: Icon(icon),
+      subtitle: Text(subTitle),
       title: Text(name),
       onTap: () {
         action(context);

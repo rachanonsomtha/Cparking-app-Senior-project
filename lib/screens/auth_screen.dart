@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../provider/auth.dart';
 import '../model/http_exception.dart';
+import '../loader/color_loader_2.dart';
+import '../loader/color_loader_3.dart';
 
 enum AuthMode { Signup, Login }
 
@@ -93,7 +95,7 @@ class _AuthCardState extends State<AuthCard> {
           _authData['password'],
         );
       } else {
-        print(_authData['email']);
+        // print(_authData['email']);
         await Provider.of<Auth>(context, listen: false).signUp(
           _authData['email'],
           _authData['password'],
@@ -158,7 +160,14 @@ class _AuthCardState extends State<AuthCard> {
             child: Column(
               children: <Widget>[
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'E-mail'),
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                  decoration: InputDecoration(
+                    labelText: 'E-mail',
+                    labelStyle:
+                        TextStyle(color: Theme.of(context).primaryColor),
+                  ),
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value.isEmpty || !value.contains('@')) {
@@ -170,7 +179,14 @@ class _AuthCardState extends State<AuthCard> {
                   },
                 ),
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'Password'),
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    labelStyle:
+                        TextStyle(color: Theme.of(context).primaryColor),
+                  ),
                   obscureText: true,
                   controller: _passwordController,
                   validator: (value) {
@@ -184,8 +200,15 @@ class _AuthCardState extends State<AuthCard> {
                 ),
                 if (_authMode == AuthMode.Signup)
                   TextFormField(
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
                     enabled: _authMode == AuthMode.Signup,
-                    decoration: InputDecoration(labelText: 'Confirm Password'),
+                    decoration: InputDecoration(
+                      labelText: 'Confirm Password',
+                      labelStyle:
+                          TextStyle(color: Theme.of(context).primaryColor),
+                    ),
                     obscureText: true,
                     validator: _authMode == AuthMode.Signup
                         ? (value) {
@@ -199,7 +222,7 @@ class _AuthCardState extends State<AuthCard> {
                   height: 20,
                 ),
                 _isLoading
-                    ? CircularProgressIndicator()
+                    ? ColorLoader3()
                     : RaisedButton(
                         child: Text(
                           _authMode == AuthMode.Login ? 'LOGIN' : 'SIGN UP',

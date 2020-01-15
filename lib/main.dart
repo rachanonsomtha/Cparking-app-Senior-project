@@ -13,6 +13,9 @@ import './provider/auth.dart';
 import './provider/parkingLotProvider.dart';
 import './provider/report_provider.dart';
 import './provider/report.dart';
+import './screens/user_previous_reports.dart';
+
+import './screens/report_detail_screen.dart';
 
 // import 'package:firebase/firebase.dart';
 // import 'package:firebase/firestore.dart' as fs;
@@ -46,12 +49,14 @@ class MyApp extends StatelessWidget {
       ],
       child: Consumer<Auth>(
         builder: (ctx, auth, _) => MaterialApp(
+          title: 'C-Parking',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
-            primaryColor: CompanyColors.blue[500],
-            accentColor: Colors.indigo,
-            primarySwatch: Colors.green,
-            fontFamily: 'Lato',
+            brightness: Brightness.dark,
+            accentColor: Colors.white,
+            primaryColorDark: Colors.black,
+            // primaryColor:   Color(#003c7e),
+            fontFamily: 'Raleway',
           ),
           home: auth.isAuth
               ? HomeScreen()
@@ -67,6 +72,8 @@ class MyApp extends StatelessWidget {
             // HomeScreen.routeName: (ctx) => HomeScreen(),
             Parkability.routeName: (ctx) => Parkability(),
             ReportOverViewScreen.routeName: (ctx) => ReportOverViewScreen(),
+            UserPreviousReports.routeName: (ctx) => UserPreviousReports(),
+            ReportDetailScreen.routeName: (ctx) => ReportDetailScreen(),
             // AuthScreen.routeName: (ctx) => AuthScreen(),
           },
         ),

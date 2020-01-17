@@ -148,7 +148,8 @@ class _ReportItemState extends State<ReportItem> {
                               aspectRatio: 1,
                               child: Padding(
                                 padding: EdgeInsets.all(10),
-                                child: report.isPromoted
+                                child: report.isPromoted &&
+                                        _isanimate != 'favorite'
                                     ? Icon(
                                         Icons.thumb_down,
                                       )
@@ -180,7 +181,7 @@ class _ReportItemState extends State<ReportItem> {
                       ),
                     ),
                     Text(
-                      '${report.isPromoted ? 'Unlike' : 'Like'}',
+                      '${report.isPromoted && _isanimate != 'favorite' ? 'Unlike' : 'Like'}',
                       style: TextStyle(
                         color: Theme.of(context).primaryColorDark,
                         fontWeight: FontWeight.bold,

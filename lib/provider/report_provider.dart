@@ -231,7 +231,7 @@ class ReportsProvider with ChangeNotifier {
       notifyListeners();
       // print(loadedProducts);
     } catch (error) {
-      // print(error);
+      print(error);
       throw error;
     }
   }
@@ -239,6 +239,9 @@ class ReportsProvider with ChangeNotifier {
   Future<void> addReport(Report report) async {
     final url =
         'https://cparking-ecee0.firebaseio.com/reports.json?auth=$authToken';
+    final userUrl =
+        'https://cparking-ecee0.firebaseio.com/$userId/reports.json?auth=$authToken';
+
     final add_date =
         DateFormat('yyyy-MM-dd').add_Hms().format(DateTime.now()).toString();
     // print(add_date);
@@ -256,6 +259,13 @@ class ReportsProvider with ChangeNotifier {
           // 'isPromote': report.isPromoted,
           'score': 0,
           'availability': report.availability,
+        }),
+      );
+
+      await http.post(
+        userUrl,
+        body: json.encode({
+          'id': json.decode(response.body)['name'],
         }),
       );
       // print(json.decode(response.body));

@@ -13,6 +13,8 @@ class ParkLot with ChangeNotifier {
   final String lat;
   @required
   final String lon;
+  @required
+  List poly;
 
   ParkLot({
     this.id,
@@ -21,5 +23,6 @@ class ParkLot with ChangeNotifier {
     this.imageUrl,
     this.lat,
     this.lon,
+    this.poly,
   });
 }

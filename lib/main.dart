@@ -22,32 +22,7 @@ import './screens/user_profile.dart';
 // import 'package:firebase/firebase.dart';
 // import 'package:firebase/firestore.dart' as fs;
 
-import 'dart:async';
-import 'dart:io' show Platform;
-
-// import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
-
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  final FirebaseApp app = await FirebaseApp.configure(
-    name: 'db2',
-    options: Platform.isIOS
-        ? const FirebaseOptions(
-            googleAppID: '1:247138558143:ios:757e1d9fcb53ca1a80660a',
-            gcmSenderID: '247138558143', // wat the fuvk??
-            databaseURL: 'https://cparking-ecee0.firebaseio.com',
-          )
-        : const FirebaseOptions(
-            googleAppID: '1:247138558143:android:8bfc2afd0f5c510680660a',
-            apiKey: 'AIzaSyBmonMa2ytyi8c3aYWtVzgIhE8jCyzTHB8',
-            databaseURL: 'https://cparking-ecee0.firebaseio.com',
-          ),
-  );
-  runApp(MyApp());
-}
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.

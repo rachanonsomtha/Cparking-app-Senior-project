@@ -55,7 +55,6 @@ class _AuthCardState extends State<AuthCard> {
   Map<String, String> _authData = {
     'email': '',
     'password': '',
-    'username': '',
   };
   var _isLoading = false;
   final _passwordController = TextEditingController();
@@ -100,7 +99,6 @@ class _AuthCardState extends State<AuthCard> {
         await Provider.of<Auth>(context, listen: false).signUp(
           _authData['email'],
           _authData['password'],
-          _authData['username'],
         );
       }
     } on HttpException catch (error) {
@@ -151,36 +149,16 @@ class _AuthCardState extends State<AuthCard> {
       elevation: 0,
       child: Container(
         margin: EdgeInsets.all(20),
-        height: _authMode == AuthMode.Signup ? 380 : 260,
+        height: _authMode == AuthMode.Signup ? 320 : 260,
         constraints:
             BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 320 : 260),
         width: deviceSize.width * 0.75,
-        padding: EdgeInsets.all(10.0),
+        padding: EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
-                if (_authMode == AuthMode.Signup)
-                  TextFormField(
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                    decoration: InputDecoration(
-                      labelText: 'Username',
-                      labelStyle:
-                          TextStyle(color: Theme.of(context).primaryColor),
-                    ),
-                    keyboardType: TextInputType.emailAddress,
-                    validator: (value) {
-                      if (value.isEmpty || value.length <= 5) {
-                        return 'Username was too short!';
-                      }
-                    },
-                    onSaved: (value) {
-                      _authData['username'] = value;
-                    },
-                  ),
                 TextFormField(
                   style: TextStyle(
                     color: Colors.black,

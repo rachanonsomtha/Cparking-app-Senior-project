@@ -18,7 +18,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Modal modal = new Modal();
   Completer<GoogleMapController> _controller = Completer();
   List<Marker> markers = <Marker>[];
-  List<Polyline> polylines = <Polyline>[];
 
   LocationData currentLocation;
 
@@ -64,22 +63,8 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  void getPolyLine() {
-    final parkingData = Provider.of<ParkingLotProvider>(context);
-    final lots = parkingData.parkingLots;
-
-    for (int i = 0; i < parkingData.parkingLotsCount; i++) {
-      polylines.add(Polyline(
-          color: Colors.green,
-          width: 10,
-          points: lots[i].poly,
-          polylineId: PolylineId(lots[i].id.toString())));
-    }
-  }
-
   @override
   void didChangeDependencies() {
-    getPolyLine();
     // TODO: implement didChangeDependencies
     getParkingData();
     super.didChangeDependencies();
@@ -97,14 +82,9 @@ class _HomeScreenState extends State<HomeScreen> {
         body: Stack(
           alignment: Alignment.bottomRight,
           children: <Widget>[
-            
             GoogleMap(
-              // myLocationEnabled: true,
-
+              myLocationEnabled: true,
               markers: Set.from(markers),
-
-              polylines: Set.from(polylines),
-              // polylines: ,
               // Marker(
               //   onTap: () => modal.mainBottomSheet(context, "30#1"),
               //   markerId: MarkerId("1"),

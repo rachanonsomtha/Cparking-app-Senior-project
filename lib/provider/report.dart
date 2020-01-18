@@ -38,10 +38,7 @@ class Report with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> scoreManagement(
-    String authToken,
-    String userId,
-  ) async {
+  Future<void> scoreManagement(String authToken, String userId) async {
     bool oldStatus = isPromoted;
     int oldScore = score;
     // print(isPromoted);

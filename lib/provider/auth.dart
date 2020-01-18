@@ -5,22 +5,12 @@ import 'dart:convert';
 import '../model/http_exception.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
-import '../provider/userData.dart';
-
-import 'dart:io' show Platform;
-
-import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
 
 class Auth extends ChangeNotifier {
   String _token;
   DateTime _expiryDate;
   String _userId;
   Timer _authTimer;
-  // String _userName;
-
-  UserData _userData;
 
   bool get isAuth {
     return _token != null;
@@ -39,67 +29,10 @@ class Auth extends ChangeNotifier {
     return _userId;
   }
 
-  UserData get userData {
-    print(userData.userName);
-    return _userData;
-  }
-  // String get userName {
-  //   return _userName;
-  // }
-
-  Future<void> fetchUserProfileData(String _userId) async {
-    final url = 'https://cparking-ecee0.firebaseio.com/$userId/profile.json';
-    // print(userId);
-    try {
-      final response = await http.get(url).then((value) {
-        final decodeData = json.decode(value.body) as Map<String, dynamic>;
-        if (decodeData == null) {
-          print('null eiei');
-        }
-
-        decodeData.forEach((userId, userData) {
-          _userData = UserData(
-            userName: userData['userName'],
-            id: userId,
-            score: 0,
-            profileImageUrl: '',
-            reports: null,
-          );
-          // return _userData;
-          // _userName = userData['userName']; // test fetching
-        });
-      });
-
-      // final url2 =
-      //     'https://cparking-ecee0.firebaseio.com/$userId/profile/temp.json';
-
-      // final response2 = await http.get(url2);
-
-      // final decodedData = json.decode(response2.body) as Map<String, dynamic>;
-      // print(decodedData);
-
-      // if (decodeData == null) {
-      //   return;
-      // }
-
-      // print(decodeData['userName']);
-      // final UserData user = UserData();
-
-      // print(user.userName);
-
-      // notifyListeners();
-      // return user;
-    } catch (error) {
-      print(error);
-      throw error;
-    }
-  }
-
   Future<void> _authenticate(
-      String email, String password, String _auth, String userName) async {
+      String email, String password, String _auth) async {
     final url =
         'https://identitytoolkit.googleapis.com/v1/accounts:$_auth?key=AIzaSyBmonMa2ytyi8c3aYWtVzgIhE8jCyzTHB8';
-
     try {
       final response = await http.post(
         url,
@@ -107,20 +40,16 @@ class Auth extends ChangeNotifier {
           {
             'email': email,
             'password': password,
-            // 'userName': userName,
             'returnSecureToken': true,
           },
         ),
       );
-
       final responseData = json.decode(response.body);
       if (responseData['error'] != null) {
         throw HttpException(responseData['error']['message']);
       }
       _token = responseData['idToken'];
       _userId = responseData['localId'];
-      // _userName = responseData['userName'];
-
       _expiryDate = DateTime.now().add(
         Duration(
           seconds: int.parse(responseData['expiresIn']),
@@ -136,32 +65,8 @@ class Auth extends ChangeNotifier {
           'token': _token,
           'userId': _userId,
           'expiryDate': _expiryDate.toIso8601String(),
-          // 'userName': _userName,
         },
       );
-
-      // print('kuy');
-      // print(_userName);
-
-      final url2 = 'https://cparking-ecee0.firebaseio.com/$userId/profile.json';
-
-      try {
-        if (userName != null) {
-          final response2 = await http.post(
-            url2,
-            body: json.encode(
-              {
-                'userName': userName,
-                'score': 0,
-                'profileImageUrl': null,
-              },
-            ),
-          );
-          // print(_userName);
-        }
-      } catch (error) {
-        print(error);
-      }
       prefs.setString('userData', userData);
       // print(_token);
     } catch (error) {
@@ -184,27 +89,23 @@ class Auth extends ChangeNotifier {
     }
     _token = extractedUserData['token'];
     _userId = extractedUserData['userId'];
-    // _userName = extractedUserData['userName'];
     _expiryDate = expiryDate;
     notifyListeners();
     _autoLogout();
     return true;
   }
 
-  Future<void> signUp(String email, String password, String userName) async {
-    return _authenticate(email, password, 'signUp', userName);
+  Future<void> signUp(String email, String password) async {
+    return _authenticate(email, password, 'signUp');
   }
 
   Future<void> signIn(String email, String password) async {
-    return _authenticate(email, password, 'signInWithPassword', null).then((_) {
-      fetchUserProfileData(userId);
-    });
+    return _authenticate(email, password, 'signInWithPassword');
   }
 
   Future<void> logOut() async {
     _token = null;
     _userId = null;
-    // _userName = null;
     _expiryDate = null;
     if (_authTimer != null) {
       _authTimer.cancel();
@@ -212,7 +113,7 @@ class Auth extends ChangeNotifier {
     }
     notifyListeners();
     final prefs = await SharedPreferences.getInstance();
-    prefs.remove('userData');
+    // prefs.remove('userData');
     prefs.clear();
   }
 

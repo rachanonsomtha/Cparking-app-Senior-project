@@ -46,15 +46,15 @@ class _ReportOverViewScreenState extends State<ReportOverViewScreen> {
   @override
   Widget build(BuildContext context) {
     final report = Provider.of<ReportsProvider>(context);
-    final name = ModalRoute.of(context).settings.arguments as String;
-
     var count = report.reportCount;
+
+    // var loadedReport = report.reports;
 
     return Scaffold(
       // backgroundColor: Color.fromRGBO(67, 66, 114, 100),
       appBar: AppBar(
-        title: Text(
-          'Reports from : $name',
+        title: const Text(
+          "Reports",
           style: TextStyle(
             fontFamily: 'Lato',
           ),
@@ -65,7 +65,7 @@ class _ReportOverViewScreenState extends State<ReportOverViewScreen> {
         ),
       ),
       // drawer: AppDrawer(),
-      body: count == 0 && !_isLoading
+      body: count == 0
           ? Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

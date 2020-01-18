@@ -15,12 +15,16 @@ import './provider/report_provider.dart';
 import './provider/report.dart';
 import './screens/user_previous_reports.dart';
 
+// import './screens/user_profile_screen.dart';
 import './screens/report_detail_screen.dart';
 
+import './screens/user_profile.dart';
 // import 'package:firebase/firebase.dart';
 // import 'package:firebase/firestore.dart' as fs;
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -71,6 +75,7 @@ class MyApp extends StatelessWidget {
           routes: {
             // HomeScreen.routeName: (ctx) => HomeScreen(),
             Parkability.routeName: (ctx) => Parkability(),
+            UserProfile.routeName: (ctx) => UserProfile(),
             ReportOverViewScreen.routeName: (ctx) => ReportOverViewScreen(),
             UserPreviousReports.routeName: (ctx) => UserPreviousReports(),
             ReportDetailScreen.routeName: (ctx) => ReportDetailScreen(),

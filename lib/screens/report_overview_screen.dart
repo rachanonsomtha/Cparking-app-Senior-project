@@ -22,7 +22,7 @@ class _ReportOverViewScreenState extends State<ReportOverViewScreen> {
   bool _isLoading = false;
 
   @override
-  void didChangeDependencies() {
+  void initState() {
     final name = ModalRoute.of(context).settings.arguments as String;
     print(name);
     if (_isInit) {
@@ -39,22 +39,22 @@ class _ReportOverViewScreenState extends State<ReportOverViewScreen> {
     }
     _isInit = false;
 
-    // TODO: implement didChangeDependenciess
-    super.didChangeDependencies();
+    // TODO: implement initState
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final report = Provider.of<ReportsProvider>(context);
-    var count = report.reportCount;
+    final name = ModalRoute.of(context).settings.arguments as String;
 
-    // var loadedReport = report.reports;
+    var count = report.reportCount;
 
     return Scaffold(
       // backgroundColor: Color.fromRGBO(67, 66, 114, 100),
       appBar: AppBar(
-        title: const Text(
-          "Reports",
+        title: Text(
+          'Reports from : $name',
           style: TextStyle(
             fontFamily: 'Lato',
           ),
@@ -65,7 +65,7 @@ class _ReportOverViewScreenState extends State<ReportOverViewScreen> {
         ),
       ),
       // drawer: AppDrawer(),
-      body: count == 0
+      body: count == 0 && !_isLoading
           ? Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

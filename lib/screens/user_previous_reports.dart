@@ -31,7 +31,9 @@ class _UserPreviousReportsState extends State<UserPreviousReports> {
         });
       });
     }
-    _isInit = false;
+    setState(() {
+      _isInit = false;
+    });
 
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
@@ -53,7 +55,7 @@ class _UserPreviousReportsState extends State<UserPreviousReports> {
         ),
       ),
       // drawer: AppDrawer(),
-      body: count == 0
+      body: count == 0 && !_isLoading
           ? Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

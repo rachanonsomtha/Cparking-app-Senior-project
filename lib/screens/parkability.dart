@@ -309,13 +309,14 @@ class _ParkabilityState extends State<Parkability> {
                               }),
                         ),
                         Center(
-                            child: FlatButton(
-                          color: Colors.grey,
-                          onPressed: () async {
-                            await uploadFile(context, name);
-                          },
-                          child: Text('Confirm report'),
-                        )),
+                          child: FlatButton(
+                            color: Colors.grey,
+                            onPressed: () async {
+                              await uploadFile(context, name);
+                            },
+                            child: Text('Confirm report'),
+                          ),
+                        ),
                       ],
                     ),
                   ],

@@ -22,7 +22,7 @@ class _ReportOverViewScreenState extends State<ReportOverViewScreen> {
   bool _isLoading = false;
 
   @override
-  void initState() {
+  void didChangeDependencies() {
     final name = ModalRoute.of(context).settings.arguments as String;
     print(name);
     if (_isInit) {
@@ -39,8 +39,8 @@ class _ReportOverViewScreenState extends State<ReportOverViewScreen> {
     }
     _isInit = false;
 
-    // TODO: implement initState
-    super.initState();
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
   }
 
   @override

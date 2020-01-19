@@ -41,7 +41,7 @@ class Auth extends ChangeNotifier {
   //   return _userName;
   // }
 
-  Future<void> fetchUserProfileData(String _userId) async {
+  Future<void> fetchUserProfileData() async {
     final url = 'https://cparking-ecee0.firebaseio.com/$userId/profile.json';
     // print(userId);
     try {
@@ -55,8 +55,8 @@ class Auth extends ChangeNotifier {
           _userData = UserData(
             userName: userData['userName'],
             id: userId,
-            score: 0,
-            profileImageUrl: '',
+            score: userData['score'],
+            profileImageUrl: userData['profileImageUrl'],
             reports: null,
           );
 
@@ -65,29 +65,38 @@ class Auth extends ChangeNotifier {
           // _userName = userData['userName']; // test fetching
         });
       });
-
-      // final url2 =
-      //     'https://cparking-ecee0.firebaseio.com/$userId/profile/temp.json';
-
-      // final response2 = await http.get(url2);
-
-      // final decodedData = json.decode(response2.body) as Map<String, dynamic>;
-      // print(decodedData);
-
-      // if (decodeData == null) {
-      //   return;
-      // }
-
-      // print(decodeData['userName']);
-      // final UserData user = UserData();
-
-      // print(user.userName);
-
-      // notifyListeners();
-      // return user;
     } catch (error) {
       print(error);
       throw error;
+    }
+  }
+
+  Future<void> updateUserProfile(UserData newUserData) async {
+    final url = 'https://cparking-ecee0.firebaseio.com/$userId/profile.json';
+    print('eiei1');
+
+    try {
+      final response = await http.get(url);
+      final decodeData = json.decode(response.body) as Map<String, dynamic>;
+
+      decodeData.forEach((id, userData) async {
+        final url =
+            'https://cparking-ecee0.firebaseio.com/$userId/profile/$id.json';
+        try {
+          await http.patch(
+            url,
+            body: json.encode({
+              'profileImageUrl': newUserData.profileImageUrl,
+            }),
+          );
+        } catch (error) {
+          print(error);
+        }
+      });
+
+      notifyListeners();
+    } catch (error) {
+      print(error);
     }
   }
 
@@ -135,21 +144,20 @@ class Auth extends ChangeNotifier {
           // 'userName': _userName,
         },
       );
-
+      fetchUserProfileData();
       // print('kuy');
       // print(_userName);
 
       final url2 = 'https://cparking-ecee0.firebaseio.com/$userId/profile.json';
-
       try {
         if (userName != null) {
-          final response2 = await http.post(
+          await http.post(
             url2,
             body: json.encode(
               {
                 'userName': userName,
                 'score': 0,
-                'profileImageUrl': null,
+                'profileImageUrl': '',
               },
             ),
           );
@@ -180,7 +188,7 @@ class Auth extends ChangeNotifier {
     }
     _token = extractedUserData['token'];
     _userId = extractedUserData['userId'];
-    fetchUserProfileData(_userId);
+    fetchUserProfileData();
     // _userName = extractedUserData['userName'];
     _expiryDate = expiryDate;
     notifyListeners();
@@ -193,9 +201,7 @@ class Auth extends ChangeNotifier {
   }
 
   Future<void> signIn(String email, String password) async {
-    return _authenticate(email, password, 'signInWithPassword', null).then((_) {
-      fetchUserProfileData(userId);
-    });
+    return _authenticate(email, password, 'signInWithPassword', null);
   }
 
   Future<void> logOut() async {

@@ -77,6 +77,7 @@ flutter:
     - images/logo_cpark.png
     - images/logo_cpark2.png
     - images/cover.jpg
+    - images/unknownProfileImg.png
     - assets/flare/LiquidDownload.flr
     - assets/flare/HearthAnimation.flr
     - assets/flare/Unlikeheart.flr

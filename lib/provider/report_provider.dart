@@ -193,6 +193,8 @@ class ReportsProvider with ChangeNotifier {
   }
 
   Future<void> fetchReportFromUserId() async {
+
+    
     final url =
         'https://cparking-ecee0.firebaseio.com/reports.json?auth=$authToken';
 
@@ -237,15 +239,16 @@ class ReportsProvider with ChangeNotifier {
   }
 
   Future<void> addReport(Report report) async {
-    final url =
+    final url1 =
         'https://cparking-ecee0.firebaseio.com/reports.json?auth=$authToken';
+
     final add_date =
         DateFormat('yyyy-MM-dd').add_Hms().format(DateTime.now()).toString();
     // print(add_date);
     // create products collection in firebase
     try {
       final response = await http.post(
-        url,
+        url1,
         body: json.encode({
           'userName': report.userName,
           'imageUrl': report.imageUrl,
@@ -258,6 +261,17 @@ class ReportsProvider with ChangeNotifier {
           'availability': report.availability,
         }),
       );
+
+      final url2 =
+          'https://cparking-ecee0.firebaseio.com/$userId/reportsId.json';
+
+      await http.post(
+        url2,
+        body: json.encode(
+          json.decode(response.body)['name'],
+        ),
+      );
+
       // print(json.decode(response.body));
       final rep = Report(
         id: json.decode(response.body)['name'],

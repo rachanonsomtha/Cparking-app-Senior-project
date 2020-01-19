@@ -1,3 +1,4 @@
+import 'package:cparking/provider/report.dart';
 import 'package:flutter/foundation.dart';
 
 class UserData with ChangeNotifier {
@@ -7,8 +8,8 @@ class UserData with ChangeNotifier {
   final String userName;
   final String profileImageUrl;
   @required
-  final double score;
-  List reports;
+  final int score;
+  List<String> reports;
 
   UserData({
     this.id,

@@ -1,11 +1,19 @@
+import 'dart:io';
+
 import 'package:cparking/provider/userData.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../provider/auth.dart';
+import '../widgets/badge.dart';
+import 'package:path/path.dart';
+
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class UserProfile extends StatefulWidget {
   String userName;
   String userId;
+
   static const routeName = '/userProfile';
 
   @override
@@ -17,6 +25,17 @@ class _UserProfileState extends State<UserProfile> {
   // var _user;
   bool _isInit = true;
   bool _isLoading = false;
+  bool _isGetimage = false;
+  File _image;
+  String _uploadedFileURL;
+
+  var _editedUserProfile = UserData(
+    id: null,
+    profileImageUrl: '',
+    reports: null,
+    score: 0,
+    userName: '',
+  );
 
   final String _status = "Software Developer";
 
@@ -41,14 +60,82 @@ class _UserProfileState extends State<UserProfile> {
     );
   }
 
-  Widget _buildProfileImage() {
+  Future getImage(String userId) async {
+    _image = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      _image = _image;
+      _isGetimage = true;
+      // print(_image);
+    });
+  }
+
+  Future uploadProfilePicture(context, userId) async {
+    try {
+      StorageReference storageReference = FirebaseStorage.instance
+          .ref()
+          .child('userProfile/$userId/${basename(_image.path)}');
+      StorageUploadTask uploadTask = storageReference.putFile(_image);
+      setState(() {
+        _isLoading = true;
+      });
+      await uploadTask.onComplete;
+      setState(() {
+        _isLoading = false;
+      });
+      storageReference.getDownloadURL().then((fileUrl) {
+        setState(() {
+          _uploadedFileURL = fileUrl;
+          _editedUserProfile = UserData(
+            id: _editedUserProfile.id,
+            profileImageUrl: _uploadedFileURL,
+            reports: _editedUserProfile.reports,
+          );
+        });
+      }).then((_) =>
+          Provider.of<Auth>(context).updateUserProfile(_editedUserProfile));
+    } catch (error) {
+      await showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text('An error occurred!'),
+          content: Text('Something went wrong.'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Okay'),
+              onPressed: () {
+                Navigator.of(ctx).pop();
+              },
+            )
+          ],
+        ),
+      );
+    }
+  }
+
+  Widget _buildProfileImage(Auth userData) {
     return Center(
       child: Container(
+        child: GestureDetector(
+          onTap: () {
+            getImage(
+              (userData.userData.userName),
+            );
+          },
+          child: Badge(
+            color: Colors.black87,
+            value: '2',
+          ),
+        ),
         width: 140.0,
         height: 140.0,
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('images/logo_cpark2.png'),
+            image: (userData.userData.profileImageUrl).isEmpty
+                ? AssetImage('images/unknownProfileImg.png')
+                : NetworkImage(
+                    (userData.userData.profileImageUrl).toString(),
+                  ),
             fit: BoxFit.scaleDown,
           ),
           borderRadius: BorderRadius.circular(80.0),
@@ -75,7 +162,7 @@ class _UserProfileState extends State<UserProfile> {
     );
   }
 
-  Widget _buildStatus(BuildContext context) {
+  Widget _buildStatus(BuildContext context, Auth userData) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 6.0),
       decoration: BoxDecoration(
@@ -83,7 +170,7 @@ class _UserProfileState extends State<UserProfile> {
         borderRadius: BorderRadius.circular(4.0),
       ),
       child: Text(
-        _status,
+        'eiei',
         style: TextStyle(
           fontFamily: 'Spectral',
           color: Colors.black,
@@ -123,7 +210,7 @@ class _UserProfileState extends State<UserProfile> {
     );
   }
 
-  Widget _buildStatContainer() {
+  Widget _buildStatContainer(Auth userData) {
     return Container(
       height: 60.0,
       margin: EdgeInsets.only(top: 8.0),
@@ -133,9 +220,12 @@ class _UserProfileState extends State<UserProfile> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          _buildStatItem("Followers", _followers),
-          _buildStatItem("Posts", _posts),
-          _buildStatItem("Scores", _scores),
+          // _buildStatItem("Followers", _followers),
+          _buildStatItem("Posts", '1'),
+          _buildStatItem(
+            "Scores",
+            (userData.userData.score.toString()),
+          ),
         ],
       ),
     );
@@ -251,7 +341,7 @@ class _UserProfileState extends State<UserProfile> {
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
-
+    Provider.of<Auth>(context).fetchUserProfileData();
     final _userData = Provider.of<Auth>(context);
 
     return Scaffold(
@@ -275,18 +365,32 @@ class _UserProfileState extends State<UserProfile> {
               child: Column(
                 children: <Widget>[
                   SizedBox(height: screenSize.height / 5),
-                  _buildProfileImage(),
+                  _buildProfileImage(_userData),
                   _buildFullName(
                     (_userData.userData.userName),
                   ),
-                  _buildStatus(context),
-                  _buildStatContainer(),
+                  _buildStatus(context, _userData),
+                  _buildStatContainer(_userData),
                   // _buildBio(context),
                   SizedBox(
                     height: 20,
                   ),
                   _buildSeparator(screenSize),
                   SizedBox(height: 10.0),
+                  !_isGetimage
+                      ? SizedBox(
+                          height: 10,
+                        )
+                      : Center(
+                          child: FlatButton(
+                            color: Colors.grey,
+                            onPressed: () async {
+                              await uploadProfilePicture(
+                                  context, _userData.userId);
+                            },
+                            child: Text('Update Profile Picture'),
+                          ),
+                        ),
                   // _buildGetInTouch(context),
                   SizedBox(height: 8.0),
                   // _buildButtons(),

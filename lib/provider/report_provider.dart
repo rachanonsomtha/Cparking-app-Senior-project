@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
@@ -6,13 +5,12 @@ import 'package:intl/intl.dart';
 import './report.dart';
 import 'dart:convert';
 
-import 'package:firebase_storage/firebase_storage.dart'; // For File Upload To Firestore
-import 'package:path/path.dart' as Path;
-
 class ReportsProvider with ChangeNotifier {
   List<Report> _reports = [];
 
   List<Report> _userReports = [];
+
+  List<Report> _reportsLoc = [];
 
   String authToken;
   String userId;
@@ -23,10 +21,8 @@ class ReportsProvider with ChangeNotifier {
     this.userId,
     // this._reports,
   );
+  //////
   List<Report> get reports {
-    //getters
-    // if (_showFavourtiesOnly) {
-    //   return _items.where((prodItem) => prodItem.isFavorite).toList();
     return [..._reports];
   }
 
@@ -34,12 +30,22 @@ class ReportsProvider with ChangeNotifier {
     return _reports.length;
   }
 
+//////
   List<Report> get userReports {
     return [..._userReports];
   }
 
   int get userReportCount {
     return _userReports.length;
+  }
+
+/////
+  List<Report> get locReports {
+    return [..._reportsLoc];
+  }
+
+  int get locReportsCount {
+    return _reportsLoc.length;
   }
 
   // effect all pages scenarios
@@ -141,7 +147,7 @@ class ReportsProvider with ChangeNotifier {
       });
       _reports = loadedProducts;
       notifyListeners();
-      // print(loadedProducts);
+      print(_reports);
     } catch (error) {
       print(error);
       throw error;
@@ -183,7 +189,7 @@ class ReportsProvider with ChangeNotifier {
             ),
           );
       });
-      _reports = loadedProducts;
+      _reportsLoc = loadedProducts;
       notifyListeners();
       // print(loadedProducts);
     } catch (error) {
@@ -192,9 +198,7 @@ class ReportsProvider with ChangeNotifier {
     }
   }
 
-  Future<void> fetchReportFromUserId() async {
-
-    
+  Future<void> fetchReportFromUserId(List<String> userReports) async {
     final url =
         'https://cparking-ecee0.firebaseio.com/reports.json?auth=$authToken';
 
@@ -211,10 +215,11 @@ class ReportsProvider with ChangeNotifier {
       final favResponse = await http.get(favUrl);
       final favData = json.decode(favResponse.body);
       // print(favData);
-
       final List<Report> loadedProducts = [];
+      // print(userReports);
       decodeData.forEach((reportId, reportData) {
-        if (reportData['userName'] == userId)
+        // print(reportId);
+        if ((userReports.contains(reportId)))
           loadedProducts.add(
             Report(
               id: reportId,
@@ -263,7 +268,7 @@ class ReportsProvider with ChangeNotifier {
       );
 
       final url2 =
-          'https://cparking-ecee0.firebaseio.com/$userId/reportsId.json';
+          'https://cparking-ecee0.firebaseio.com/users/$userId/reportsId.json';
 
       await http.post(
         url2,

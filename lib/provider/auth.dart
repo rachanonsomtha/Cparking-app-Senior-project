@@ -37,12 +37,20 @@ class Auth extends ChangeNotifier {
     // print(userData.userName);
     return _userData;
   }
+
+  int get userReportsCount {
+    return _userData.reports.length;
+  }
   // String get userName {
   //   return _userName;
   // }
 
   Future<void> fetchUserProfileData() async {
-    final url = 'https://cparking-ecee0.firebaseio.com/$userId/profile.json';
+    final url =
+        'https://cparking-ecee0.firebaseio.com/users/$userId/profile.json';
+    final url1 =
+        'https://cparking-ecee0.firebaseio.com/users/$userId/reportsId.json';
+
     // print(userId);
     try {
       final response = await http.get(url).then((value) {
@@ -57,13 +65,25 @@ class Auth extends ChangeNotifier {
             id: userId,
             score: userData['score'],
             profileImageUrl: userData['profileImageUrl'],
-            reports: null,
+            reports: [],
           );
 
           // print(_userData.id);
           // return _userData;
           // _userName = userData['userName']; // test fetching
         });
+      });
+
+      final response1 = await http.get(url1).then((value) {
+        final decodeData = json.decode(value.body) as Map<String, dynamic>;
+
+        decodeData.forEach((userId, userData) {
+          // print(userData);
+          (_userData.reports).add(
+            userData.toString(),
+          );
+        });
+        print(_userData.reports.length);
       });
     } catch (error) {
       print(error);
@@ -72,7 +92,8 @@ class Auth extends ChangeNotifier {
   }
 
   Future<void> updateUserProfile(UserData newUserData) async {
-    final url = 'https://cparking-ecee0.firebaseio.com/$userId/profile.json';
+    final url =
+        'https://cparking-ecee0.firebaseio.com/users/$userId/profile.json';
     print('eiei1');
 
     try {
@@ -81,7 +102,7 @@ class Auth extends ChangeNotifier {
 
       decodeData.forEach((id, userData) async {
         final url =
-            'https://cparking-ecee0.firebaseio.com/$userId/profile/$id.json';
+            'https://cparking-ecee0.firebaseio.com//users/$userId/profile/$id.json';
         try {
           await http.patch(
             url,
@@ -148,7 +169,8 @@ class Auth extends ChangeNotifier {
       // print('kuy');
       // print(_userName);
 
-      final url2 = 'https://cparking-ecee0.firebaseio.com/$userId/profile.json';
+      final url2 =
+          'https://cparking-ecee0.firebaseio.com/users/$userId/profile.json';
       try {
         if (userName != null) {
           await http.post(
@@ -197,11 +219,15 @@ class Auth extends ChangeNotifier {
   }
 
   Future<void> signUp(String email, String password, String userName) async {
-    return _authenticate(email, password, 'signUp', userName);
+    return _authenticate(email, password, 'signUp', userName).then(
+      (_) => fetchUserProfileData(),
+    );
   }
 
   Future<void> signIn(String email, String password) async {
-    return _authenticate(email, password, 'signInWithPassword', null);
+    return _authenticate(email, password, 'signInWithPassword', null).then(
+      (_) => fetchUserProfileData(),
+    );
   }
 
   Future<void> logOut() async {

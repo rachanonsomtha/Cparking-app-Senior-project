@@ -7,6 +7,7 @@ import '../loader/color_loader_3.dart';
 import '../widgets/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flare_flutter/flare_actor.dart';
+import '../provider/auth.dart';
 
 class UserPreviousReports extends StatefulWidget {
   static const routeName = '/UserReport-screen';
@@ -21,11 +22,16 @@ class _UserPreviousReportsState extends State<UserPreviousReports> {
   bool _isLoading = false;
   @override
   void didChangeDependencies() {
+    final userData = Provider.of<Auth>(context);
     if (_isInit) {
       setState(() {
         _isLoading = true;
       });
-      Provider.of<ReportsProvider>(context).fetchReportFromUserId().then((_) {
+      Provider.of<ReportsProvider>(context).fetchReport();
+
+      Provider.of<ReportsProvider>(context)
+          .fetchReportFromUserId(userData.userData.reports)
+          .then((_) {
         setState(() {
           _isLoading = false;
         });

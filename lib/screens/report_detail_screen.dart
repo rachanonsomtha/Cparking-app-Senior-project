@@ -8,15 +8,22 @@ import '../provider/report_provider.dart';
 //loader animations
 import '../loader/color_loader_3.dart';
 
-class ReportDetailScreen extends StatelessWidget {
+class ReportDetailScreen extends StatefulWidget {
   static const routeName = '/report-detail';
+
+  @override
+  _ReportDetailScreenState createState() => _ReportDetailScreenState();
+}
+
+@override
+class _ReportDetailScreenState extends State<ReportDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final reportId = ModalRoute.of(context).settings.arguments as String;
     final loadedReport = Provider.of<ReportsProvider>(
       context,
       listen: false,
-    ).findById(reportId);
+    ).findById(reportId); // fetching problems
     // print(loadedReport.id);
     return Scaffold(
       appBar: AppBar(

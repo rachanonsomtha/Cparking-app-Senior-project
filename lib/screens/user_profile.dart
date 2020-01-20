@@ -221,7 +221,7 @@ class _UserProfileState extends State<UserProfile> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
           // _buildStatItem("Followers", _followers),
-          _buildStatItem("Posts", '1'),
+          _buildStatItem("Posts", (userData.userReportsCount.toString())),
           _buildStatItem(
             "Scores",
             (userData.userData.score.toString()),
@@ -314,29 +314,6 @@ class _UserProfileState extends State<UserProfile> {
       ),
     );
   }
-
-  // void didChangeDependencies() {
-  //   if (_isInit) {
-  //     setState(() {
-  //       _isLoading = true;
-  //     });
-  //     final _userData = Provider.of<Auth>(context);
-  //     Provider.of<Auth>(context).fetchUserProfileData(_userData.userId);
-  //     setState(() {
-  //       _isLoading = false;
-  //     });
-  //   }
-  //   _isInit = false;
-  //   // TODO: implement didChangeDependencies
-  //   super.didChangeDependencies();
-  // }
-  // void didChangeDependencies() {
-  //   final user = Provider.of<Auth>(context);
-  //   user.fetchUserProfileData(user.userId);
-
-  //   // TODO: implement didChangeDependencies
-  //   super.didChangeDependencies();
-  // }
 
   @override
   Widget build(BuildContext context) {

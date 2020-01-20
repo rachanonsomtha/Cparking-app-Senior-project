@@ -101,7 +101,7 @@ class _ReportOverViewScreenState extends State<ReportOverViewScreen> {
               : Padding(
                   padding: EdgeInsets.all(8),
                   child: ListView.builder(
-                    itemCount: report.reportCount,
+                    itemCount: report.locReportsCount,
                     itemBuilder: (_, index) => ChangeNotifierProvider.value(
                       child: Column(
                         children: <Widget>[
@@ -116,7 +116,7 @@ class _ReportOverViewScreenState extends State<ReportOverViewScreen> {
                               ),
                         ],
                       ),
-                      value: report.reports[index],
+                      value: report.locReports[index],
                     ),
                   ),
                 ),

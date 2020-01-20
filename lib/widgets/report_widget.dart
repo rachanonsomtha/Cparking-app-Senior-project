@@ -50,10 +50,6 @@ class _ReportItemState extends State<ReportItem> {
           children: <Widget>[
             Container(
               width: 100,
-              margin: EdgeInsets.only(
-                top: 10,
-                right: 10,
-              ),
               child: GestureDetector(
                 onTap: () {
                   Navigator.of(context).pushNamed(
@@ -62,23 +58,22 @@ class _ReportItemState extends State<ReportItem> {
                   );
                 },
                 child: ClipRRect(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(25.0),
-                    topRight: Radius.circular(25.0),
-                    bottomRight: Radius.circular(25.0),
-                  ),
-                  child: Image.network(
-                    report.imageUrl.toString(),
-                    fit: BoxFit.fill,
-                    loadingBuilder: (BuildContext context, Widget child,
-                        ImageChunkEvent loadingProgress) {
-                      if (loadingProgress == null) {
-                        return child;
-                      }
-                      return Center(
-                        child: ColorLoader3(),
-                      );
-                    },
+                  borderRadius: BorderRadius.all(Radius.circular(12)),
+                  child: Container(
+                    height: MediaQuery.of(context).size.height / 6,
+                    child: Image.network(
+                      report.imageUrl.toString(),
+                      fit: BoxFit.cover,
+                      loadingBuilder: (BuildContext context, Widget child,
+                          ImageChunkEvent loadingProgress) {
+                        if (loadingProgress == null) {
+                          return child;
+                        }
+                        return Center(
+                          child: ColorLoader3(),
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
@@ -87,6 +82,7 @@ class _ReportItemState extends State<ReportItem> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 Container(
+                  padding: EdgeInsets.only(right: 50),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     // mainAxisAlignment: MainAxisAlignment.end,

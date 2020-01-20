@@ -114,6 +114,7 @@ class _ReportOverViewScreenState extends State<ReportOverViewScreen> {
                               // report.reports[index].isPromoted,
                               // report.reports[index].score,
                               ),
+                          Divider(),
                         ],
                       ),
                       value: report.locReports[index],

@@ -147,7 +147,7 @@ class ReportsProvider with ChangeNotifier {
       });
       _reports = loadedProducts;
       notifyListeners();
-      print(_reports);
+      // print(_reports);
     } catch (error) {
       print(error);
       throw error;

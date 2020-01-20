@@ -57,6 +57,8 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
             brightness: Brightness.dark,
+            // backgroundColor: Color.fromRGBO(120, 132, 158, 100),
+            //rgba(120, 132, 158, 1)
             accentColor: Colors.white,
             primaryColorDark: Colors.black,
             // primaryColor:   Color(#003c7e),
@@ -90,7 +92,7 @@ class MyApp extends StatelessWidget {
 class CompanyColors {
   CompanyColors._(); // this basically makes it so you can instantiate this class
 
-  static const _primaryValue = 0xFF001957;
+  static const _primaryValue = 0x78849E;
 
   static const MaterialColor blue = const MaterialColor(
     _primaryValue,

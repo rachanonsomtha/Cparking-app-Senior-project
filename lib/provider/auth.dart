@@ -83,7 +83,7 @@ class Auth extends ChangeNotifier {
             userData.toString(),
           );
         });
-        print(_userData.reports.length);
+        // print(_userData.reports.length);
       });
     } catch (error) {
       print(error);

@@ -285,7 +285,7 @@ class _ParkabilityState extends State<Parkability> {
                           ),
                         ),
                         Container(
-                          width: double.infinity,
+                          width: MediaQuery.of(context).size.width / 3,
                           child: NumberPicker.integer(
                               initialValue: _currentValue,
                               minValue: 0,

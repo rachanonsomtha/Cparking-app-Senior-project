@@ -50,7 +50,7 @@ class _UserProfileState extends State<UserProfile> {
 
   Widget _buildCoverImage(Size screenSize) {
     return Container(
-      height: screenSize.height / 2.6,
+      height: screenSize.height / 2.5,
       decoration: BoxDecoration(
         image: DecorationImage(
           image: AssetImage('images/cover.jpg'),
@@ -124,7 +124,7 @@ class _UserProfileState extends State<UserProfile> {
           },
           child: Badge(
             color: Colors.black87,
-            value: '2',
+            // value: '2',
           ),
         ),
         width: 140.0,
@@ -335,13 +335,25 @@ class _UserProfileState extends State<UserProfile> {
         children: <Widget>[
           _buildCoverImage(screenSize),
           SizedBox(
-            height: 100,
+            height: 50,
           ),
           SafeArea(
             child: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
+                  Container(
+                    child: Row(
+                      children: <Widget>[
+                        IconButton(
+                          color: Colors.black54,
+                          icon: Icon(Icons.arrow_back_ios),
+                          onPressed: () => Navigator.of(context).pop(),
+                        )
+                      ],
+                    ),
+                  ),
                   SizedBox(height: screenSize.height / 5),
+
                   _buildProfileImage(_userData),
                   _buildFullName(
                     (_userData.userData.userName),

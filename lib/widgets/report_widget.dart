@@ -52,10 +52,14 @@ class _ReportItemState extends State<ReportItem> {
               width: 100,
               child: GestureDetector(
                 onTap: () {
-                  Navigator.of(context).pushNamed(
-                    ReportDetailScreen.routeName,
-                    arguments: report.id,
-                  );
+                  Provider.of<Auth>(context)
+                      .fetchUserDataFromUserId(report.userName)
+                      .then((_) {
+                    Navigator.of(context).pushNamed(
+                      ReportDetailScreen.routeName,
+                      arguments: report.id,
+                    );
+                  });
                 },
                 child: ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(12)),

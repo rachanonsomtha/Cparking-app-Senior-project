@@ -2,7 +2,7 @@ import 'package:cparking/provider/report.dart';
 import 'package:flutter/foundation.dart';
 
 class UserData with ChangeNotifier {
-  @required
+  // @required
   final String id;
   @required
   final String userName;

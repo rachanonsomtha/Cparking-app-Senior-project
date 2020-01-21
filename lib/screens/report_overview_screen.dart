@@ -29,6 +29,7 @@ class _ReportOverViewScreenState extends State<ReportOverViewScreen> {
       setState(() {
         _isLoading = true;
       });
+      Provider.of<ReportsProvider>(context).fetchReport();
       Provider.of<ReportsProvider>(context)
           .fetchReportFromLocation(name)
           .then((_) {
@@ -48,7 +49,7 @@ class _ReportOverViewScreenState extends State<ReportOverViewScreen> {
     final report = Provider.of<ReportsProvider>(context);
     final name = ModalRoute.of(context).settings.arguments as String;
 
-    var count = report.reportCount;
+    var count = report.locReportsCount;
 
     return Scaffold(
       // backgroundColor: Color.fromRGBO(67, 66, 114, 100),

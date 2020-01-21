@@ -41,9 +41,38 @@ class Auth extends ChangeNotifier {
   int get userReportsCount {
     return _userData.reports.length;
   }
+
+  UserData _tempUserData;
+
+  UserData get tempUserData {
+    return _tempUserData;
+  }
   // String get userName {
   //   return _userName;
   // }
+
+  Future<void> fetchUserDataFromUserId(String userIds) async {
+    print(userId);
+    final url =
+        'https://cparking-ecee0.firebaseio.com/users/$userIds/profile.json';
+    try {
+      await http.get(url).then((value) {
+        final decodeData = json.decode(value.body) as Map<String, dynamic>;
+        decodeData.forEach((userId, userData) {
+          // print(userData['profileImageUrl']);
+          _tempUserData = UserData(
+            userName: userData['userName'],
+            id: userId,
+            score: userData['score'],
+            profileImageUrl: userData['profileImageUrl'].toString(),
+            reports: [],
+          );
+        });
+      });
+    } catch (error) {
+      print(error);
+    }
+  }
 
   Future<void> fetchUserProfileData() async {
     final url =
@@ -94,7 +123,7 @@ class Auth extends ChangeNotifier {
   Future<void> updateUserProfile(UserData newUserData) async {
     final url =
         'https://cparking-ecee0.firebaseio.com/users/$userId/profile.json';
-    print('eiei1');
+    // print('eiei1');
 
     try {
       final response = await http.get(url);
@@ -114,7 +143,6 @@ class Auth extends ChangeNotifier {
           print(error);
         }
       });
-
       notifyListeners();
     } catch (error) {
       print(error);

@@ -28,7 +28,7 @@ class _UserPreviousReportsState extends State<UserPreviousReports> {
         _isLoading = true;
       });
       Provider.of<ReportsProvider>(context).fetchReport();
-
+      // Provider.of<Auth>(context).fetchUserProfileData();
       Provider.of<ReportsProvider>(context)
           .fetchReportFromUserId(userData.userData.reports)
           .then((_) {
@@ -43,6 +43,10 @@ class _UserPreviousReportsState extends State<UserPreviousReports> {
 
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
+  }
+
+  Future<void> _fetchReport(BuildContext context) async {
+    await Provider.of<Auth>(context).fetchUserProfileData();
   }
 
   @override
@@ -61,6 +65,7 @@ class _UserPreviousReportsState extends State<UserPreviousReports> {
         ),
       ),
       // drawer: AppDrawer(),
+
       body: count == 0 && !_isLoading
           ? Center(
               child: Column(
@@ -94,25 +99,28 @@ class _UserPreviousReportsState extends State<UserPreviousReports> {
               ? Center(
                   child: ColorLoader3(),
                 )
-              : Padding(
-                  padding: EdgeInsets.all(8),
-                  child: ListView.builder(
-                    itemCount: report.userReportCount,
-                    itemBuilder: (_, index) => ChangeNotifierProvider.value(
-                      child: Column(
-                        children: <Widget>[
-                          ReportItem(
-                              // report.reports[index].userName,
-                              // report.reports[index].lifeTime,
-                              // report.reports[index].dateTime.toString(),
-                              // report.reports[index].imageUrl,
-                              // report.reports[index].availability,
-                              // report.reports[index].isPromoted,
-                              // report.reports[index].score,
-                              ),
-                        ],
+              : RefreshIndicator(
+                  onRefresh: () => _fetchReport(context),
+                  child: Padding(
+                    padding: EdgeInsets.all(8),
+                    child: ListView.builder(
+                      itemCount: report.userReportCount,
+                      itemBuilder: (_, index) => ChangeNotifierProvider.value(
+                        child: Column(
+                          children: <Widget>[
+                            ReportItem(
+                                // report.reports[index].userName,
+                                // report.reports[index].lifeTime,
+                                // report.reports[index].dateTime.toString(),
+                                // report.reports[index].imageUrl,
+                                // report.reports[index].availability,
+                                // report.reports[index].isPromoted,
+                                // report.reports[index].score,
+                                ),
+                          ],
+                        ),
+                        value: report.userReports[index],
                       ),
-                      value: report.userReports[index],
                     ),
                   ),
                 ),

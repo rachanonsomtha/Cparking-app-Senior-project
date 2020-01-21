@@ -170,7 +170,7 @@ class _UserProfileState extends State<UserProfile> {
         borderRadius: BorderRadius.circular(4.0),
       ),
       child: Text(
-        'eiei',
+        'GOLD II',
         style: TextStyle(
           fontFamily: 'Spectral',
           color: Colors.black,
@@ -318,7 +318,6 @@ class _UserProfileState extends State<UserProfile> {
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
-    Provider.of<Auth>(context).fetchUserProfileData();
     final _userData = Provider.of<Auth>(context);
 
     return Scaffold(

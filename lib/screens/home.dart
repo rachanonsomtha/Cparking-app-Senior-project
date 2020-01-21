@@ -21,6 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Polyline> polylines = <Polyline>[];
 
   LocationData currentLocation;
+  BitmapDescriptor pinLocationIcon;
 
   Future<LocationData> getCurrentLocation() async {
     Location location = Location();
@@ -49,6 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
     for (int i = 0; i < parkingLots.parkingLotsCount; i++) {
       markers.add(
         Marker(
+          icon: pinLocationIcon,
           markerId: MarkerId(lots[i].id),
           position: LatLng(
             double.parse(lots[i].lat),
@@ -79,10 +81,24 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void didChangeDependencies() {
+    setCustomMapPin();
     getPolyLine();
     // TODO: implement didChangeDependencies
     getParkingData();
     super.didChangeDependencies();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  void setCustomMapPin() async {
+    pinLocationIcon = await BitmapDescriptor.fromAssetImage(
+      ImageConfiguration(devicePixelRatio: 2.5),
+      'images/logo_cpark.png',
+    );
   }
 
   @override
@@ -97,7 +113,6 @@ class _HomeScreenState extends State<HomeScreen> {
         body: Stack(
           alignment: Alignment.bottomRight,
           children: <Widget>[
-            
             GoogleMap(
               // myLocationEnabled: true,
 

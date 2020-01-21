@@ -6,9 +6,12 @@ import 'package:provider/provider.dart';
 import '../provider/report_provider.dart';
 
 //loader animations
-import '../loader/color_loader_3.dart';
 import '../provider/report.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
+import '../provider/userData.dart';
+import '../provider/auth.dart';
+
+import '../loader/color_loader_3.dart';
 
 class ReportDetailScreen extends StatefulWidget {
   static const routeName = '/report-detail';
@@ -20,6 +23,7 @@ class ReportDetailScreen extends StatefulWidget {
 @override
 class _ReportDetailScreenState extends State<ReportDetailScreen> {
   double rating = 2.5;
+  // bool _isLoading = true;
 
   Widget _buildReportPicture(Report report) {
     return Container(
@@ -46,7 +50,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     );
   }
 
-  Widget _buildReportName() {
+  Widget _buildReportName(Report report) {
     return Container(
       // color: Theme.of(context).accentColor,
       padding: EdgeInsets.only(
@@ -54,7 +58,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
         left: 20,
       ),
       child: Text(
-        'Report 02',
+        report.loc,
         style: TextStyle(
           fontFamily: 'Raleway',
           fontSize: 52,
@@ -64,7 +68,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     );
   }
 
-  Widget _buildDetail() {
+  Widget _buildDetail(Report report) {
     return Container(
       height: 100,
       padding: EdgeInsets.only(
@@ -80,7 +84,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               Text(
-                'Parkability : 20 %',
+                'Parkability : ${report.availability}',
                 style: TextStyle(
                   fontFamily: 'Raleway',
                   fontSize: 16,
@@ -88,7 +92,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                 ),
               ),
               Text(
-                '2019-09-18',
+                '${report.dateTime}',
                 style: TextStyle(
                   fontFamily: 'Raleway',
                   fontSize: 16,
@@ -122,7 +126,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     );
   }
 
-  Widget _buildContact(Size screenSize) {
+  Widget _buildContact(UserData userData) {
     return Container(
       height: 100,
       padding: EdgeInsets.only(
@@ -135,13 +139,33 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.only(right: 17),
-            child: Image.asset('images/unknownProfileImg.png'),
+            child: userData.profileImageUrl != null
+                ? Container(
+                    height: 47,
+                    width: 47,
+                    child: ClipOval(
+                      child: Image.network(
+                        userData.profileImageUrl,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  )
+                : Container(
+                    height: 47,
+                    width: 47,
+                    child: ClipOval(
+                      child: Image.asset(
+                        'images/unknownProfileImg.png',
+                        color: Colors.white70,
+                      ),
+                    ),
+                  ),
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               Text(
-                'JOHN',
+                userData.userName,
                 style: TextStyle(
                   fontFamily: 'Raleway',
                   fontSize: 16,
@@ -152,7 +176,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                 'GOLD II',
                 style: TextStyle(
                   fontFamily: 'Raleway',
-                  fontSize: 14,
+                  fontSize: 16,
                   color: Colors.white60,
                 ),
               ),
@@ -165,12 +189,18 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final reportId = ModalRoute.of(context).settings.arguments as String;
     final screenSize = MediaQuery.of(context).size;
-    final loadedReport = Provider.of<ReportsProvider>(
+    Report loadedReport;
+    // UserData reportUserData;
+    final reportId = ModalRoute.of(context).settings.arguments as String;
+    loadedReport = Provider.of<ReportsProvider>(
       context,
       listen: false,
-    ).findById(reportId); // fetching problems
+    ).findById(reportId);
+    final reportData = Provider.of<Auth>(context);
+
+    // fetching problems
+
     // print(loadedReport.id);
     return Scaffold(
       body: Stack(
@@ -199,10 +229,10 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                       ],
                     ),
                   ),
-                  _buildReportName(),
-                  _buildDetail(),
+                  _buildReportName(loadedReport),
+                  _buildDetail(loadedReport),
                   _buildSeparator(screenSize),
-                  _buildContact(screenSize),
+                  _buildContact(reportData.tempUserData),
                 ],
               ),
             ),

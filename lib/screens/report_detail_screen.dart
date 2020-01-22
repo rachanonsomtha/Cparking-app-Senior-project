@@ -139,7 +139,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.only(right: 17),
-            child: userData.profileImageUrl != null
+            child: userData.profileImageUrl != ''
                 ? Container(
                     height: 47,
                     width: 47,
@@ -173,7 +173,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                 ),
               ),
               Text(
-                'GOLD II',
+                userData.score.toString(),
                 style: TextStyle(
                   fontFamily: 'Raleway',
                   fontSize: 16,

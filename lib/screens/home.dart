@@ -45,25 +45,34 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void getParkingData() {
-    final parkingLots = Provider.of<ParkingLotProvider>(context);
-    final lots = parkingLots.parkingLots;
-    for (int i = 0; i < parkingLots.parkingLotsCount; i++) {
-      markers.add(
-        Marker(
-          icon: pinLocationIcon,
-          markerId: MarkerId(lots[i].id),
-          position: LatLng(
-            double.parse(lots[i].lat),
-            double.parse(lots[i].lon),
+    BitmapDescriptor.fromAssetImage(
+      ImageConfiguration(devicePixelRatio: 2.5),
+      'images/logo_cpark2.png',
+    ).then((onValue) {
+      setState(() {
+        pinLocationIcon = onValue;
+      });
+    }).then((_) {
+      final parkingLots = Provider.of<ParkingLotProvider>(context);
+      final lots = parkingLots.parkingLots;
+      for (int i = 0; i < parkingLots.parkingLotsCount; i++) {
+        markers.add(
+          Marker(
+            icon: pinLocationIcon,
+            markerId: MarkerId(lots[i].id),
+            position: LatLng(
+              double.parse(lots[i].lat),
+              double.parse(lots[i].lon),
+            ),
+            infoWindow: InfoWindow(
+              title: lots[i].title,
+              snippet: '${lots[i].title} คณะวิศวกรรมศาสตร์',
+            ),
+            onTap: () => modal.mainBottomSheet(context, lots[i].id),
           ),
-          infoWindow: InfoWindow(
-            title: lots[i].title,
-            snippet: '${lots[i].title} คณะวิศวกรรมศาสตร์',
-          ),
-          onTap: () => modal.mainBottomSheet(context, lots[i].id),
-        ),
-      );
-    }
+        );
+      }
+    });
   }
 
   void getPolyLine() {
@@ -81,8 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void didChangeDependencies() {
-    setCustomMapPin();
-    getPolyLine();
+    // getPolyLine();
     // TODO: implement didChangeDependencies
     getParkingData();
     super.didChangeDependencies();
@@ -92,13 +100,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-  }
-
-  void setCustomMapPin() async {
-    pinLocationIcon = await BitmapDescriptor.fromAssetImage(
-      ImageConfiguration(devicePixelRatio: 2.5),
-      'images/logo_cpark.png',
-    );
   }
 
   @override

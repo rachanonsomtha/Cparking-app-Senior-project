@@ -38,7 +38,9 @@ class _ReportOverViewScreenState extends State<ReportOverViewScreen> {
         });
       });
     }
-    _isInit = false;
+    setState(() {
+      _isInit = false;
+    });
 
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();

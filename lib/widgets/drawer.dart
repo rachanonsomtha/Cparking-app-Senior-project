@@ -44,6 +44,7 @@ class AppDrawer extends StatelessWidget {
               text: 'Previous reports',
               onTap: () {
                 // navigateToPage(context, ReportOverViewScreen.routeName);
+                Provider.of<Auth>(context).fetchUserProfileData();
                 Navigator.of(context).pushNamed(UserPreviousReports.routeName);
               }),
           Divider(),

@@ -45,6 +45,8 @@ dev_dependencies:
   location: ^2.3.5
   url_launcher: ^5.2.7
   numberpicker: ^1.1.0
+  charts_flutter: ^0.8.1
+  flutter_sparkline: ^0.1.0
 
 #   flutter_launcher_icons: "^0.6.1"
 
@@ -76,6 +78,12 @@ flutter:
   assets:
     - images/logo_cpark.png
     - images/logo_cpark2.png
+    - images/cpark_pin_1.png
+    - images/cpark_pin_2.png
+    - images/Webp.net-resizeimage.png
+    - images/1.bmp
+    - images/pin.png
+    - images/lg1.png
     - images/cover.jpg
     - images/unknownProfileImg.png
     - assets/flare/LiquidDownload.flr

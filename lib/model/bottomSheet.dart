@@ -1,6 +1,7 @@
 import '../screens/report_overview_screen.dart';
 import 'package:flutter/material.dart';
 import '../screens/Parkability.dart';
+import '../screens/view_history_screen.dart';
 
 class Modal {
   mainBottomSheet(BuildContext context, String s) {
@@ -16,11 +17,10 @@ class Modal {
                   leading: Icon(Icons.queue),
                   subtitle: Text("Shared your report with us"),
                   title: Text('Report C-Parking'),
-                  onTap: () => {
-                    Navigator.of(context).pushReplacementNamed(
-                        Parkability.routeName,
-                        arguments: name)
-                  },
+                  onTap: () => Navigator.of(context).pushReplacementNamed(
+                    Parkability.routeName,
+                    arguments: name,
+                  ),
                 ),
                 Divider(
                   thickness: 1,
@@ -29,7 +29,10 @@ class Modal {
                   leading: Icon(Icons.show_chart),
                   subtitle: Text("See what happened"),
                   title: Text('Parkability'),
-                  onTap: () => {},
+                  onTap: () => Navigator.of(context).pushReplacementNamed(
+                    ViewHistoryScreen.routeName,
+                    arguments: name,
+                  ),
                 ),
                 Divider(
                   thickness: 1,

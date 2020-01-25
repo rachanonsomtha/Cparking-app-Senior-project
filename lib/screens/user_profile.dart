@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cparking/provider/userData.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -9,6 +8,8 @@ import 'package:path/path.dart';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import '../provider/auth.dart';
+import 'package:path/path.dart';
 
 class UserProfile extends StatefulWidget {
   String userName;
@@ -20,7 +21,6 @@ class UserProfile extends StatefulWidget {
   _UserProfileState createState() => _UserProfileState();
 }
 
-@override
 class _UserProfileState extends State<UserProfile> {
   // var _user;
   bool _isInit = true;
@@ -37,16 +37,8 @@ class _UserProfileState extends State<UserProfile> {
     userName: '',
   );
 
-  final String _status = "Software Developer";
-
   final String _bio =
       "\"Hi, I am a Freelance developer working for hourly basis. If you wants to contact me to build your product leave a message.\"";
-
-  final String _followers = "173";
-
-  final String _posts = "24";
-
-  final String _scores = "450";
 
   Widget _buildCoverImage(Size screenSize) {
     return Container(
@@ -131,7 +123,7 @@ class _UserProfileState extends State<UserProfile> {
         height: 140.0,
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: (userData.userData.profileImageUrl).isEmpty
+            image: (userData.userData.profileImageUrl) == ""
                 ? AssetImage('images/unknownProfileImg.png')
                 : NetworkImage(
                     (userData.userData.profileImageUrl).toString(),

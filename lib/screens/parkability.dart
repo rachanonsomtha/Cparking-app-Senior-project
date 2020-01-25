@@ -270,7 +270,7 @@ class _ParkabilityState extends State<Parkability> {
                                               ),
                                               height: 200,
                                               width: 200,
-                                              child: Image.file(_image),
+                                              child: Image.file(_image,fit: BoxFit.cover,),
                                             ),
                                           ]),
                                     ),

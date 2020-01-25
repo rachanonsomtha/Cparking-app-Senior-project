@@ -45,10 +45,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void getParkingData() {
-    BitmapDescriptor.fromAssetImage(
-      ImageConfiguration(devicePixelRatio: 2.5),
-      'images/logo_cpark2.png',
-    ).then((onValue) {
+    BitmapDescriptor.fromAssetImage(ImageConfiguration(devicePixelRatio: 2.5),
+            'images/Webp.net-resizeimage.png')
+        .then((onValue) {
       setState(() {
         pinLocationIcon = onValue;
       });
@@ -58,6 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
       for (int i = 0; i < parkingLots.parkingLotsCount; i++) {
         markers.add(
           Marker(
+            // icon: pinLocationIcon,
             icon: pinLocationIcon,
             markerId: MarkerId(lots[i].id),
             position: LatLng(
@@ -81,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     for (int i = 0; i < parkingData.parkingLotsCount; i++) {
       polylines.add(Polyline(
-          color: Colors.green,
+          color: Colors.yellow,
           width: 10,
           points: lots[i].poly,
           polylineId: PolylineId(lots[i].id.toString())));
@@ -90,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void didChangeDependencies() {
-    // getPolyLine();
+    getPolyLine();
     // TODO: implement didChangeDependencies
     getParkingData();
     super.didChangeDependencies();
@@ -116,45 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: <Widget>[
             GoogleMap(
               // myLocationEnabled: true,
-
               markers: Set.from(markers),
-
-              // polylines: Set.from(polylines),
-              // polylines: ,
-              // Marker(
-              //   onTap: () => modal.mainBottomSheet(context, "30#1"),
-              //   markerId: MarkerId("1"),
-              //   position: LatLng(18.795484, 98.952698),
-              //   infoWindow: InfoWindow(
-              //       title: "ตึกสามสิบปี#1",
-              //       snippet: "ตึกสามสิบปี#1 คณะวิศวกรรมศาสตร์"),
-              // ),
-              // Marker(
-              //   onTap: () => modal.mainBottomSheet(context, "30#2"),
-              //   markerId: MarkerId("2"),
-              //   position: LatLng(18.795353, 98.952700),
-              //   infoWindow: InfoWindow(
-              //       title: "ตึกสามสิบปี#2",
-              //       snippet: "ตึกสามสิบปี#2 คณะวิศวกรรมศาสตร์"),
-              // ),
-              // Marker(
-              //   onTap: () => modal.mainBottomSheet(context, "SUR#1"),
-              //   markerId: MarkerId("3"),
-              //   position: LatLng(18.795051, 98.952685),
-              //   infoWindow: InfoWindow(
-              //       title: "ตึกเซอร์เวย์#1",
-              //       snippet: "ตึกเซอร์เวย์#1 คณะวิศวกรรมศาสตร์"),
-              // ),
-              // Marker(
-              //   onTap: () => modal.mainBottomSheet(context, "SUR#2"),
-              //   markerId: MarkerId("4"),
-              //   position: LatLng(18.795033, 98.952969),
-              //   infoWindow: InfoWindow(
-              //       title: "ตึกเซอร์เวย์#2",
-              //       snippet: "ตึกเซอร์เวย์#2 คณะวิศวกรรมศาสตร์"),
-              // )
-              // ..._markers
-              // myLocationEnabled: true,
               mapType: MapType.normal,
               initialCameraPosition: CameraPosition(
                 target: LatLng(18.795484, 98.952698),

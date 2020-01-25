@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import './report.dart';
 import 'dart:convert';
+import 'dart:collection';
 
 class ReportsProvider with ChangeNotifier {
   List<Report> _reports = [];
@@ -14,6 +15,8 @@ class ReportsProvider with ChangeNotifier {
 
   String authToken;
   String userId;
+  Map<String, String> headers = new HashMap();
+
   // var _showFavourtiesOnly = false;
 
   ReportsProvider(
@@ -48,6 +51,10 @@ class ReportsProvider with ChangeNotifier {
     return _reportsLoc.length;
   }
 
+  bool isOwnedby(Report report) {
+    return report.userName == userId ? true : false;
+  }
+
   // effect all pages scenarios
   // void showFavouritesOnly() {
   //   _showFavourtiesOnly = true;
@@ -74,11 +81,9 @@ class ReportsProvider with ChangeNotifier {
     // print('...');
   }
 
-  void deleteProduct(String id, bool isFav) {
+  void removeReport(String id) {
     // final prodIndex = _items.indexWhere((prod) => prod.id == id);
-    if (isFav == false) {
-      _reports.removeWhere((prod) => prod.id == id);
-    }
+    _reports.removeWhere((prod) => prod.id == id);
     notifyListeners();
   }
 
@@ -243,12 +248,49 @@ class ReportsProvider with ChangeNotifier {
     }
   }
 
+  Future<void> deleteReport(Report report) async {
+    String keyName;
+
+    final url1 =
+        'https://cparking-ecee0.firebaseio.com/reports/${report.id}.json?auth=$authToken';
+    try {
+      await http.delete(url1, headers: headers).then((_) {
+        print('deletion report from user success');
+        _reports.removeWhere((rep) => rep.id == report.id);
+        _userReports.removeWhere((rep) => rep.id == report.id);
+        _reportsLoc.removeWhere((rep) => rep.id == report.id);
+        notifyListeners();
+      }).then((_) async {
+        final url2 =
+            'https://cparking-ecee0.firebaseio.com/users/$userId/reportsId.json';
+
+        final response = await http.get(url2);
+        final decodeData = json.decode(response.body) as Map<String, dynamic>;
+        decodeData.forEach((reportId, reportData) {
+          if (reportData == report.id) {
+            keyName = reportId;
+          }
+        });
+      }).then((_) async {
+        final url3 =
+            'https://cparking-ecee0.firebaseio.com/users/$userId/reportsId/$keyName.json';
+
+        await http.delete(url3, headers: headers).then((_) {
+          print("delete from reportFolder complete");
+        });
+      });
+    } catch (error) {
+      print(error);
+    }
+  }
+
   Future<void> addReport(Report report) async {
     final url1 =
         'https://cparking-ecee0.firebaseio.com/reports.json?auth=$authToken';
 
-    final add_date =
-        DateFormat('yyyy-MM-dd').add_Hms().format(DateTime.now()).toString();
+    // final add_date =
+    //     DateFormat('yyyy-MM-dd').add_Hms().format(DateTime.now()).toString();
+    final add_date = DateTime.now().toString();
     // print(add_date);
     // create products collection in firebase
     try {

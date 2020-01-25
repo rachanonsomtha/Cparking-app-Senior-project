@@ -15,6 +15,8 @@ class ParkLot with ChangeNotifier {
   final String lon;
   @required
   List poly;
+  @required
+  List<double> lifeTime;
 
   ParkLot({
     this.id,
@@ -24,5 +26,6 @@ class ParkLot with ChangeNotifier {
     this.lat,
     this.lon,
     this.poly,
+    this.lifeTime,
   });
 }

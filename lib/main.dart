@@ -19,6 +19,8 @@ import './screens/user_previous_reports.dart';
 import './screens/report_detail_screen.dart';
 
 import './screens/user_profile.dart';
+
+import './screens/view_history_screen.dart';
 // import 'package:firebase/firebase.dart';
 // import 'package:firebase/firestore.dart' as fs;
 
@@ -81,6 +83,8 @@ class MyApp extends StatelessWidget {
             ReportOverViewScreen.routeName: (ctx) => ReportOverViewScreen(),
             UserPreviousReports.routeName: (ctx) => UserPreviousReports(),
             ReportDetailScreen.routeName: (ctx) => ReportDetailScreen(),
+            ViewHistoryScreen.routeName: (ctx) => ViewHistoryScreen(),
+            // SimpleLineChart.routeName: (ctx) => SimpleLineChart(null),
             // AuthScreen.routeName: (ctx) => AuthScreen(),
           },
         ),

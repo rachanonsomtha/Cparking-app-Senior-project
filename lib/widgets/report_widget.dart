@@ -5,12 +5,11 @@ import 'package:flutter/material.dart';
 import '../provider/report.dart';
 import 'package:provider/provider.dart';
 import '../provider/auth.dart';
-import '../provider/report.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
-import 'package:intl/intl.dart';
 //rating
-import '../rating/starRating.dart';
+import '../widgets/lifeTimeBar.dart';
+import 'dart:math';
 
 class ReportItem extends StatefulWidget {
   // final report = Provider.of<ReportsProvider>(context, listen: false);
@@ -30,6 +29,29 @@ class ReportItem extends StatefulWidget {
 
 class _ReportItemState extends State<ReportItem> {
   String _isanimate = 'go';
+
+  double ratioCalculate(DateTime submitTime, Duration lifeTime) {
+    DateTime expTime = submitTime.add(lifeTime);
+    print(expTime.millisecondsSinceEpoch);
+    print(DateTime.now().millisecondsSinceEpoch);
+
+    print(expTime.toString());
+
+    if ((DateTime.now()).isBefore(expTime)) {
+      print((((DateTime.now()).millisecondsSinceEpoch -
+                  expTime.millisecondsSinceEpoch) /
+              lifeTime.inMilliseconds)
+          .abs());
+
+      return ((((DateTime.now()).millisecondsSinceEpoch -
+                  expTime.millisecondsSinceEpoch) /
+              lifeTime.inMilliseconds))
+          .abs();
+    } else {
+      return 0;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // print('eiei');
@@ -38,6 +60,10 @@ class _ReportItemState extends State<ReportItem> {
     final report = Provider.of<Report>(context);
     DateTime dateTime = DateTime.parse(report.dateTime.toString());
 
+    double remainingTime = ratioCalculate(
+      DateTime.parse(report.dateTime),
+      new Duration(minutes: 6),
+    );
     // print(dateTime.minute);
     return Card(
       //rgb(67,66,114)
@@ -48,8 +74,16 @@ class _ReportItemState extends State<ReportItem> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
+            LifeTimeBar(
+              heightz: MediaQuery.of(context).size.height / 8,
+              icon: Icon(
+                Icons.timelapse,
+                color: Colors.black87,
+              ),
+              factor: remainingTime,
+            ),
             Container(
-              width: 100,
+              width: MediaQuery.of(context).size.height / 8,
               child: GestureDetector(
                 onTap: () {
                   Provider.of<Auth>(context)

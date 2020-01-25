@@ -1,5 +1,7 @@
 // import 'dart:html';
 
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
@@ -69,6 +71,8 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
   }
 
   Widget _buildDetail(Report report) {
+    DateTime dateTime = DateTime.parse(report.dateTime.toString());
+
     return Container(
       height: 100,
       padding: EdgeInsets.only(
@@ -92,7 +96,15 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                 ),
               ),
               Text(
-                '${report.dateTime}',
+                'Date :${dateTime.day}/${dateTime.month}/${dateTime.year}',
+                style: TextStyle(
+                  fontFamily: 'Raleway',
+                  fontSize: 16,
+                  color: Colors.white60,
+                ),
+              ),
+              Text(
+                'Time :${dateTime.hour}:${dateTime.minute} ',
                 style: TextStyle(
                   fontFamily: 'Raleway',
                   fontSize: 16,
@@ -198,7 +210,8 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       listen: false,
     ).findById(reportId);
     final reportData = Provider.of<Auth>(context);
-
+    final isOwned =
+        Provider.of<ReportsProvider>(context).isOwnedby(loadedReport);
     // fetching problems
 
     // print(loadedReport.id);
@@ -233,6 +246,43 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                   _buildDetail(loadedReport),
                   _buildSeparator(screenSize),
                   _buildContact(reportData.tempUserData),
+                  isOwned
+                      ? Center(
+                          child: RaisedButton(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            color: Colors.redAccent,
+                            onPressed: () {
+                              Provider.of<ReportsProvider>(context)
+                                  .deleteReport(loadedReport);
+                              Navigator.of(context).pop();
+                            },
+                            child: Container(
+                              height: 30,
+                              width: MediaQuery.of(context).size.width / 2,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.delete,
+                                  ),
+                                  Text(
+                                    'Delete report',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      : SizedBox(
+                          height: 10,
+                        )
                 ],
               ),
             ),

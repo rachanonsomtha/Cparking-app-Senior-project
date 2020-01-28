@@ -13,8 +13,6 @@ import 'package:smooth_star_rating/smooth_star_rating.dart';
 import '../provider/userData.dart';
 import '../provider/auth.dart';
 
-import '../loader/color_loader_3.dart';
-
 class ReportDetailScreen extends StatefulWidget {
   static const routeName = '/report-detail';
 
@@ -282,7 +280,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                         )
                       : SizedBox(
                           height: 10,
-                        )
+                        ),
                 ],
               ),
             ),

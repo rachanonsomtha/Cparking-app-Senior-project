@@ -130,11 +130,11 @@ class _ParkabilityState extends State<Parkability> {
     var dateTime = DateTime.now();
 
     //Real envi
-    var hourMark = dateTime.hour;
-    var minuteMark = dateTime.minute;
+    // var hourMark = dateTime.hour;
+    // var minuteMark = dateTime.minute;
     // Developing environment
-    // var hourMark = 8;
-    // var minuteMark = 20;
+    var hourMark = 8;
+    var minuteMark = 20;
 
     int row, col;
 
@@ -190,7 +190,7 @@ class _ParkabilityState extends State<Parkability> {
     return col + (row * 4);
   }
 
-  Future uploadFile(context, name) async {
+  Future uploadFile(context, name, currentReportCount) async {
     try {
       StorageReference storageReference = FirebaseStorage.instance
           .ref()
@@ -224,8 +224,10 @@ class _ParkabilityState extends State<Parkability> {
           // print(_uploadedFileURL + "eiei");
         });
       }).then((_) async {
-        await Provider.of<ReportsProvider>(context, listen: false)
-            .addReport(_editReport);
+        await Provider.of<ReportsProvider>(context, listen: false).addReport(
+          _editReport,
+          currentReportCount,
+        );
       });
 // print('File Uploaded');
       _image = null;
@@ -262,6 +264,10 @@ class _ParkabilityState extends State<Parkability> {
   Widget build(BuildContext context) {
     getAndSetlifeTime();
     final name = ModalRoute.of(context).settings.arguments as String;
+    final historyData = Provider.of<ReportsProvider>(context);
+    Provider.of<ReportsProvider>(context).fetchReportFromLocation(name);
+    int currentReportCount = historyData.locReportsCount;
+
     final parkingInfo =
         Provider.of<ParkingLotProvider>(context, listen: false).findById(name);
     final authData = Provider.of<Auth>(context, listen: false);
@@ -384,7 +390,8 @@ class _ParkabilityState extends State<Parkability> {
                           child: FlatButton(
                             color: Colors.grey,
                             onPressed: () async {
-                              await uploadFile(context, name);
+                              await uploadFile(
+                                  context, name, currentReportCount);
                             },
                             child: Text('Confirm report'),
                           ),

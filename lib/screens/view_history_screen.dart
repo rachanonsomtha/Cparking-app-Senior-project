@@ -8,6 +8,7 @@ import 'dart:math' as math;
 import 'package:provider/provider.dart';
 import '../provider/report_provider.dart';
 import '../loader/color_loader_3.dart';
+import '../widgets/simpleLine.dart';
 
 math.Random random = new math.Random();
 List<double> _generateRandomData(int count) {
@@ -243,7 +244,11 @@ class _ViewHistoryScreenState extends State<ViewHistoryScreen> {
                               _buildStarAndCount(currentReportCount),
                               _buildHistoryDetails(),
                             ],
-                          )
+                          ),
+                    Container(
+                      height: 200,
+                      child: PointsLineChart.withSampleData(),
+                    ),
                   ],
                 ),
               ),

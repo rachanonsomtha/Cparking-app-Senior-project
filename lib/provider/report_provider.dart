@@ -119,6 +119,63 @@ class ReportsProvider with ChangeNotifier {
   //   }
   // }
 
+  int setHour(int time) {
+    //Real envi
+
+    int row;
+    if (time >= 7) {
+      row = 7;
+      if (time >= 8) {
+        row = 8;
+        if (time >= 9) {
+          row = 9;
+          if (time >= 10) {
+            row = 10;
+            if (time >= 11) {
+              row = 11;
+              if (time >= 12) {
+                row = 12;
+                if (time >= 13) {
+                  row = 13;
+                  if (time >= 14) {
+                    row = 14;
+                    if (time >= 15) {
+                      row = 15;
+                      if (time >= 16) {
+                        row = 16;
+                        if (time >= 17) {
+                          row = 17;
+                          if (time == 18) {
+                            row = 18;
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    return row;
+  }
+
+  int setMinute(int time) {
+    //Real envi
+
+    int min;
+    if (time <= 30) {
+      min = 0;
+    }
+    if (time >= 31) {
+      min = 30;
+    }
+
+    return min;
+  }
+
   Future<void> fetchReport() async {
     final url =
         'https://cparking-ecee0.firebaseio.com/reports.json?auth=$authToken';
@@ -295,13 +352,22 @@ class ReportsProvider with ChangeNotifier {
     }
   }
 
-  Future<void> addReport(Report report) async {
+  Future<void> addReport(Report report, int currentReportCount) async {
+    var hour = DateTime.now().hour;
+    var _minute = setMinute(DateTime.now().minute);
+    var avai = report.availability.toInt();
+    var loc = report.loc.toString();
+    print(hour);
+    print(_minute);
+    print(avai);
+    print(loc);
     final url1 =
         'https://cparking-ecee0.firebaseio.com/reports.json?auth=$authToken';
 
     // final add_date =
     //     DateFormat('yyyy-MM-dd').add_Hms().format(DateTime.now()).toString();
     final add_date = DateTime.now().toString();
+
     // print(add_date);
     // create products collection in firebase
     try {
@@ -330,7 +396,30 @@ class ReportsProvider with ChangeNotifier {
           json.decode(response.body)['name'],
         ),
       );
+      int oldMean;
 
+      // final url3 =
+      //     'https://cparking-ecee0.firebaseio.com/avai/$loc/$hour/$_minute.json';
+
+      // try {
+      //   final response = await http.get(url3);
+      //   final decodeData = json.decode(response.body) as Map<String, dynamic>;
+
+      //   decodeData.forEach((reportId, reportData) {
+      //     oldMean = reportData['mean'];
+      //     // print(reportId);
+      //   });
+      // } catch (error) {
+      //   print(error);
+      // }
+      // var mean = 2;
+      // // (oldMean + avai) / currentReportCount == 0 ? 1 : currentReportCount;
+      // await http.patch(
+      //   url3,
+      //   body: json.encode({
+      //     'mean': mean,
+      //   }),
+      // );
       // print(json.decode(response.body));
       final rep = Report(
         id: json.decode(response.body)['name'],

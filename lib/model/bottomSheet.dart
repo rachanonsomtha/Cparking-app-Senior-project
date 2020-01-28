@@ -6,6 +6,9 @@ import '../screens/view_history_screen.dart';
 class Modal {
   mainBottomSheet(BuildContext context, String s) {
     String name = s;
+    DateTime now = DateTime.now();
+
+    bool _isEnable = (now.hour >= 7 && now.hour <= 18) ? true : false;
     showModalBottomSheet(
         context: context,
         builder: (BuildContext bc) {
@@ -14,8 +17,11 @@ class Modal {
               spacing: 3,
               children: <Widget>[
                 ListTile(
+                  enabled: _isEnable,
                   leading: Icon(Icons.queue),
-                  subtitle: Text("Shared your report with us"),
+                  subtitle: _isEnable
+                      ? Text("Report time 7am - 6pm")
+                      : Text("You can submit reports again next morning"),
                   title: Text('Report C-Parking'),
                   onTap: () => Navigator.of(context).pushReplacementNamed(
                     Parkability.routeName,
@@ -27,7 +33,7 @@ class Modal {
                 ),
                 ListTile(
                   leading: Icon(Icons.show_chart),
-                  subtitle: Text("See what happened"),
+                  subtitle: Text("See what happaned"),
                   title: Text('Parkability'),
                   onTap: () => Navigator.of(context).pushReplacementNamed(
                     ViewHistoryScreen.routeName,

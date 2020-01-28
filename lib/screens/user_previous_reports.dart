@@ -21,15 +21,15 @@ class _UserPreviousReportsState extends State<UserPreviousReports> {
 
   bool _isLoading = false;
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async {
     final userData = Provider.of<Auth>(context);
     if (_isInit) {
       setState(() {
         _isLoading = true;
       });
-      Provider.of<ReportsProvider>(context).fetchReport();
+      await Provider.of<ReportsProvider>(context).fetchReport();
       // Provider.of<Auth>(context).fetchUserProfileData();
-      Provider.of<ReportsProvider>(context)
+      await Provider.of<ReportsProvider>(context)
           .fetchReportFromUserId(userData.userData.reports)
           .then((_) {
         setState(() {

@@ -16,7 +16,7 @@ class ParkLot with ChangeNotifier {
   @required
   List poly;
   @required
-  List<double> lifeTime;
+  List<int> lifeTime;
 
   ParkLot({
     this.id,

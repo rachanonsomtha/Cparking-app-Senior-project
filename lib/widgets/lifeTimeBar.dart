@@ -5,10 +5,24 @@ class LifeTimeBar extends StatelessWidget {
   final Icon icon;
   final double heightz;
   double factor;
+  Color colorFactor;
+
+  void _colorFactor() {
+    if (factor >= 0.3) {
+      colorFactor = Colors.red;
+      if (factor >= 0.5) {
+        colorFactor = Colors.yellow;
+        if (factor >= 0.8) {
+          colorFactor = Colors.green;
+        }
+      }
+    }
+  }
 
   LifeTimeBar({this.heightz, this.icon, this.factor});
   @override
   Widget build(BuildContext context) {
+    _colorFactor();
     return LayoutBuilder(
       builder: (ctx, constraints) {
         return Container(
@@ -45,7 +59,7 @@ class LifeTimeBar extends StatelessWidget {
                         heightFactor: factor,
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.grey,
+                            color: colorFactor,
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),

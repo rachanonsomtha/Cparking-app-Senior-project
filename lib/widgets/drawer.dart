@@ -32,9 +32,9 @@ class AppDrawer extends StatelessWidget {
           _createDrawerItem(
             icon: Icons.portrait,
             text: 'Profile',
-            onTap: () {
+            onTap: () async {
               // navigateToPage(context, '/');
-              Provider.of<Auth>(context).fetchUserProfileData();
+              await Provider.of<Auth>(context).fetchUserProfileData();
               Navigator.of(context).pushNamed(UserProfile.routeName);
             },
           ),

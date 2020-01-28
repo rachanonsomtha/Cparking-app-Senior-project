@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import './report.dart';
 import 'dart:convert';
 import 'dart:collection';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class ReportsProvider with ChangeNotifier {
   List<Report> _reports = [];
@@ -83,7 +84,9 @@ class ReportsProvider with ChangeNotifier {
 
   void removeReport(String id) {
     // final prodIndex = _items.indexWhere((prod) => prod.id == id);
-    _reports.removeWhere((prod) => prod.id == id);
+    _reports.removeWhere((rep) => rep.id == id);
+    _userReports.removeWhere((rep) => rep.id == id);
+    _reportsLoc.removeWhere((rep) => rep.id == id);
     notifyListeners();
   }
 
@@ -147,6 +150,7 @@ class ReportsProvider with ChangeNotifier {
             dateTime: reportData['dateTime'].toString(),
             availability: reportData['availability'],
             loc: reportData['loc'],
+            imgName: reportData['imgName'],
           ),
         );
       });
@@ -191,6 +195,7 @@ class ReportsProvider with ChangeNotifier {
               dateTime: reportData['dateTime'].toString(),
               availability: reportData['availability'],
               loc: reportData['loc'],
+              imgName: reportData['imgName'],
             ),
           );
       });
@@ -236,6 +241,7 @@ class ReportsProvider with ChangeNotifier {
               dateTime: reportData['dateTime'].toString(),
               availability: reportData['availability'],
               loc: reportData['loc'],
+              imgName: reportData['imgName'],
             ),
           );
       });
@@ -250,15 +256,20 @@ class ReportsProvider with ChangeNotifier {
 
   Future<void> deleteReport(Report report) async {
     String keyName;
-
+    StorageReference storageReference = FirebaseStorage.instance
+        .ref()
+        .child('reports/${report.loc}/${report.imgName}');
+    storageReference.delete().then((_) {
+      print('delete succesfully');
+    }).catchError((_) {
+      print(_);
+    });
     final url1 =
         'https://cparking-ecee0.firebaseio.com/reports/${report.id}.json?auth=$authToken';
     try {
       await http.delete(url1, headers: headers).then((_) {
         print('deletion report from user success');
-        _reports.removeWhere((rep) => rep.id == report.id);
-        _userReports.removeWhere((rep) => rep.id == report.id);
-        _reportsLoc.removeWhere((rep) => rep.id == report.id);
+        removeReport(report.id);
         notifyListeners();
       }).then((_) async {
         final url2 =
@@ -306,6 +317,7 @@ class ReportsProvider with ChangeNotifier {
           // 'isPromote': report.isPromoted,
           'score': 0,
           'availability': report.availability,
+          'imgName': (report.imgName).toString(),
         }),
       );
 
@@ -330,6 +342,7 @@ class ReportsProvider with ChangeNotifier {
         loc: report.loc,
         // isPromoted: report.isPromoted,
         availability: report.availability,
+        imgName: (report.imgName).toString(),
       );
       _reports.add(rep);
       notifyListeners();

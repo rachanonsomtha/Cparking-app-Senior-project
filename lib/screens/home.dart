@@ -22,6 +22,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   LocationData currentLocation;
   BitmapDescriptor pinLocationIcon;
+  bool maptype = true;
+  MapType mapType;
 
   Future<LocationData> getCurrentLocation() async {
     Location location = Location();
@@ -102,6 +104,18 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
+  void changeMapType() {
+    maptype
+        ? setState(() {
+            mapType = MapType.satellite;
+          })
+        : setState(() {
+            mapType = MapType.normal;
+          });
+
+    maptype = !maptype;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -117,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
             GoogleMap(
               // myLocationEnabled: true,
               markers: Set.from(markers),
-              mapType: MapType.normal,
+              mapType: mapType,
               initialCameraPosition: CameraPosition(
                 target: LatLng(18.795484, 98.952698),
                 zoom: 18,
@@ -126,6 +140,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 _controller.complete(controller);
               },
             ),
+          ],
+        ),
+        floatingActionButton: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: FloatingActionButton(
@@ -133,7 +152,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Icon(Icons.place),
                 onPressed: _goMyLoc,
               ),
-            )
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: FloatingActionButton(
+                heroTag: UniqueKey(),
+                child: Icon(Icons.map),
+                onPressed: changeMapType,
+              ),
+            ),
           ],
         ));
   }

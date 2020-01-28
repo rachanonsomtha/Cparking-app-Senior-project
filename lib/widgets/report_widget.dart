@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../provider/auth.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
+import '../provider/parkingLotProvider.dart';
 //rating
 import '../widgets/lifeTimeBar.dart';
 import 'dart:math';
@@ -30,19 +31,11 @@ class ReportItem extends StatefulWidget {
 class _ReportItemState extends State<ReportItem> {
   String _isanimate = 'go';
 
+// calculate displayed lifetime bar
   double ratioCalculate(DateTime submitTime, Duration lifeTime) {
     DateTime expTime = submitTime.add(lifeTime);
-    print(expTime.millisecondsSinceEpoch);
-    print(DateTime.now().millisecondsSinceEpoch);
-
-    print(expTime.toString());
 
     if ((DateTime.now()).isBefore(expTime)) {
-      print((((DateTime.now()).millisecondsSinceEpoch -
-                  expTime.millisecondsSinceEpoch) /
-              lifeTime.inMilliseconds)
-          .abs());
-
       return ((((DateTime.now()).millisecondsSinceEpoch -
                   expTime.millisecondsSinceEpoch) /
               lifeTime.inMilliseconds))
@@ -59,10 +52,11 @@ class _ReportItemState extends State<ReportItem> {
     final authData = Provider.of<Auth>(context, listen: false);
     final report = Provider.of<Report>(context);
     DateTime dateTime = DateTime.parse(report.dateTime.toString());
+    final loc = Provider.of<ParkingLotProvider>(context).findById(report.loc);
 
     double remainingTime = ratioCalculate(
       DateTime.parse(report.dateTime),
-      new Duration(minutes: 6),
+      new Duration(minutes: loc.lifeTime[0]),
     );
     // print(dateTime.minute);
     return Card(
@@ -76,10 +70,7 @@ class _ReportItemState extends State<ReportItem> {
           children: <Widget>[
             LifeTimeBar(
               heightz: MediaQuery.of(context).size.height / 8,
-              icon: Icon(
-                Icons.timelapse,
-                color: Colors.black87,
-              ),
+              icon: Icon(Icons.timelapse, color: Colors.black87),
               factor: remainingTime,
             ),
             Container(

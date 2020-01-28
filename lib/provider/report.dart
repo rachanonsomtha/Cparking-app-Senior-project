@@ -9,7 +9,7 @@ class Report with ChangeNotifier {
   @required
   final String userName;
   @required
-  final double lifeTime;
+  final int lifeTime;
   @required
   final String imageUrl;
   @required
@@ -20,6 +20,7 @@ class Report with ChangeNotifier {
   int availability;
   @required
   final String loc;
+  final String imgName;
 
   Report({
     @required this.id,
@@ -31,6 +32,7 @@ class Report with ChangeNotifier {
     this.score = 0,
     @required this.availability,
     @required this.loc,
+    this.imgName,
   });
 
   void _setNewPromoteValue(bool newValue) {

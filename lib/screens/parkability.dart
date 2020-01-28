@@ -40,6 +40,7 @@ class _ParkabilityState extends State<Parkability> {
     availability: 0,
     score: 0,
     loc: '',
+    imgName: '',
   );
 
   File _image;
@@ -125,11 +126,76 @@ class _ParkabilityState extends State<Parkability> {
     });
   }
 
+  int getAndSetlifeTime() {
+    var dateTime = DateTime.now();
+
+    //Real envi
+    var hourMark = dateTime.hour;
+    var minuteMark = dateTime.minute;
+    // Developing environment
+    // var hourMark = 8;
+    // var minuteMark = 20;
+
+    int row, col;
+
+    if (hourMark >= 7) {
+      row = 0;
+      if (hourMark >= 8) {
+        row = 1;
+        if (hourMark >= 9) {
+          row = 2;
+          if (hourMark >= 10) {
+            row = 3;
+            if (hourMark >= 11) {
+              row = 4;
+              if (hourMark >= 12) {
+                row = 5;
+                if (hourMark >= 13) {
+                  row = 6;
+                  if (hourMark >= 14) {
+                    row = 7;
+                    if (hourMark >= 15) {
+                      row = 8;
+                      if (hourMark >= 16) {
+                        row = 9;
+                        if (hourMark >= 17) {
+                          row = 10;
+                          if (hourMark == 18) {
+                            row = 11;
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    if (minuteMark >= 0) {
+      col = 0;
+      if (minuteMark >= 16) {
+        col = 1;
+        if (minuteMark >= 31) {
+          col = 2;
+          if (minuteMark >= 46) {
+            col = 3;
+          }
+        }
+      }
+    }
+    return col + (row * 4);
+  }
+
   Future uploadFile(context, name) async {
     try {
       StorageReference storageReference = FirebaseStorage.instance
           .ref()
           .child('reports/$name/${basename(_image.path)}');
+      var imagename = basename(_image.path);
       StorageUploadTask uploadTask = storageReference.putFile(_image);
       setState(() {
         _isLoading = true;
@@ -145,13 +211,14 @@ class _ParkabilityState extends State<Parkability> {
           _editReport = Report(
             id: _editReport.id,
             userName: _editReport.userName,
-            lifeTime: _editReport.lifeTime,
+            lifeTime: getAndSetlifeTime(),
             dateTime: _editReport.dateTime,
             imageUrl: _uploadedFileURL,
             isPromoted: _editReport.isPromoted,
             availability: _editReport.availability,
             score: _editReport.score,
             loc: _editReport.loc,
+            imgName: imagename,
           );
           // print(_uploadedFileURL);
           // print(_uploadedFileURL + "eiei");
@@ -193,6 +260,7 @@ class _ParkabilityState extends State<Parkability> {
 
   @override
   Widget build(BuildContext context) {
+    getAndSetlifeTime();
     final name = ModalRoute.of(context).settings.arguments as String;
     final parkingInfo =
         Provider.of<ParkingLotProvider>(context, listen: false).findById(name);
@@ -270,7 +338,10 @@ class _ParkabilityState extends State<Parkability> {
                                               ),
                                               height: 200,
                                               width: 200,
-                                              child: Image.file(_image,fit: BoxFit.cover,),
+                                              child: Image.file(
+                                                _image,
+                                                fit: BoxFit.cover,
+                                              ),
                                             ),
                                           ]),
                                     ),
@@ -303,6 +374,7 @@ class _ParkabilityState extends State<Parkability> {
                                   availability: newValue,
                                   score: _editReport.score,
                                   loc: name,
+                                  imgName: _editReport.imgName,
                                 );
                                 // print(_editReport.imageUrl);
                                 setState(() => _currentValue = newValue);

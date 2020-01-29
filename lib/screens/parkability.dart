@@ -278,7 +278,7 @@ class _ParkabilityState extends State<Parkability> {
     return Scaffold(
       backgroundColor: Color.fromRGBO(67, 66, 114, 100),
       appBar: AppBar(
-        title: Text(name),
+        title: Text(parkingInfo.title),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
           onPressed: () => Navigator.of(context).pop(),

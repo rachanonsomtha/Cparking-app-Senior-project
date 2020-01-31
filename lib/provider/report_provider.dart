@@ -351,17 +351,6 @@ class ReportsProvider with ChangeNotifier {
     }
   }
 
-<<<<<<< HEAD
-  String calculateMean(double oldMean, int avai, int count) {
-    var temp = oldMean + avai;
-    print(avai);
-    var ans = (temp / (count == 0 ? 1 : count)).round();
-    print('ans : $ans');
-    return ans.toString();
-  }
-
-=======
->>>>>>> parent of 5e66f5a... adding average availability
   Future<void> addReport(Report report, int currentReportCount) async {
     var hour = DateTime.now().hour;
     var _minute = setMinute(DateTime.now().minute);
@@ -406,35 +395,6 @@ class ReportsProvider with ChangeNotifier {
           json.decode(response.body)['name'],
         ),
       );
-<<<<<<< HEAD
-
-      final url3 =
-          'https://cparking-ecee0.firebaseio.com/avai/${report.loc}/$hour/$minute.json';
-
-      double oldMean;
-      final response3 = await http.get(url3);
-      final decodeData = json.decode(response3.body) as Map<String, dynamic>;
-      if (decodeData == null) {
-        oldMean = 0;
-      } else {
-        oldMean = double.parse(decodeData['mean']);
-        // decodeData.forEach((timeId, timeData) {});
-      }
-
-      String newMean =
-          calculateMean(oldMean, report.availability, currentReportCount);
-
-      final url4 =
-          'https://cparking-ecee0.firebaseio.com/avai/${report.loc}/$hour/$minute.json';
-
-      await http.patch(
-        url4,
-        body: json.encode({
-          'mean': newMean,
-        }),
-      );
-
-=======
       int oldMean;
 
       // final url3 =
@@ -460,7 +420,6 @@ class ReportsProvider with ChangeNotifier {
       //   }),
       // );
       // print(json.decode(response.body));
->>>>>>> parent of 5e66f5a... adding average availability
       final rep = Report(
         id: json.decode(response.body)['name'],
         userName: report.userName,

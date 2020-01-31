@@ -1,4 +1,3 @@
-import 'package:cparking/provider/report.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -11,8 +10,7 @@ import './screens/splash-screen.dart';
 import './screens/auth_screen.dart';
 import './provider/auth.dart';
 import './provider/parkingLotProvider.dart';
-import './provider/report_provider.dart';
-import './provider/report.dart';
+
 import './screens/user_previous_reports.dart';
 
 // import './screens/user_profile_screen.dart';
@@ -79,7 +77,7 @@ class MyApp extends StatelessWidget {
           routes: {
             // HomeScreen.routeName: (ctx) => HomeScreen(),
             Parkability.routeName: (ctx) => Parkability(),
-            UserProfile.routeName: (ctx) => UserProfile(),
+            UserProfile.routeName: (ctx) => UserProfile(null, null),
             ReportOverViewScreen.routeName: (ctx) => ReportOverViewScreen(),
             UserPreviousReports.routeName: (ctx) => UserPreviousReports(),
             ReportDetailScreen.routeName: (ctx) => ReportDetailScreen(),

@@ -1,14 +1,13 @@
 import 'package:cparking/loader/color_loader_3.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
-import 'dart:math';
-import 'package:flutter_sparkline/flutter_sparkline.dart';
 import 'dart:math' as math;
 import 'package:provider/provider.dart';
 import '../provider/report_provider.dart';
 import '../loader/color_loader_3.dart';
 import '../widgets/simpleLine.dart';
+import '../provider/parkingLotProvider.dart';
+import '../provider/parkingLot.dart';
 
 math.Random random = new math.Random();
 List<double> _generateRandomData(int count) {
@@ -33,12 +32,12 @@ class _ViewHistoryScreenState extends State<ViewHistoryScreen> {
 
   var data = _generateRandomData(11);
 
-  Widget _buildCoverImage(Size screenSize) {
+  Widget _buildCoverImage(Size screenSize, ParkLot lot) {
     return Container(
       height: screenSize.height / 2.5,
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('images/cover.jpg'),
+          image: NetworkImage(lot.imageUrl),
           fit: BoxFit.cover,
         ),
       ),
@@ -198,13 +197,13 @@ class _ViewHistoryScreenState extends State<ViewHistoryScreen> {
       _isInit = false;
     });
 
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
     final name = ModalRoute.of(context).settings.arguments as String;
+    final loc = Provider.of<ParkingLotProvider>(context).findById(name);
     final historyData = Provider.of<ReportsProvider>(context);
     Provider.of<ReportsProvider>(context).fetchReportFromLocation(name);
     int currentReportCount = historyData.locReportsCount;
@@ -214,7 +213,7 @@ class _ViewHistoryScreenState extends State<ViewHistoryScreen> {
       body: SingleChildScrollView(
         child: Stack(
           children: <Widget>[
-            _buildCoverImage(screenSize),
+            _buildCoverImage(screenSize, loc),
             SizedBox(
               height: 50,
             ),

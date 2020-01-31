@@ -1,7 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import './report.dart';
 import 'dart:convert';
 import 'dart:collection';
@@ -356,6 +355,7 @@ class ReportsProvider with ChangeNotifier {
     var temp = oldMean + avai;
     print(avai);
     var ans = (temp / (count == 0 ? 1 : count)).round();
+    print('ans : $ans');
     return ans.toString();
   }
 
@@ -400,14 +400,27 @@ class ReportsProvider with ChangeNotifier {
         ),
       );
 
-      String newMean =
-          calculateMean(0, report.availability, currentReportCount);
-
       final url3 =
           'https://cparking-ecee0.firebaseio.com/avai/${report.loc}/$hour/$minute.json';
 
+      double oldMean;
+      final response3 = await http.get(url3);
+      final decodeData = json.decode(response3.body) as Map<String, dynamic>;
+      if (decodeData == null) {
+        oldMean = 0;
+      } else {
+        oldMean = double.parse(decodeData['mean']);
+        // decodeData.forEach((timeId, timeData) {});
+      }
+
+      String newMean =
+          calculateMean(oldMean, report.availability, currentReportCount);
+
+      final url4 =
+          'https://cparking-ecee0.firebaseio.com/avai/${report.loc}/$hour/$minute.json';
+
       await http.patch(
-        url3,
+        url4,
         body: json.encode({
           'mean': newMean,
         }),

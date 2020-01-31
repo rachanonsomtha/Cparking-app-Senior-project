@@ -91,20 +91,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  @override
-  void didChangeDependencies() {
-    getPolyLine();
-    // TODO: implement didChangeDependencies
-    getParkingData();
-    super.didChangeDependencies();
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
   void changeMapType() {
     maptype
         ? setState(() {

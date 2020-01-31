@@ -4,7 +4,6 @@
 import 'package:provider/provider.dart';
 import '../provider/report.dart';
 import 'package:flutter/material.dart';
-import '../widgets/drawer.dart';
 import 'dart:async';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -12,15 +11,11 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:transparent_image/transparent_image.dart';
-import '../loader/color_loader_2.dart';
 import '../loader/color_loader_3.dart';
 
 //provider
 import '../provider/report_provider.dart';
-import 'package:provider/provider.dart';
 import '../provider/parkingLotProvider.dart';
-import '../provider/auth.dart';
-import '../provider/report_provider.dart';
 
 class Parkability extends StatefulWidget {
   static const routeName = '/park-ability';
@@ -45,77 +40,52 @@ class _ParkabilityState extends State<Parkability> {
 
   File _image;
   String _uploadedFileURL;
-  String _locImage;
-
-  final _form = GlobalKey<FormState>();
-
-  final _imageUrlFocusNode = FocusNode();
-
-  final _lifeTimeFocusNode = FocusNode();
 
   var _isLoading = false;
-  var _isUploadImage = false;
-  var _locPicloaded = false;
-  var _isPickedImage = false;
+  // var _isUploadImage = false;
+  // var _locPicloaded = false;
+  // var _isPickedImage = false;
 
   int _currentValue = 0; // Number slider value
 
-  @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    super.didChangeDependencies();
-  }
+  // Future<void> _saveForm(context, name) async {
+  //   // final _isValid = _form.currentState.validate();
 
-  @override
-  void initState() {
-    // TODO: implement initState
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  Future<void> _saveForm(context, name) async {
-    // final _isValid = _form.currentState.validate();
-
-    // if (!_isValid) {
-    //   return;
-    // }
-    setState(() {
-      _isLoading = true;
-    });
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(
-          'Confirmed?',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        content: Text('Do you confirmed your reports?'),
-        actions: <Widget>[
-          FlatButton(
-            child: Text('Discard'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          _isLoading
-              ? CircularProgressIndicator()
-              : FlatButton(
-                  child: Text('Confirmed'),
-                  onPressed: () {},
-                )
-        ],
-      ),
-    );
-    // Navigator.of(context).pop();
-  }
+  //   // if (!_isValid) {
+  //   //   return;
+  //   // }
+  //   setState(() {
+  //     _isLoading = true;
+  //   });
+  //   showDialog(
+  //     context: context,
+  //     builder: (ctx) => AlertDialog(
+  //       title: Text(
+  //         'Confirmed?',
+  //         style: TextStyle(
+  //           fontSize: 20,
+  //           fontWeight: FontWeight.bold,
+  //         ),
+  //       ),
+  //       content: Text('Do you confirmed your reports?'),
+  //       actions: <Widget>[
+  //         FlatButton(
+  //           child: Text('Discard'),
+  //           onPressed: () {
+  //             Navigator.of(context).pop();
+  //           },
+  //         ),
+  //         _isLoading
+  //             ? CircularProgressIndicator()
+  //             : FlatButton(
+  //                 child: Text('Confirmed'),
+  //                 onPressed: () {},
+  //               )
+  //       ],
+  //     ),
+  //   );
+  //   // Navigator.of(context).pop();
+  // }
 
   Future getImage() async {
     _image = await ImagePicker.pickImage(source: ImageSource.gallery);
@@ -127,8 +97,6 @@ class _ParkabilityState extends State<Parkability> {
   }
 
   int getAndSetlifeTime() {
-    var dateTime = DateTime.now();
-
     //Real envi
     // var hourMark = dateTime.hour;
     // var minuteMark = dateTime.minute;
@@ -249,12 +217,12 @@ class _ParkabilityState extends State<Parkability> {
         ),
       );
     }
-    final snackBar = SnackBar(
-      content: Text('Upload image complete'),
-      duration: Duration(
-        seconds: 1,
-      ),
-    );
+    // final snackBar = SnackBar(
+    //   content: Text('Upload image complete'),
+    //   duration: Duration(
+    //     seconds: 1,
+    //   ),
+    // );
 
     // Navigator.of(context).pop();
     // Scaffold.of(context).showSnackBar(snackBar);
@@ -270,8 +238,7 @@ class _ParkabilityState extends State<Parkability> {
 
     final parkingInfo =
         Provider.of<ParkingLotProvider>(context, listen: false).findById(name);
-    final authData = Provider.of<Auth>(context, listen: false);
-    final report = Provider.of<ReportsProvider>(context, listen: false);
+
     // final locUrl = Provider.of<ParkingLotProvider>(context, listen: false)
     //     .getLocImage(name);
     // print(locUrl.toString());

@@ -1,45 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-class LifeTimeBar extends StatelessWidget {
+class LifeTimeBar extends StatefulWidget {
   final Icon icon;
   final double heightz;
   double factor;
+  LifeTimeBar({this.heightz, this.icon, this.factor});
+
+  @override
+  _LifeTimeBarState createState() => _LifeTimeBarState();
+}
+
+class _LifeTimeBarState extends State<LifeTimeBar> {
   Color colorFactor;
 
   void _colorFactor() {
-    if (factor >= 0.3) {
+    if (widget.factor >= 0.3) {
       colorFactor = Colors.red;
-      if (factor >= 0.5) {
+      if (widget.factor >= 0.5) {
         colorFactor = Colors.yellow;
-        if (factor >= 0.8) {
+        if (widget.factor >= 0.8) {
           colorFactor = Colors.green;
         }
       }
     }
   }
 
-  LifeTimeBar({this.heightz, this.icon, this.factor});
   @override
   Widget build(BuildContext context) {
     _colorFactor();
     return LayoutBuilder(
       builder: (ctx, constraints) {
         return Container(
-          height: heightz,
+          height: widget.heightz,
           child: Column(
             children: <Widget>[
               Container(
-                height: heightz * 0.15,
+                height: widget.heightz * 0.15,
                 child: FittedBox(
-                  child: icon,
+                  child: widget.icon,
                 ),
               ),
               SizedBox(
-                height: heightz * 0.05,
+                height: widget.heightz * 0.05,
               ),
               Container(
-                height: heightz * 0.8,
+                height: widget.heightz * 0.8,
                 width: 10,
                 child: Stack(
                   children: <Widget>[
@@ -56,7 +62,7 @@ class LifeTimeBar extends StatelessWidget {
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: FractionallySizedBox(
-                        heightFactor: factor,
+                        heightFactor: widget.factor,
                         child: Container(
                           decoration: BoxDecoration(
                             color: colorFactor,

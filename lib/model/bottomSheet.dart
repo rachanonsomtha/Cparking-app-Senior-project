@@ -62,29 +62,4 @@ class Modal {
     Navigator.of(context)
         .pushNamedAndRemoveUntil(page, (Route<dynamic> route) => false);
   }
-
-  ListTile _createTile(BuildContext context, String name, String subTitle,
-      IconData icon, Function action) {
-    return ListTile(
-      leading: Icon(icon),
-      subtitle: Text(subTitle),
-      title: Text(name),
-      onTap: () {
-        action(context);
-      },
-    );
-  }
-
-  _action1(context) {
-    // print('action 1');
-  }
-
-  _action2(context, name) {
-    Navigator.of(context)
-        .pushReplacementNamed(Parkability.routeName, arguments: name);
-  }
-
-  _action3(context) {
-    Navigator.of(context).pushReplacementNamed(ReportOverViewScreen.routeName);
-  }
 }

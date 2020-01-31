@@ -1,12 +1,8 @@
-import 'package:cparking/screens/report_detail_screen.dart';
-
 import '../provider/report_provider.dart';
 import '../widgets/report_widget.dart';
 import 'package:provider/provider.dart';
-import '../loader/color_loader_2.dart';
 import '../loader/color_loader_3.dart';
 
-import '../widgets/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flare_flutter/flare_actor.dart';
 
@@ -40,8 +36,6 @@ class _ReportOverViewScreenState extends State<ReportOverViewScreen> {
     setState(() {
       _isInit = false;
     });
-
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
   }
 

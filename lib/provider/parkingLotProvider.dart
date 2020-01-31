@@ -2,7 +2,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import './parkingLot.dart';
 import 'package:firebase_storage/firebase_storage.dart'; // For File Upload To Firestore
-import '../provider/report.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class ParkingLotProvider with ChangeNotifier {

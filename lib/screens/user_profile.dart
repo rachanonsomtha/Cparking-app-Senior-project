@@ -10,12 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class UserProfile extends StatefulWidget {
-  final String userName;
-  final String userId;
-
   static const routeName = '/userProfile';
-
-  UserProfile(this.userName, this.userId);
 
   @override
   _UserProfileState createState() => _UserProfileState();

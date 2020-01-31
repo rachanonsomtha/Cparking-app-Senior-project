@@ -77,7 +77,7 @@ class MyApp extends StatelessWidget {
           routes: {
             // HomeScreen.routeName: (ctx) => HomeScreen(),
             Parkability.routeName: (ctx) => Parkability(),
-            UserProfile.routeName: (ctx) => UserProfile(null, null),
+            UserProfile.routeName: (ctx) => UserProfile(),
             ReportOverViewScreen.routeName: (ctx) => ReportOverViewScreen(),
             UserPreviousReports.routeName: (ctx) => UserPreviousReports(),
             ReportDetailScreen.routeName: (ctx) => ReportDetailScreen(),

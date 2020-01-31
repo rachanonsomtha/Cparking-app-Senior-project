@@ -1,8 +1,12 @@
+import 'package:cparking/screens/report_detail_screen.dart';
+
 import '../provider/report_provider.dart';
 import '../widgets/report_widget.dart';
 import 'package:provider/provider.dart';
+import '../loader/color_loader_2.dart';
 import '../loader/color_loader_3.dart';
 
+import '../widgets/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flare_flutter/flare_actor.dart';
 
@@ -36,7 +40,21 @@ class _ReportOverViewScreenState extends State<ReportOverViewScreen> {
     setState(() {
       _isInit = false;
     });
+
+    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
+  }
+
+  Future<void> _fetchReport(BuildContext context, String name) async {
+    Provider.of<ReportsProvider>(context).fetchReport();
+    Provider.of<ReportsProvider>(context)
+        .fetchReportFromLocation(name)
+        .then((_) {
+      setState(() {
+        _isLoading = false;
+      });
+    });
+    print('kuy');
   }
 
   @override
@@ -94,26 +112,29 @@ class _ReportOverViewScreenState extends State<ReportOverViewScreen> {
               ? Center(
                   child: ColorLoader3(),
                 )
-              : Padding(
-                  padding: EdgeInsets.all(8),
-                  child: ListView.builder(
-                    itemCount: report.locReportsCount,
-                    itemBuilder: (_, index) => ChangeNotifierProvider.value(
-                      child: Column(
-                        children: <Widget>[
-                          ReportItem(
-                              // report.reports[index].userName,
-                              // report.reports[index].lifeTime,
-                              // report.reports[index].dateTime.toString(),
-                              // report.reports[index].imageUrl,
-                              // report.reports[index].availability,
-                              // report.reports[index].isPromoted,
-                              // report.reports[index].score,
-                              ),
-                          Divider(),
-                        ],
+              : RefreshIndicator(
+                  onRefresh: () => _fetchReport(context, name),
+                  child: Padding(
+                    padding: EdgeInsets.all(8),
+                    child: ListView.builder(
+                      itemCount: report.locReportsCount,
+                      itemBuilder: (_, index) => ChangeNotifierProvider.value(
+                        child: Column(
+                          children: <Widget>[
+                            ReportItem(
+                                // report.reports[index].userName,
+                                // report.reports[index].lifeTime,
+                                // report.reports[index].dateTime.toString(),
+                                // report.reports[index].imageUrl,
+                                // report.reports[index].availability,
+                                // report.reports[index].isPromoted,
+                                // report.reports[index].score,
+                                ),
+                            Divider(),
+                          ],
+                        ),
+                        value: report.locReports[index],
                       ),
-                      value: report.locReports[index],
                     ),
                   ),
                 ),

@@ -1,6 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import './report.dart';
 import 'dart:convert';
 import 'dart:collection';
@@ -161,15 +162,15 @@ class ReportsProvider with ChangeNotifier {
     return row;
   }
 
-  int setMinute(int time) {
+  String setMinute(int time) {
     //Real envi
 
-    int min;
+    String min;
     if (time <= 30) {
-      min = 0;
+      min = '0';
     }
     if (time >= 31) {
-      min = 30;
+      min = '30';
     }
 
     return min;
@@ -351,21 +352,24 @@ class ReportsProvider with ChangeNotifier {
     }
   }
 
-  Future<void> addReport(Report report, int currentReportCount) async {
-    var hour = DateTime.now().hour;
-    var _minute = setMinute(DateTime.now().minute);
-    var avai = report.availability.toInt();
-    var loc = report.loc.toString();
-    print(hour);
-    print(_minute);
+  String calculateMean(double oldMean, int avai, int count) {
+    var temp = oldMean + avai;
     print(avai);
-    print(loc);
+    var ans = (temp / (count == 0 ? 1 : count)).round();
+    return ans.toString();
+  }
+
+  Future<void> addReport(Report report, int currentReportCount) async {
     final url1 =
         'https://cparking-ecee0.firebaseio.com/reports.json?auth=$authToken';
 
     // final add_date =
     //     DateFormat('yyyy-MM-dd').add_Hms().format(DateTime.now()).toString();
     final add_date = DateTime.now().toString();
+    final time = DateTime.now();
+
+    String hour = (time.hour).toString();
+    String minute = setMinute(time.minute);
 
     // print(add_date);
     // create products collection in firebase
@@ -395,31 +399,29 @@ class ReportsProvider with ChangeNotifier {
           json.decode(response.body)['name'],
         ),
       );
-      int oldMean;
 
-      // final url3 =
-      //     'https://cparking-ecee0.firebaseio.com/avai/$loc/$hour/$_minute.json';
+      final urlOldMean =
+          'https://cparking-ecee0.firebaseio.com/avai/${report.loc}/$hour/$minute.json';
 
-      // try {
-      //   final response = await http.get(url3);
-      //   final decodeData = json.decode(response.body) as Map<String, dynamic>;
+      double oldMean;
+      await http.get(urlOldMean).then((value) {
+        var data = json.decode(value.body) as Map<String, dynamic>;
+        oldMean = double.parse(data['mean']);
+      });
 
-      //   decodeData.forEach((reportId, reportData) {
-      //     oldMean = reportData['mean'];
-      //     // print(reportId);
-      //   });
-      // } catch (error) {
-      //   print(error);
-      // }
-      // var mean = 2;
-      // // (oldMean + avai) / currentReportCount == 0 ? 1 : currentReportCount;
-      // await http.patch(
-      //   url3,
-      //   body: json.encode({
-      //     'mean': mean,
-      //   }),
-      // );
-      // print(json.decode(response.body));
+      String newMean =
+          calculateMean(oldMean, report.availability, currentReportCount);
+
+      final url3 =
+          'https://cparking-ecee0.firebaseio.com/avai/${report.loc}/$hour/$minute.json';
+
+      await http.patch(
+        url3,
+        body: json.encode({
+          'mean': newMean,
+        }),
+      );
+
       final rep = Report(
         id: json.decode(response.body)['name'],
         userName: report.userName,

@@ -80,12 +80,10 @@ class _ReportItemState extends State<ReportItem> {
                   Provider.of<Auth>(context)
                       .fetchUserDataFromUserId(report.userName)
                       .then((_) {
-                    if (report.id != null) {
-                      Navigator.of(context).pushNamed(
-                        ReportDetailScreen.routeName,
-                        arguments: report.id,
-                      );
-                    }
+                    Navigator.of(context).pushNamed(
+                      ReportDetailScreen.routeName,
+                      arguments: report.id,
+                    );
                   });
                 },
                 child: ClipRRect(
@@ -180,12 +178,11 @@ class _ReportItemState extends State<ReportItem> {
                                     ? Icon(
                                         Icons.thumb_down,
                                       )
-                                    : Icon(Icons.thumb_up),
-                                    // FlareActor(
-                                    //     'assets/flare/HearthAnimation.flr',
-                                    //     fit: BoxFit.contain,
-                                    //     animation: _isanimate,
-                                    //   ),
+                                    : FlareActor(
+                                        'assets/flare/HearthAnimation.flr',
+                                        fit: BoxFit.contain,
+                                        animation: _isanimate,
+                                      ),
                               ),
                             ),
                             onTap: () {

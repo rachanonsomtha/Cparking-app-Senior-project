@@ -1,8 +1,10 @@
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../provider/auth.dart';
 import '../model/http_exception.dart';
+import '../loader/color_loader_2.dart';
 import '../loader/color_loader_3.dart';
 
 enum AuthMode { Signup, Login }

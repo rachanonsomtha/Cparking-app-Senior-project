@@ -8,8 +8,13 @@ import 'package:path/path.dart';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import '../provider/auth.dart';
+import 'package:path/path.dart';
 
 class UserProfile extends StatefulWidget {
+  String userName;
+  String userId;
+
   static const routeName = '/userProfile';
 
   @override
@@ -18,6 +23,7 @@ class UserProfile extends StatefulWidget {
 
 class _UserProfileState extends State<UserProfile> {
   // var _user;
+  bool _isInit = true;
   bool _isLoading = false;
   bool _isGetimage = false;
   File _image;
@@ -122,7 +128,7 @@ class _UserProfileState extends State<UserProfile> {
                 : NetworkImage(
                     (userData.userData.profileImageUrl).toString(),
                   ),
-            fit: BoxFit.cover,
+            fit: BoxFit.scaleDown,
           ),
           borderRadius: BorderRadius.circular(80.0),
           border: Border.all(
@@ -246,63 +252,59 @@ class _UserProfileState extends State<UserProfile> {
     );
   }
 
-  // Widget _buildButtons() {
-  //   return Padding(
-  //     padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-  //     child: Row(
-  //       children: <Widget>[
-  //         Expanded(
-  //           child: InkWell(
-  //             onTap: () => print("followed"),
-  //             child: Container(
-  //               height: 40.0,
-  //               decoration: BoxDecoration(
-  //                 border: Border.all(),
-  //                 color: Color(0xFF404A5C),
-  //               ),
-  //               child: Center(
-  //                 child: Text(
-  //                   "FOLLOW",
-  //                   style: TextStyle(
-  //                     color: Colors.white,
-  //                     fontWeight: FontWeight.w600,
-  //                   ),
-  //                 ),
-  //               ),
-  //             ),
-  //           ),
-  //         ),
-  //         SizedBox(width: 10.0),
-  //         Expanded(
-  //           child: InkWell(
-  //             onTap: () => print("Message"),
-  //             child: Container(
-  //               height: 40.0,
-  //               decoration: BoxDecoration(
-  //                 border: Border.all(),
-  //               ),
-  //               child: Center(
-  //                 child: Padding(
-  //                   padding: EdgeInsets.all(10.0),
-  //                   child: Text(
-  //                     "MESSAGE",
-  //                     style: TextStyle(
-  //                       color: Colors.black,
-  //                       fontWeight: FontWeight.w600,
-  //                     ),
-  //                   ),
-  //                 ),
-  //               ),
-  //             ),
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  Future<void> _fetchReport(BuildContext context) async {
-    await Provider.of<Auth>(context).fetchUserProfileData();
+  Widget _buildButtons() {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: InkWell(
+              onTap: () => print("followed"),
+              child: Container(
+                height: 40.0,
+                decoration: BoxDecoration(
+                  border: Border.all(),
+                  color: Color(0xFF404A5C),
+                ),
+                child: Center(
+                  child: Text(
+                    "FOLLOW",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(width: 10.0),
+          Expanded(
+            child: InkWell(
+              onTap: () => print("Message"),
+              child: Container(
+                height: 40.0,
+                decoration: BoxDecoration(
+                  border: Border.all(),
+                ),
+                child: Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: Text(
+                      "MESSAGE",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -326,56 +328,53 @@ class _UserProfileState extends State<UserProfile> {
           SizedBox(
             height: 50,
           ),
-          RefreshIndicator(
-            onRefresh: () => _fetchReport(context),
-            child: SafeArea(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      child: Row(
-                        children: <Widget>[
-                          IconButton(
-                            color: Colors.black54,
-                            icon: Icon(Icons.arrow_back_ios),
-                            onPressed: () => Navigator.of(context).pop(),
-                          )
-                        ],
-                      ),
+          SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    child: Row(
+                      children: <Widget>[
+                        IconButton(
+                          color: Colors.black54,
+                          icon: Icon(Icons.arrow_back_ios),
+                          onPressed: () => Navigator.of(context).pop(),
+                        )
+                      ],
                     ),
-                    SizedBox(height: screenSize.height / 5),
+                  ),
+                  SizedBox(height: screenSize.height / 5),
 
-                    _buildProfileImage(_userData),
-                    _buildFullName(
-                      (_userData.userData.userName),
-                    ),
-                    _buildStatus(context, _userData),
-                    _buildStatContainer(_userData),
-                    // _buildBio(context),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _buildSeparator(screenSize),
-                    SizedBox(height: 10.0),
-                    !_isGetimage
-                        ? SizedBox(
-                            height: 10,
-                          )
-                        : Center(
-                            child: FlatButton(
-                              color: Colors.grey,
-                              onPressed: () async {
-                                await uploadProfilePicture(
-                                    context, _userData.userId);
-                              },
-                              child: Text('Update Profile Picture'),
-                            ),
+                  _buildProfileImage(_userData),
+                  _buildFullName(
+                    (_userData.userData.userName),
+                  ),
+                  _buildStatus(context, _userData),
+                  _buildStatContainer(_userData),
+                  // _buildBio(context),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  _buildSeparator(screenSize),
+                  SizedBox(height: 10.0),
+                  !_isGetimage
+                      ? SizedBox(
+                          height: 10,
+                        )
+                      : Center(
+                          child: FlatButton(
+                            color: Colors.grey,
+                            onPressed: () async {
+                              await uploadProfilePicture(
+                                  context, _userData.userId);
+                            },
+                            child: Text('Update Profile Picture'),
                           ),
-                    // _buildGetInTouch(context),
-                    SizedBox(height: 8.0),
-                    // _buildButtons(),
-                  ],
-                ),
+                        ),
+                  // _buildGetInTouch(context),
+                  SizedBox(height: 8.0),
+                  // _buildButtons(),
+                ],
               ),
             ),
           ),

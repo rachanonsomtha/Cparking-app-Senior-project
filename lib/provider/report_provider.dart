@@ -161,15 +161,15 @@ class ReportsProvider with ChangeNotifier {
     return row;
   }
 
-  String setMinute(int time) {
+  int setMinute(int time) {
     //Real envi
 
-    String min;
+    int min;
     if (time <= 30) {
-      min = '0';
+      min = 0;
     }
     if (time >= 31) {
-      min = '30';
+      min = 30;
     }
 
     return min;
@@ -351,6 +351,7 @@ class ReportsProvider with ChangeNotifier {
     }
   }
 
+<<<<<<< HEAD
   String calculateMean(double oldMean, int avai, int count) {
     var temp = oldMean + avai;
     print(avai);
@@ -359,17 +360,23 @@ class ReportsProvider with ChangeNotifier {
     return ans.toString();
   }
 
+=======
+>>>>>>> parent of 5e66f5a... adding average availability
   Future<void> addReport(Report report, int currentReportCount) async {
+    var hour = DateTime.now().hour;
+    var _minute = setMinute(DateTime.now().minute);
+    var avai = report.availability.toInt();
+    var loc = report.loc.toString();
+    print(hour);
+    print(_minute);
+    print(avai);
+    print(loc);
     final url1 =
         'https://cparking-ecee0.firebaseio.com/reports.json?auth=$authToken';
 
     // final add_date =
     //     DateFormat('yyyy-MM-dd').add_Hms().format(DateTime.now()).toString();
     final add_date = DateTime.now().toString();
-    final time = DateTime.now();
-
-    String hour = (time.hour).toString();
-    String minute = setMinute(time.minute);
 
     // print(add_date);
     // create products collection in firebase
@@ -399,6 +406,7 @@ class ReportsProvider with ChangeNotifier {
           json.decode(response.body)['name'],
         ),
       );
+<<<<<<< HEAD
 
       final url3 =
           'https://cparking-ecee0.firebaseio.com/avai/${report.loc}/$hour/$minute.json';
@@ -426,6 +434,33 @@ class ReportsProvider with ChangeNotifier {
         }),
       );
 
+=======
+      int oldMean;
+
+      // final url3 =
+      //     'https://cparking-ecee0.firebaseio.com/avai/$loc/$hour/$_minute.json';
+
+      // try {
+      //   final response = await http.get(url3);
+      //   final decodeData = json.decode(response.body) as Map<String, dynamic>;
+
+      //   decodeData.forEach((reportId, reportData) {
+      //     oldMean = reportData['mean'];
+      //     // print(reportId);
+      //   });
+      // } catch (error) {
+      //   print(error);
+      // }
+      // var mean = 2;
+      // // (oldMean + avai) / currentReportCount == 0 ? 1 : currentReportCount;
+      // await http.patch(
+      //   url3,
+      //   body: json.encode({
+      //     'mean': mean,
+      //   }),
+      // );
+      // print(json.decode(response.body));
+>>>>>>> parent of 5e66f5a... adding average availability
       final rep = Report(
         id: json.decode(response.body)['name'],
         userName: report.userName,

@@ -83,7 +83,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
     for (int i = 0; i < parkingData.parkingLotsCount; i++) {
       polylines.add(Polyline(
-          // onTap: () => modal.mainBottomSheet(context, lots[i].id),
           color: Colors.yellow,
           width: 10,
           points: lots[i].poly,
@@ -117,7 +116,6 @@ class _HomeScreenState extends State<HomeScreen> {
           children: <Widget>[
             GoogleMap(
               // myLocationEnabled: true,
-              polylines: Set.from(polylines),
               markers: Set.from(markers),
               mapType: mapType,
               initialCameraPosition: CameraPosition(

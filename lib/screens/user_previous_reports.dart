@@ -1,7 +1,6 @@
 import '../provider/report_provider.dart';
 import '../widgets/report_widget.dart';
 import 'package:provider/provider.dart';
-import '../loader/color_loader_2.dart';
 import '../loader/color_loader_3.dart';
 
 import '../widgets/drawer.dart';

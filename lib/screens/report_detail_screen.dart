@@ -1,9 +1,5 @@
 // import 'dart:html';
-
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
-
 import 'package:provider/provider.dart';
 import '../provider/report_provider.dart';
 
@@ -224,7 +220,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           SafeArea(
             child: SingleChildScrollView(
               child: Column(
-                // mainAxisAlignment: MainAxisAlignment.start,
+                // mainAxisAlignment: MainAxisAlignment.start, 
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   SizedBox(

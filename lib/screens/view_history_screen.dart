@@ -1,9 +1,6 @@
 import 'package:cparking/loader/color_loader_3.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
-import 'dart:math';
-import 'package:flutter_sparkline/flutter_sparkline.dart';
 import 'dart:math' as math;
 import 'package:provider/provider.dart';
 import '../provider/report_provider.dart';
@@ -106,7 +103,7 @@ class _ViewHistoryScreenState extends State<ViewHistoryScreen> {
     );
   }
 
-  Widget _buildHistoryDetails() {
+  Widget _buildHistoryDetails(ParkLot loc) {
     return Container(
       padding: EdgeInsets.only(
         top: 20,
@@ -125,7 +122,12 @@ class _ViewHistoryScreenState extends State<ViewHistoryScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     Icon(Icons.place),
-                    Text('ตึก 30 ปี คณะวิศวกรรมศาสตร์ มหาวิทยาลัยเชียงใหม่'),
+                    Wrap(
+                      children: <Widget>[
+                        Text(
+                            '${loc.title} คณะวิศวกรรมศาสตร์'),
+                      ],
+                    )
                   ],
                 ),
               ),
@@ -245,7 +247,7 @@ class _ViewHistoryScreenState extends State<ViewHistoryScreen> {
                         : Column(
                             children: <Widget>[
                               _buildStarAndCount(currentReportCount),
-                              _buildHistoryDetails(),
+                              _buildHistoryDetails(loc),
                             ],
                           ),
                     Container(

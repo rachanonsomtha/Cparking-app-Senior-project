@@ -401,29 +401,31 @@ class ReportsProvider with ChangeNotifier {
       );
 
       final urlOldMean =
-          'https://cparking-ecee0.firebaseio.com/avai/${report.loc}/11/30.json';
+          'https://cparking-ecee0.firebaseio.com/avai/${report.loc}/$hour/$minute.json';
 
       double oldMean;
-      await http.get(urlOldMean).then((value) {
-        var data = json.decode(value.body) as Map<String, dynamic>;
+      final response3 = await http.get(urlOldMean);
+      final decodeData3 = json.decode(response3.body) as Map<String, dynamic>;
+      if (decodeData3 == null) {
+        oldMean = 0;
+      } else {
+        oldMean = double.parse(decodeData3['mean']);
+      }
+      // print(decodeData3['mean']);
 
-        data.forEach((dataId, dataData) {
-          oldMean = double.parse(dataData['mean']);
-        });
-      }).then((_) async {
-        String newMean =
-            calculateMean(oldMean, report.availability, currentReportCount);
+      // .then((_) async {
+      String newMean =
+          calculateMean(oldMean, report.availability, currentReportCount);
 
-        final url3 =
-            'https://cparking-ecee0.firebaseio.com/avai/${report.loc}/11/30.json';
+      final url3 =
+          'https://cparking-ecee0.firebaseio.com/avai/${report.loc}/$hour/$minute.json';
 
-        await http.patch(
-          url3,
-          body: json.encode({
-            'mean': newMean,
-          }),
-        );
-      });
+      await http.patch(
+        url3,
+        body: json.encode({
+          'mean': newMean,
+        }),
+      );
 
       final rep = Report(
         id: json.decode(response.body)['name'],

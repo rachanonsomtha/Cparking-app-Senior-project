@@ -78,18 +78,18 @@ class _ReportOverViewScreenState extends State<ReportOverViewScreen> {
 
     return Scaffold(
       // backgroundColor: Color.fromRGBO(67, 66, 114, 100),
-      // appBar: AppBar(
-      //   title: Text(
-      //     'Reports from : $name',
-      //     style: TextStyle(
-      //       fontFamily: 'Lato',
-      //     ),
-      //   ),
-      //   leading: IconButton(
-      //     icon: Icon(Icons.arrow_back_ios),
-      //     onPressed: () => Navigator.of(context).pop(),
-      //   ),
-      // ),
+      appBar: AppBar(
+        title: Text(
+          'Reports from : $name',
+          style: TextStyle(
+            fontFamily: 'Lato',
+          ),
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
       // drawer: AppDrawer(),
       body: count == 0 && !_isLoading
           ? Center(

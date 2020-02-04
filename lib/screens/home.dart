@@ -6,6 +6,7 @@ import 'dart:async';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import '../provider/parkingLotProvider.dart';
+import '../loader/color_loader_3.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home-screeen';
@@ -24,6 +25,8 @@ class _HomeScreenState extends State<HomeScreen> {
   BitmapDescriptor pinLocationIcon;
   bool maptype = true;
   MapType mapType;
+
+  bool _isLoading = false;
 
   Future<LocationData> getCurrentLocation() async {
     Location location = Location();
@@ -46,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
     )));
   }
 
-  void getParkingData() {
+  Future<void> getParkingData() async {
     BitmapDescriptor.fromAssetImage(ImageConfiguration(devicePixelRatio: 2.5),
             'images/Webp.net-resizeimage.png')
         .then((onValue) {
@@ -77,14 +80,14 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  void getPolyLine() {
+  Future<void> getPolyLine() async {
     final parkingData = Provider.of<ParkingLotProvider>(context);
     final lots = parkingData.parkingLots;
 
     for (int i = 0; i < parkingData.parkingLotsCount; i++) {
       polylines.add(Polyline(
           // onTap: () => modal.mainBottomSheet(context, lots[i].id),
-          color: Colors.yellow,
+          color: lots[i].color,
           width: 10,
           points: lots[i].poly,
           polylineId: PolylineId(lots[i].id.toString())));
@@ -92,17 +95,22 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
-  void didChangeDependencies() {
-    getPolyLine();
+  void didChangeDependencies() async {
     // TODO: implement didChangeDependencies
-    getParkingData();
-    super.didChangeDependencies();
-  }
+    setState(() {
+      _isLoading = true;
+    });
+    await Provider.of<ParkingLotProvider>(context).getColor().then((_) {
+      getParkingData().then((_) async {
+        await getPolyLine().then((_) {
+          setState(() {
+            _isLoading = false;
+          });
+        });
+      });
+    });
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
+    super.didChangeDependencies();
   }
 
   void changeMapType() {
@@ -126,24 +134,28 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         drawer: AppDrawer(),
         // drawer: AppDrawer(),
-        body: Stack(
-          alignment: Alignment.bottomRight,
-          children: <Widget>[
-            GoogleMap(
-              // myLocationEnabled: true,
-              polylines: Set.from(polylines),
-              markers: Set.from(markers),
-              mapType: mapType,
-              initialCameraPosition: CameraPosition(
-                target: LatLng(18.795484, 98.952698),
-                zoom: 18,
+        body: _isLoading
+            ? Center(
+                child: ColorLoader3(),
+              )
+            : Stack(
+                alignment: Alignment.bottomRight,
+                children: <Widget>[
+                  GoogleMap(
+                    // myLocationEnabled: true,
+                    polylines: Set.from(polylines),
+                    markers: Set.from(markers),
+                    mapType: mapType,
+                    initialCameraPosition: CameraPosition(
+                      target: LatLng(18.795484, 98.952698),
+                      zoom: 18,
+                    ),
+                    onMapCreated: (GoogleMapController controller) {
+                      _controller.complete(controller);
+                    },
+                  ),
+                ],
               ),
-              onMapCreated: (GoogleMapController controller) {
-                _controller.complete(controller);
-              },
-            ),
-          ],
-        ),
         floatingActionButton: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[

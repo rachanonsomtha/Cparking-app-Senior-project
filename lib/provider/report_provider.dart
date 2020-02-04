@@ -352,17 +352,14 @@ class ReportsProvider with ChangeNotifier {
     }
   }
 
-  String calculateMean(
-    double oldMean,
-    int avai,
-  ) {
+  String calculateMean(double oldMean, int avai, int count) {
     var temp = oldMean + avai;
     print("Avai: $avai");
-    var ans = (temp / 2).round();
+    var ans = (temp / count == 0 ? 1 : 2).round();
     return (ans.toString());
   }
 
-  Future<void> addReport(Report report, int currentReportCount) async {
+  Future<void> addReport(Report report) async {
     final url1 =
         'https://cparking-ecee0.firebaseio.com/reports.json?auth=$authToken';
 
@@ -406,22 +403,27 @@ class ReportsProvider with ChangeNotifier {
       final urlOldMean =
           'https://cparking-ecee0.firebaseio.com/avai/${report.loc}/$hour/$minute.json';
       double oldMean;
+      int count;
       final response3 = await http.get(urlOldMean);
       final decodeData3 = json.decode(response3.body) as Map<String, dynamic>;
 
       oldMean = double.parse(decodeData3['mean']);
+      count = int.parse(decodeData3['count']);
+
       // .then((_) async {
       String newMean = calculateMean(
         oldMean,
         report.availability,
+        count,
       );
       final url3 =
           'https://cparking-ecee0.firebaseio.com/avai/${report.loc}/$hour/$minute.json';
-
+      count += 1;
       await http.patch(
         url3,
         body: json.encode({
           'mean': newMean,
+          'count': count.toString(),
         }),
       );
 

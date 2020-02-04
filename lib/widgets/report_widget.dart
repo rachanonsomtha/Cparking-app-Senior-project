@@ -30,6 +30,7 @@ class ReportItem extends StatefulWidget {
 
 class _ReportItemState extends State<ReportItem> {
   String _isanimate = 'go';
+  bool _isLoading = false;
 
 // calculate displayed lifetime bar
   double ratioCalculate(DateTime submitTime, Duration lifeTime) {
@@ -86,11 +87,15 @@ class _ReportItemState extends State<ReportItem> {
                   );
                 },
                 child: ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(12)),
+                  // borderRadius: BorderRadius.all(Radius.circular(12)),
                   child: Container(
-                    height: MediaQuery.of(context).size.height / 6,
+                    margin: EdgeInsets.only(
+                      left: 5,
+                      right: 5,
+                    ),
+                    height: MediaQuery.of(context).size.height / 7,
                     child: Image.network(
-                      reportData.userData.profileImageUrl,
+                      report.imageUrl,
                       fit: BoxFit.cover,
                       loadingBuilder: (BuildContext context, Widget child,
                           ImageChunkEvent loadingProgress) {
@@ -136,6 +141,13 @@ class _ReportItemState extends State<ReportItem> {
                           fontSize: 12,
                         ),
                       ),
+                      Text(
+                        'Username: ${authData.tempUserData.userName}',
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColorDark,
+                          fontSize: 12,
+                        ),
+                      ),
                       Container(
                         width: 100,
                         child: SmoothStarRating(
@@ -156,64 +168,74 @@ class _ReportItemState extends State<ReportItem> {
                     ],
                   ),
                 ),
-                Column(
-                  // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    // Spacer(flex: 1,),
-                    FloatingActionButton(
-                      backgroundColor: Colors.white,
-                      heroTag: UniqueKey(),
-                      elevation: 0,
-                      onPressed: () {},
-                      child: Consumer<Report>(
-                        builder: (ctx, report, _) => GestureDetector(
-                            behavior: HitTestBehavior.translucent,
-                            child: AspectRatio(
-                              aspectRatio: 1,
-                              child: Padding(
-                                padding: EdgeInsets.all(10),
-                                child: report.isPromoted &&
-                                        _isanimate != 'favorite'
-                                    ? Icon(
-                                        Icons.thumb_down,
-                                      )
-                                    : FlareActor(
-                                        'assets/flare/HearthAnimation.flr',
-                                        fit: BoxFit.contain,
-                                        animation: _isanimate,
-                                      ),
-                              ),
+                _isLoading
+                    ? Center(
+                        child: Container(
+                          margin: EdgeInsets.all(10),
+                          width: 20,
+                          child: ColorLoader3(),
+                        ),
+                      )
+                    : Column(
+                        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          // Spacer(flex: 1,),
+                          FloatingActionButton(
+                            backgroundColor: Colors.white,
+                            heroTag: UniqueKey(),
+                            elevation: 0,
+                            onPressed: () {},
+                            child: Consumer<Report>(
+                              builder: (ctx, report, _) => GestureDetector(
+                                  behavior: HitTestBehavior.translucent,
+                                  child: AspectRatio(
+                                    aspectRatio: 1,
+                                    child: Padding(
+                                      padding: EdgeInsets.all(10),
+                                      child: report.isPromoted &&
+                                              _isanimate != 'favorite'
+                                          ? Icon(
+                                              Icons.thumb_down,
+                                            )
+                                          : FlareActor(
+                                              'assets/flare/HearthAnimation.flr',
+                                              fit: BoxFit.contain,
+                                              animation: _isanimate,
+                                            ),
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    // print(_isanimate);
+                                    setState(() {
+                                      _isLoading = true;
+                                      _isanimate = 'favorite';
+                                    });
+                                    // print(_isanimate);
+                                    report
+                                        .scoreManagement(
+                                      authData.token,
+                                      authData.userId,
+                                    )
+                                        .then((_) {
+                                      setState(() {
+                                        _isLoading = false;
+                                        _isanimate = 'idle';
+                                      });
+                                    });
+                                    // print('go');
+                                  }),
                             ),
-                            onTap: () {
-                              // print(_isanimate);
-                              setState(() {
-                                _isanimate = 'favorite';
-                              });
-                              // print(_isanimate);
-                              report
-                                  .scoreManagement(
-                                authData.token,
-                                authData.userId,
-                              )
-                                  .then((_) {
-                                setState(() {
-                                  _isanimate = 'idle';
-                                });
-                              });
-                              // print('go');
-                            }),
+                          ),
+                          Text(
+                            '${report.isPromoted && _isanimate != 'favorite' ? 'Unlike' : 'Like'}',
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColorDark,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    Text(
-                      '${report.isPromoted && _isanimate != 'favorite' ? 'Unlike' : 'Like'}',
-                      style: TextStyle(
-                        color: Theme.of(context).primaryColorDark,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                ),
               ],
             ),
           ],

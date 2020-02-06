@@ -2,8 +2,6 @@ import '../provider/report_provider.dart';
 import '../widgets/report_widget.dart';
 import 'package:provider/provider.dart';
 import '../loader/color_loader_3.dart';
-
-import '../widgets/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import '../provider/auth.dart';
@@ -39,8 +37,6 @@ class _UserPreviousReportsState extends State<UserPreviousReports> {
     setState(() {
       _isInit = false;
     });
-
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
   }
 

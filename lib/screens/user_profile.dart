@@ -10,9 +10,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class UserProfile extends StatefulWidget {
-  String userName;
-  String userId;
-
   static const routeName = '/userProfile';
 
   @override
@@ -21,12 +18,10 @@ class UserProfile extends StatefulWidget {
 
 class _UserProfileState extends State<UserProfile> {
   // var _user;
-  bool _isInit = true;
-  bool _isLoading = false;
   bool _isGetimage = false;
   File _image;
   String _uploadedFileURL;
-  
+
   var _editedUserProfile = UserData(
     id: null,
     profileImageUrl: '',
@@ -34,9 +29,6 @@ class _UserProfileState extends State<UserProfile> {
     score: 0,
     userName: '',
   );
-
-  final String _bio =
-      "\"Hi, I am a Freelance developer working for hourly basis. If you wants to contact me to build your product leave a message.\"";
 
   Widget _buildCoverImage(Size screenSize) {
     return Container(
@@ -66,13 +58,13 @@ class _UserProfileState extends State<UserProfile> {
           .ref()
           .child('userProfile/$userId/${basename(_image.path)}');
       StorageUploadTask uploadTask = storageReference.putFile(_image);
-      setState(() {
-        _isLoading = true;
-      });
+      // setState(() {
+      //   _isLoading = true;
+      // });
       await uploadTask.onComplete;
-      setState(() {
-        _isLoading = false;
-      });
+      // setState(() {
+      //   _isLoading = false;
+      // });
       storageReference.getDownloadURL().then((fileUrl) {
         setState(() {
           _uploadedFileURL = fileUrl;
@@ -221,25 +213,25 @@ class _UserProfileState extends State<UserProfile> {
     );
   }
 
-  Widget _buildBio(BuildContext context) {
-    TextStyle bioTextStyle = TextStyle(
-      fontFamily: 'Lato',
-      fontWeight: FontWeight.w400, //try changing weight to w500 if not thin
-      fontStyle: FontStyle.italic,
-      color: Color(0xFF799497),
-      fontSize: 16.0,
-    );
+  // Widget _buildBio(BuildContext context) {
+  //   TextStyle bioTextStyle = TextStyle(
+  //     fontFamily: 'Lato',
+  //     fontWeight: FontWeight.w400, //try changing weight to w500 if not thin
+  //     fontStyle: FontStyle.italic,
+  //     color: Color(0xFF799497),
+  //     fontSize: 16.0,
+  //   );
 
-    return Container(
-      color: Theme.of(context).accentColor,
-      padding: EdgeInsets.all(8.0),
-      child: Text(
-        _bio,
-        textAlign: TextAlign.center,
-        style: bioTextStyle,
-      ),
-    );
-  }
+  //   return Container(
+  //     color: Theme.of(context).accentColor,
+  //     padding: EdgeInsets.all(8.0),
+  //     child: Text(
+  //       _bio,
+  //       textAlign: TextAlign.center,
+  //       style: bioTextStyle,
+  //     ),
+  //   );
+  // }
 
   Widget _buildSeparator(Size screenSize) {
     return Container(
@@ -250,60 +242,60 @@ class _UserProfileState extends State<UserProfile> {
     );
   }
 
-  Widget _buildButtons() {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: InkWell(
-              onTap: () => print("followed"),
-              child: Container(
-                height: 40.0,
-                decoration: BoxDecoration(
-                  border: Border.all(),
-                  color: Color(0xFF404A5C),
-                ),
-                child: Center(
-                  child: Text(
-                    "FOLLOW",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          SizedBox(width: 10.0),
-          Expanded(
-            child: InkWell(
-              onTap: () => print("Message"),
-              child: Container(
-                height: 40.0,
-                decoration: BoxDecoration(
-                  border: Border.all(),
-                ),
-                child: Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: Text(
-                      "MESSAGE",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget _buildButtons() {
+  //   return Padding(
+  //     padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+  //     child: Row(
+  //       children: <Widget>[
+  //         Expanded(
+  //           child: InkWell(
+  //             onTap: () => print("followed"),
+  //             child: Container(
+  //               height: 40.0,
+  //               decoration: BoxDecoration(
+  //                 border: Border.all(),
+  //                 color: Color(0xFF404A5C),
+  //               ),
+  //               child: Center(
+  //                 child: Text(
+  //                   "FOLLOW",
+  //                   style: TextStyle(
+  //                     color: Colors.white,
+  //                     fontWeight: FontWeight.w600,
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //           ),
+  //         ),
+  //         SizedBox(width: 10.0),
+  //         Expanded(
+  //           child: InkWell(
+  //             onTap: () => print("Message"),
+  //             child: Container(
+  //               height: 40.0,
+  //               decoration: BoxDecoration(
+  //                 border: Border.all(),
+  //               ),
+  //               child: Center(
+  //                 child: Padding(
+  //                   padding: EdgeInsets.all(10.0),
+  //                   child: Text(
+  //                     "MESSAGE",
+  //                     style: TextStyle(
+  //                       color: Colors.black,
+  //                       fontWeight: FontWeight.w600,
+  //                     ),
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {

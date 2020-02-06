@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 // import '../screens/report_overview_screen.dart';
 import '../provider/auth.dart';
 import 'package:provider/provider.dart';
-import '../screens/home.dart';
 import '../screens/user_previous_reports.dart';
 // import '../screens/user_profile_screen.dart';
 
@@ -34,8 +33,9 @@ class AppDrawer extends StatelessWidget {
             text: 'Profile',
             onTap: () async {
               // navigateToPage(context, '/');
-              Provider.of<Auth>(context).fetchUserProfileData();
-              Navigator.of(context).pushNamed(UserProfile.routeName);
+              Provider.of<Auth>(context).fetchUserProfileData().then((_) {
+                Navigator.of(context).pushNamed(UserProfile.routeName);
+              });
             },
           ),
           Divider(),

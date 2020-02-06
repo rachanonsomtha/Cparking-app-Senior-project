@@ -16,8 +16,7 @@ import '../loader/color_loader_3.dart';
 //provider
 import '../provider/report_provider.dart';
 import '../provider/parkingLotProvider.dart';
-import '../provider/auth.dart';
-import '../provider/report_provider.dart';
+import '../provider/parkingLot.dart';
 
 class Parkability extends StatefulWidget {
   static const routeName = '/park-ability';
@@ -42,84 +41,65 @@ class _ParkabilityState extends State<Parkability> {
 
   File _image;
   String _uploadedFileURL;
-  String _locImage;
-
-  final _form = GlobalKey<FormState>();
-
-  final _imageUrlFocusNode = FocusNode();
-
-  final _lifeTimeFocusNode = FocusNode();
-
   var _isLoading = false;
-  var _isUploadImage = false;
-  var _locPicloaded = false;
-  var _isPickedImage = false;
 
   int _currentValue = 0; // Number slider value
 
-  @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    super.didChangeDependencies();
-  }
+  // Future<void> _saveForm(context, name) async {
+  //   // final _isValid = _form.currentState.validate();
 
-  @override
-  void initState() {
-    // TODO: implement initState
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  Future<void> _saveForm(context, name) async {
-    // final _isValid = _form.currentState.validate();
-
-    // if (!_isValid) {
-    //   return;
-    // }
-    setState(() {
-      _isLoading = true;
-    });
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(
-          'Confirmed?',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        content: Text('Do you confirmed your reports?'),
-        actions: <Widget>[
-          FlatButton(
-            child: Text('Discard'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          _isLoading
-              ? CircularProgressIndicator()
-              : FlatButton(
-                  child: Text('Confirmed'),
-                  onPressed: () {},
-                )
-        ],
-      ),
-    );
-    // Navigator.of(context).pop();
-  }
+  //   // if (!_isValid) {
+  //   //   return;
+  //   // }
+  //   setState(() {
+  //     _isLoading = true;
+  //   });
+  //   showDialog(
+  //     context: context,
+  //     builder: (ctx) => AlertDialog(
+  //       title: Text(
+  //         'Confirmed?',
+  //         style: TextStyle(
+  //           fontSize: 20,
+  //           fontWeight: FontWeight.bold,
+  //         ),
+  //       ),
+  //       content: Text('Do you confirmed your reports?'),
+  //       actions: <Widget>[
+  //         FlatButton(
+  //           child: Text('Discard'),
+  //           onPressed: () {
+  //             Navigator.of(context).pop();
+  //           },
+  //         ),
+  //         _isLoading
+  //             ? CircularProgressIndicator()
+  //             : FlatButton(
+  //                 child: Text('Confirmed'),
+  //                 onPressed: () {},
+  //               )
+  //       ],
+  //     ),
+  //   );
+  //   // Navigator.of(context).pop();
+  // }
 
   Future getImage() async {
-    _image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    File image;
+    image = await ImagePicker.pickImage(source: ImageSource.gallery);
 
     setState(() {
-      _image = _image;
-      // print(_image);
+      _image = image;
+      print(_image);
+    });
+  }
+
+  Future getCamera() async {
+    File image;
+    image = await ImagePicker.pickImage(source: ImageSource.camera);
+
+    setState(() {
+      _image = image;
     });
   }
 
@@ -127,11 +107,11 @@ class _ParkabilityState extends State<Parkability> {
     var dateTime = DateTime.now();
 
     //Real envi
-    // var hourMark = dateTime.hour;
-    // var minuteMark = dateTime.minute;
+    var hourMark = dateTime.hour;
+    var minuteMark = dateTime.minute;
     // Developing environment
-    var hourMark = 8;
-    var minuteMark = 20;
+    // var hourMark = 8;
+    // var minuteMark = 20;
 
     int row, col;
 
@@ -157,9 +137,6 @@ class _ParkabilityState extends State<Parkability> {
                         row = 9;
                         if (hourMark >= 17) {
                           row = 10;
-                          if (hourMark == 18) {
-                            row = 11;
-                          }
                         }
                       }
                     }
@@ -184,15 +161,16 @@ class _ParkabilityState extends State<Parkability> {
         }
       }
     }
+    // print((col * (row * 4)));
     return col + (row * 4);
   }
 
-  Future uploadFile(context, name, currentReportCount) async {
+  Future uploadFile(context, name, currentReportCount, ParkLot parkLot) async {
     try {
-      StorageReference storageReference = FirebaseStorage.instance
-          .ref()
-          .child('reports/$name/${basename(_image.path)}');
-      var imagename = basename(_image.path);
+      var imagename = UniqueKey().toString();
+
+      StorageReference storageReference =
+          FirebaseStorage.instance.ref().child('reports/$name/$imagename');
       StorageUploadTask uploadTask = storageReference.putFile(_image);
       setState(() {
         _isLoading = true;
@@ -208,7 +186,7 @@ class _ParkabilityState extends State<Parkability> {
           _editReport = Report(
             id: _editReport.id,
             userName: _editReport.userName,
-            lifeTime: getAndSetlifeTime(),
+            lifeTime: parkLot.lifeTime[getAndSetlifeTime()],
             dateTime: _editReport.dateTime,
             imageUrl: _uploadedFileURL,
             isPromoted: _editReport.isPromoted,
@@ -245,12 +223,12 @@ class _ParkabilityState extends State<Parkability> {
         ),
       );
     }
-    final snackBar = SnackBar(
-      content: Text('Upload image complete'),
-      duration: Duration(
-        seconds: 1,
-      ),
-    );
+    // final snackBar = SnackBar(
+    //   content: Text('Upload image complete'),
+    //   duration: Duration(
+    //     seconds: 1,
+    //   ),
+    // );
 
     // Navigator.of(context).pop();
     // Scaffold.of(context).showSnackBar(snackBar);
@@ -266,8 +244,6 @@ class _ParkabilityState extends State<Parkability> {
 
     final parkingInfo =
         Provider.of<ParkingLotProvider>(context, listen: false).findById(name);
-    final authData = Provider.of<Auth>(context, listen: false);
-    final report = Provider.of<ReportsProvider>(context, listen: false);
     // final locUrl = Provider.of<ParkingLotProvider>(context, listen: false)
     //     .getLocImage(name);
     // print(locUrl.toString());
@@ -316,7 +292,13 @@ class _ParkabilityState extends State<Parkability> {
                                       child: FloatingActionButton(
                                         elevation: 1,
                                         backgroundColor: Colors.grey,
-                                        onPressed: getImage,
+                                        onPressed: () {
+                                          print(_image);
+                                          // getCamera(true);
+                                          // getCamera();
+                                          getImage();
+                                          print(_image);
+                                        },
                                         tooltip: 'Add Image',
                                         child: Icon(
                                           Icons.camera_alt,
@@ -333,6 +315,11 @@ class _ParkabilityState extends State<Parkability> {
                                           children: <Widget>[
                                             Container(
                                               decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(
+                                                  5.0,
+                                                ) //         <--- border radius here
+                                                    ),
                                                 border: Border.all(
                                                   width: 1,
                                                   color: Colors.grey,
@@ -386,8 +373,8 @@ class _ParkabilityState extends State<Parkability> {
                           child: FlatButton(
                             color: Colors.grey,
                             onPressed: () async {
-                              await uploadFile(
-                                  context, name, currentReportCount);
+                              await uploadFile(context, name,
+                                  currentReportCount, parkingInfo);
                             },
                             child: Text('Confirm report'),
                           ),

@@ -27,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
   MapType mapType;
 
   bool _isLoading = false;
+  bool _isInit = true;
 
   Future<LocationData> getCurrentLocation() async {
     Location location = Location();
@@ -96,19 +97,23 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void didChangeDependencies() async {
-    // TODO: implement didChangeDependencies
-    setState(() {
-      _isLoading = true;
-    });
-    await Provider.of<ParkingLotProvider>(context).getColor().then((_) {
-      getParkingData().then((_) async {
-        await getPolyLine().then((_) {
-          setState(() {
-            _isLoading = false;
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      await Provider.of<ParkingLotProvider>(context).getColor().then((_) {
+        getParkingData().then((_) async {
+          await getPolyLine().then((_) {
+            setState(() {
+              _isLoading = false;
+            });
           });
         });
       });
-    });
+      setState(() {
+        _isInit = false;
+      });
+    }
 
     super.didChangeDependencies();
   }

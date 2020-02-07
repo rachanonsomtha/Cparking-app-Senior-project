@@ -400,7 +400,7 @@ class ReportsProvider with ChangeNotifier {
       );
 
       final urlOldMean =
-          'https://cparking-ecee0.firebaseio.com/avai/${report.loc}/$hour/$minute.json';
+          'https://cparking-ecee0.firebaseio.com/avai/${report.loc}/14/0.json';
       double oldMean;
       int count;
       final response3 = await http.get(urlOldMean);
@@ -416,7 +416,7 @@ class ReportsProvider with ChangeNotifier {
         count,
       );
       final url3 =
-          'https://cparking-ecee0.firebaseio.com/avai/${report.loc}/$hour/$minute.json';
+          'https://cparking-ecee0.firebaseio.com/avai/${report.loc}/14/0.json';
       count += 1;
       await http.patch(
         url3,

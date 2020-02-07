@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../loader/color_loader_3.dart';
 import 'package:flutter/material.dart';
 import 'package:flare_flutter/flare_actor.dart';
+import '../provider/report.dart';
 
 class ReportOverViewScreen extends StatefulWidget {
   static const routeName = '/report-screen';
@@ -15,6 +16,7 @@ class ReportOverViewScreen extends StatefulWidget {
 class _ReportOverViewScreenState extends State<ReportOverViewScreen> {
   bool _isInit = true;
   bool _isLoading = false;
+  List<Report> sortedReport;
 
   @override
   void didChangeDependencies() {
@@ -50,11 +52,42 @@ class _ReportOverViewScreenState extends State<ReportOverViewScreen> {
     });
   }
 
+// calculate displayed lifetime bar
+  double ratioCalculate(DateTime submitTime, Duration lifeTime) {
+    DateTime expTime = submitTime.add(lifeTime);
+
+    if ((DateTime.now()).isBefore(expTime)) {
+      return ((((DateTime.now()).millisecondsSinceEpoch -
+                  expTime.millisecondsSinceEpoch) /
+              lifeTime.inMilliseconds))
+          .abs();
+    } else {
+      return 0;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final report = Provider.of<ReportsProvider>(context);
     final name = ModalRoute.of(context).settings.arguments as String;
     var count = report.locReportsCount;
+
+    sortedReport = (report.locReports)
+      ..sort(
+        (a, b) => ratioCalculate(
+          DateTime.parse(a.dateTime),
+          Duration(minutes: a.lifeTime),
+        ).compareTo(
+          ratioCalculate(
+            DateTime.parse(b.dateTime),
+            Duration(minutes: b.lifeTime),
+          ),
+        ),
+      );
+
+    List<Report> sortReport = sortedReport.reversed.toList();
+
+    // print(sortedReport);
 
     return Scaffold(
       // backgroundColor: Color.fromRGBO(67, 66, 114, 100),
@@ -105,7 +138,6 @@ class _ReportOverViewScreenState extends State<ReportOverViewScreen> {
                   child: ColorLoader3(),
                 )
               : RefreshIndicator(
-                
                   onRefresh: () => _fetchReport(context, name),
                   child: Padding(
                     padding: EdgeInsets.all(8),
@@ -126,7 +158,7 @@ class _ReportOverViewScreenState extends State<ReportOverViewScreen> {
                             Divider(),
                           ],
                         ),
-                        value: report.locReports[index],
+                        value: sortReport[index],
                       ),
                     ),
                   ),

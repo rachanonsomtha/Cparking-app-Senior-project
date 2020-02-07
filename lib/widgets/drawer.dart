@@ -33,9 +33,8 @@ class AppDrawer extends StatelessWidget {
             text: 'Profile',
             onTap: () async {
               // navigateToPage(context, '/');
-              Provider.of<Auth>(context).fetchUserProfileData().then((_) {
-                Navigator.of(context).pushNamed(UserProfile.routeName);
-              });
+              Provider.of<Auth>(context).fetchUserProfileData();
+              Navigator.of(context).pushNamed(UserProfile.routeName);
             },
           ),
           Divider(),

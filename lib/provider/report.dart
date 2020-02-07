@@ -8,7 +8,7 @@ class Report with ChangeNotifier {
   @required
   final String userName;
   @required
-  final int lifeTime;
+  int lifeTime;
   @required
   final String imageUrl;
   @required

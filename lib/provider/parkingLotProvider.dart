@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import './parkingLot.dart';
 import 'package:firebase_storage/firebase_storage.dart'; // For File Upload To Firestore
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class ParkingLotProvider with ChangeNotifier {
   List<ParkLot> _parkingLots = [
@@ -23,7 +21,6 @@ class ParkingLotProvider with ChangeNotifier {
         LatLng(18.795426, 98.952577),
         LatLng(18.795452, 98.952580),
       ].toList(),
-      color: Colors.grey,
       lifeTime: [
         15,
         29,
@@ -86,7 +83,6 @@ class ParkingLotProvider with ChangeNotifier {
         LatLng(18.795334, 98.952568),
         LatLng(18.795376, 98.952570),
       ].toList(),
-      color: Colors.grey,
       lifeTime: [
         15,
         29,
@@ -149,7 +145,6 @@ class ParkingLotProvider with ChangeNotifier {
         LatLng(18.795038, 98.952612),
         LatLng(18.795091, 98.952610),
       ].toList(),
-      color: Colors.grey,
       lifeTime: [
         15,
         29,
@@ -212,7 +207,6 @@ class ParkingLotProvider with ChangeNotifier {
         LatLng(18.795018, 98.952924),
         LatLng(18.795068, 98.952916),
       ].toList(),
-      color: Colors.grey,
       lifeTime: [
         15,
         29,
@@ -275,7 +269,6 @@ class ParkingLotProvider with ChangeNotifier {
         LatLng(18.794853, 98.952598),
         LatLng(18.794916, 98.952638),
       ].toList(),
-      color: Colors.grey,
       lifeTime: [
         15,
         29,
@@ -338,7 +331,6 @@ class ParkingLotProvider with ChangeNotifier {
         LatLng(18.795172, 98.951824),
         LatLng(18.795263, 98.951819),
       ].toList(),
-      color: Colors.grey,
       lifeTime: [
         15,
         29,
@@ -401,7 +393,6 @@ class ParkingLotProvider with ChangeNotifier {
         LatLng(18.795423, 98.951949),
         LatLng(18.795417, 98.951893),
       ].toList(),
-      color: Colors.grey,
       lifeTime: [
         15,
         29,
@@ -450,6 +441,7 @@ class ParkingLotProvider with ChangeNotifier {
       ].toList(),
     ),
   ];
+<<<<<<< HEAD
   String setMinute(int time) {
     //Real envi
 
@@ -498,6 +490,8 @@ class ParkingLotProvider with ChangeNotifier {
     return colorFactor;
   }
 
+=======
+>>>>>>> parent of 5d40ea5... 5/2/63
   Future<String> getLocImage(String title) async {
     var imageFile;
     StorageReference ref =

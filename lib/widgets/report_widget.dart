@@ -88,7 +88,7 @@ class _ReportItemState extends State<ReportItem> {
                   child: Container(
                     height: MediaQuery.of(context).size.height / 6,
                     child: Image.network(
-                      reportData.userData.profileImageUrl,
+                      report.imageUrl.toString(),
                       fit: BoxFit.cover,
                       loadingBuilder: (BuildContext context, Widget child,
                           ImageChunkEvent loadingProgress) {
@@ -134,7 +134,6 @@ class _ReportItemState extends State<ReportItem> {
                           fontSize: 12,
                         ),
                       ),
-<<<<<<< HEAD
                       // Text(
                       //   'Username: ${authData.tempUserData.userName}',
                       //   style: TextStyle(
@@ -142,8 +141,6 @@ class _ReportItemState extends State<ReportItem> {
                       //     fontSize: 12,
                       //   ),
                       // ),
-=======
->>>>>>> parent of 5d40ea5... 5/2/63
                       Container(
                         width: 100,
                         child: SmoothStarRating(

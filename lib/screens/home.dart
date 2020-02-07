@@ -6,6 +6,7 @@ import 'dart:async';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import '../provider/parkingLotProvider.dart';
+import '../loader/color_loader_3.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home-screeen';
@@ -25,12 +26,9 @@ class _HomeScreenState extends State<HomeScreen> {
   bool maptype = true;
   MapType mapType;
 
-<<<<<<< HEAD
   bool _isLoading = false;
   bool _isInit = true;
 
-=======
->>>>>>> parent of 5d40ea5... 5/2/63
   Future<LocationData> getCurrentLocation() async {
     Location location = Location();
     try {
@@ -52,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
     )));
   }
 
-  void getParkingData() {
+  Future<void> getParkingData() async {
     BitmapDescriptor.fromAssetImage(ImageConfiguration(devicePixelRatio: 2.5),
             'images/Webp.net-resizeimage.png')
         .then((onValue) {
@@ -83,14 +81,14 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  void getPolyLine() {
+  Future<void> getPolyLine() async {
     final parkingData = Provider.of<ParkingLotProvider>(context);
     final lots = parkingData.parkingLots;
 
     for (int i = 0; i < parkingData.parkingLotsCount; i++) {
       polylines.add(Polyline(
           // onTap: () => modal.mainBottomSheet(context, lots[i].id),
-          color: Colors.yellow,
+          color: lots[i].color,
           width: 10,
           points: lots[i].poly,
           polylineId: PolylineId(lots[i].id.toString())));
@@ -98,7 +96,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
-<<<<<<< HEAD
   void didChangeDependencies() async {
     if (_isInit) {
       setState(() {
@@ -118,19 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     }
 
-=======
-  void didChangeDependencies() {
-    getPolyLine();
-    // TODO: implement didChangeDependencies
-    getParkingData();
->>>>>>> parent of 5d40ea5... 5/2/63
     super.didChangeDependencies();
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
   }
 
   void changeMapType() {
@@ -154,24 +139,28 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         drawer: AppDrawer(),
         // drawer: AppDrawer(),
-        body: Stack(
-          alignment: Alignment.bottomRight,
-          children: <Widget>[
-            GoogleMap(
-              // myLocationEnabled: true,
-              polylines: Set.from(polylines),
-              markers: Set.from(markers),
-              mapType: mapType,
-              initialCameraPosition: CameraPosition(
-                target: LatLng(18.795484, 98.952698),
-                zoom: 18,
+        body: _isLoading
+            ? Center(
+                child: ColorLoader3(),
+              )
+            : Stack(
+                alignment: Alignment.bottomRight,
+                children: <Widget>[
+                  GoogleMap(
+                    // myLocationEnabled: true,
+                    polylines: Set.from(polylines),
+                    markers: Set.from(markers),
+                    mapType: mapType,
+                    initialCameraPosition: CameraPosition(
+                      target: LatLng(18.795484, 98.952698),
+                      zoom: 18,
+                    ),
+                    onMapCreated: (GoogleMapController controller) {
+                      _controller.complete(controller);
+                    },
+                  ),
+                ],
               ),
-              onMapCreated: (GoogleMapController controller) {
-                _controller.complete(controller);
-              },
-            ),
-          ],
-        ),
         floatingActionButton: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[

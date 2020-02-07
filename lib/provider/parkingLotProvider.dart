@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import './parkingLot.dart';
 import 'package:firebase_storage/firebase_storage.dart'; // For File Upload To Firestore
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class ParkingLotProvider with ChangeNotifier {
   List<ParkLot> _parkingLots = [
@@ -441,7 +443,6 @@ class ParkingLotProvider with ChangeNotifier {
       ].toList(),
     ),
   ];
-<<<<<<< HEAD
   String setMinute(int time) {
     //Real envi
 
@@ -490,8 +491,6 @@ class ParkingLotProvider with ChangeNotifier {
     return colorFactor;
   }
 
-=======
->>>>>>> parent of 5d40ea5... 5/2/63
   Future<String> getLocImage(String title) async {
     var imageFile;
     StorageReference ref =

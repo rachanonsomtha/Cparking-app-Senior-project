@@ -223,6 +223,7 @@ class _ParkabilityState extends State<Parkability> {
       }).then((_) async {
         await Provider.of<ReportsProvider>(context, listen: false).addReport(
           _editReport,
+          currentReportCount,
         );
       });
 // print('File Uploaded');

@@ -86,7 +86,7 @@ class _ReportItemState extends State<ReportItem> {
                   );
                 },
                 child: ClipRRect(
-                  // borderRadius: BorderRadius.all(Radius.circular(12)),
+                  borderRadius: BorderRadius.all(Radius.circular(12)),
                   child: Container(
                     height: MediaQuery.of(context).size.height / 6,
                     child: Image.network(
@@ -131,13 +131,6 @@ class _ReportItemState extends State<ReportItem> {
                       ),
                       Text(
                         'Time: ${dateTime.hour}:${dateTime.minute}',
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColorDark,
-                          fontSize: 12,
-                        ),
-                      ),
-                      Text(
-                        'Username: ${authData.tempUserData.userName}',
                         style: TextStyle(
                           color: Theme.of(context).primaryColorDark,
                           fontSize: 12,

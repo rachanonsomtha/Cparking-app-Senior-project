@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import './parkingLot.dart';
 import 'package:firebase_storage/firebase_storage.dart'; // For File Upload To Firestore
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 
 class ParkingLotProvider with ChangeNotifier {
   List<ParkLot> _parkingLots = [
@@ -443,53 +441,6 @@ class ParkingLotProvider with ChangeNotifier {
       ].toList(),
     ),
   ];
-  String setMinute(int time) {
-    //Real envi
-
-    String min;
-    if (time <= 30) {
-      min = '0';
-    }
-    if (time >= 31) {
-      min = '30';
-    }
-
-    return min;
-  }
-
-  Future<void> getColor() async {
-    String url;
-    final time = DateTime.now();
-
-    String hour = (time.hour).toString();
-    String minute = setMinute(time.minute);
-    _parkingLots.forEach((lot) async {
-      url = 'https://cparking-ecee0.firebaseio.com/avai/${lot.id}/14/0.json';
-      final response = await http.get(url);
-
-      final decodeData = json.decode(response.body) as Map<String, dynamic>;
-      double _parkingMax = lot.max;
-
-      lot.color = setColor(int.parse(decodeData['mean']), _parkingMax);
-    });
-  }
-
-  Color setColor(int avai, double max) {
-    double factor;
-    Color colorFactor;
-    factor = avai / max;
-    if (factor >= 0.3) {
-      colorFactor = Colors.red;
-      if (factor >= 0.5) {
-        colorFactor = Colors.yellow;
-        if (factor >= 0.8) {
-          colorFactor = Colors.green;
-        }
-      }
-    }
-    return colorFactor;
-  }
-
   Future<String> getLocImage(String title) async {
     var imageFile;
     StorageReference ref =

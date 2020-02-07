@@ -45,7 +45,7 @@ class Auth extends ChangeNotifier {
   UserData _tempUserData;
 
   UserData get tempUserData {
-    return _tempUserData;
+    return _tempUserData; 
   }
   // String get userName {
   //   return _userName;
@@ -82,7 +82,7 @@ class Auth extends ChangeNotifier {
 
     // print(userId);
     try {
-      await http.get(url).then((value) {
+      final response = await http.get(url).then((value) {
         final decodeData = json.decode(value.body) as Map<String, dynamic>;
         // if (decodeData == null) {
         //   print('null eiei');
@@ -103,7 +103,7 @@ class Auth extends ChangeNotifier {
         });
       });
 
-      await http.get(url1).then((value) {
+      final response1 = await http.get(url1).then((value) {
         final decodeData = json.decode(value.body) as Map<String, dynamic>;
 
         decodeData.forEach((userId, userData) {

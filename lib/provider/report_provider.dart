@@ -1,6 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import './report.dart';
 import 'dart:convert';
 import 'dart:collection';
@@ -362,15 +363,15 @@ class ReportsProvider with ChangeNotifier {
     final url1 =
         'https://cparking-ecee0.firebaseio.com/reports.json?auth=$authToken';
 
-    // final addDate =
+    // final add_date =
     //     DateFormat('yyyy-MM-dd').add_Hms().format(DateTime.now()).toString();
-    final addDate = DateTime.now().toString();
+    final add_date = DateTime.now().toString();
     final time = DateTime.now();
 
     String hour = (time.hour).toString();
     String minute = setMinute(time.minute);
 
-    // print(addDate);
+    // print(add_date);
     // create products collection in firebase
     try {
       final response = await http.post(
@@ -379,7 +380,7 @@ class ReportsProvider with ChangeNotifier {
           'userName': report.userName,
           'imageUrl': report.imageUrl,
           'lifeTime': report.lifeTime,
-          'dateTime': addDate,
+          'dateTime': add_date,
           'userName': userId,
           'loc': report.loc,
           // 'isPromote': report.isPromoted,
@@ -431,7 +432,7 @@ class ReportsProvider with ChangeNotifier {
         userName: report.userName,
         lifeTime: report.lifeTime,
         imageUrl: report.imageUrl,
-        dateTime: addDate,
+        dateTime: add_date,
         score: report.score,
         loc: report.loc,
         // isPromoted: report.isPromoted,

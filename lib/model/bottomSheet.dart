@@ -8,7 +8,7 @@ class Modal {
     String name = s;
     DateTime now = DateTime.now();
 
-    bool _isEnable = (now.hour >= 7 && now.hour <= 18) ? true : false;
+    bool _isEnable = (now.hour >= 7 && now.hour <= 23) ? true : false;
     showModalBottomSheet(
         context: context,
         builder: (BuildContext bc) {
@@ -17,7 +17,7 @@ class Modal {
               spacing: 3,
               children: <Widget>[
                 ListTile(
-                  enabled: true,
+                  enabled: _isEnable,
                   leading: Icon(Icons.queue),
                   subtitle: _isEnable
                       ? Text("Report time 7am - 6pm")
@@ -61,5 +61,30 @@ class Modal {
   navigateToPage(BuildContext context, String page) {
     Navigator.of(context)
         .pushNamedAndRemoveUntil(page, (Route<dynamic> route) => false);
+  }
+
+  ListTile _createTile(BuildContext context, String name, String subTitle,
+      IconData icon, Function action) {
+    return ListTile(
+      leading: Icon(icon),
+      subtitle: Text(subTitle),
+      title: Text(name),
+      onTap: () {
+        action(context);
+      },
+    );
+  }
+
+  _action1(context) {
+    // print('action 1');
+  }
+
+  _action2(context, name) {
+    Navigator.of(context)
+        .pushReplacementNamed(Parkability.routeName, arguments: name);
+  }
+
+  _action3(context) {
+    Navigator.of(context).pushReplacementNamed(ReportOverViewScreen.routeName);
   }
 }

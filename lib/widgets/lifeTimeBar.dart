@@ -4,7 +4,7 @@ import 'package:flutter/rendering.dart';
 class LifeTimeBar extends StatelessWidget {
   final Icon icon;
   final double heightz;
-  final double factor;
+  double factor;
   Color colorFactor;
 
   void _colorFactor() {

@@ -8,9 +8,6 @@ import '../loader/color_loader_3.dart';
 import '../widgets/simpleLine.dart';
 import '../provider/parkingLot.dart';
 import '../provider/parkingLotProvider.dart';
-import 'dart:convert';
-
-import 'package:http/http.dart' as http;
 
 math.Random random = new math.Random();
 List<double> _generateRandomData(int count) {
@@ -32,8 +29,6 @@ class _ViewHistoryScreenState extends State<ViewHistoryScreen> {
   double rating = 2.5;
   bool _isLoading = false;
   bool _isInit = true;
-  double percentage;
-  int now;
 
   var data = _generateRandomData(11);
 
@@ -129,7 +124,8 @@ class _ViewHistoryScreenState extends State<ViewHistoryScreen> {
                     Icon(Icons.place),
                     Wrap(
                       children: <Widget>[
-                        Text('${loc.title} คณะวิศวกรรมศาสตร์'),
+                        Text(
+                            '${loc.title} คณะวิศวกรรมศาสตร์'),
                       ],
                     )
                   ],
@@ -154,7 +150,7 @@ class _ViewHistoryScreenState extends State<ViewHistoryScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           Icon(Icons.directions_car),
-                          Text('$now / ${loc.max.round()}'),
+                          Text('11/18'),
                         ],
                       ),
                     ),
@@ -171,7 +167,7 @@ class _ViewHistoryScreenState extends State<ViewHistoryScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           Icon(Icons.multiline_chart),
-                          Text('${percentage.round().toString()} %'),
+                          Text('38 %'),
                         ],
                       ),
                     ),
@@ -184,34 +180,6 @@ class _ViewHistoryScreenState extends State<ViewHistoryScreen> {
         ],
       ),
     );
-  }
-
-  String setMinute(int time) {
-    //Real envi
-
-    String min;
-    if (time <= 30) {
-      min = '0';
-    }
-    if (time >= 31) {
-      min = '30';
-    }
-
-    return min;
-  }
-
-  Future<void> getPercentage(String name, ParkLot lot) async {
-    String url;
-    final time = DateTime.now();
-
-    // String hour = (time.hour).toString();
-    // String minute = setMinute(time.minute);
-    url = 'https://cparking-ecee0.firebaseio.com/avai/$name/14/0.json';
-    final response = await http.get(url);
-    // print(lot.color);
-    final decodeData = json.decode(response.body) as Map<String, dynamic>;
-    now = int.parse(decodeData['mean']);
-    percentage = (int.parse(decodeData['mean']) / lot.max) * 100;
   }
 
   @override
@@ -233,6 +201,8 @@ class _ViewHistoryScreenState extends State<ViewHistoryScreen> {
     setState(() {
       _isInit = false;
     });
+
+    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
   }
 
@@ -241,7 +211,6 @@ class _ViewHistoryScreenState extends State<ViewHistoryScreen> {
     final name = ModalRoute.of(context).settings.arguments as String;
     final historyData = Provider.of<ReportsProvider>(context);
     final loc = Provider.of<ParkingLotProvider>(context).findById(name);
-    getPercentage(name, loc);
     Provider.of<ReportsProvider>(context).fetchReportFromLocation(name);
     int currentReportCount = historyData.locReportsCount;
 
@@ -263,7 +232,7 @@ class _ViewHistoryScreenState extends State<ViewHistoryScreen> {
                       child: Row(
                         children: <Widget>[
                           IconButton(
-                            color: Colors.white70,
+                            color: Colors.black54,
                             icon: Icon(Icons.arrow_back_ios),
                             onPressed: () => Navigator.of(context).pop(),
                           )
@@ -281,10 +250,10 @@ class _ViewHistoryScreenState extends State<ViewHistoryScreen> {
                               _buildHistoryDetails(loc),
                             ],
                           ),
-                    // Container(
-                    //   height: 200,
-                    //   child: PointsLineChart.withSampleData(),
-                    // ),
+                    Container(
+                      height: 200,
+                      child: PointsLineChart.withSampleData(),
+                    ),
                   ],
                 ),
               ),

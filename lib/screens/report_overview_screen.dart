@@ -2,8 +2,12 @@ import '../provider/report_provider.dart';
 import '../widgets/report_widget.dart';
 import 'package:provider/provider.dart';
 import '../loader/color_loader_3.dart';
+
+import '../widgets/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flare_flutter/flare_actor.dart';
+import '../provider/parkingLot.dart';
+import '../provider/parkingLotProvider.dart';
 import '../provider/report.dart';
 
 class ReportOverViewScreen extends StatefulWidget {
@@ -38,6 +42,7 @@ class _ReportOverViewScreenState extends State<ReportOverViewScreen> {
       _isInit = false;
     });
 
+    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
   }
 
@@ -50,6 +55,19 @@ class _ReportOverViewScreenState extends State<ReportOverViewScreen> {
         _isLoading = false;
       });
     });
+    print('kuy');
+  }
+
+  Widget _buildCoverImage(Size screenSize, ParkLot loc) {
+    return Container(
+      height: screenSize.height / 2.5,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: NetworkImage(loc.imageUrl),
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
   }
 
 // calculate displayed lifetime bar
@@ -70,6 +88,8 @@ class _ReportOverViewScreenState extends State<ReportOverViewScreen> {
   Widget build(BuildContext context) {
     final report = Provider.of<ReportsProvider>(context);
     final name = ModalRoute.of(context).settings.arguments as String;
+    final loc = Provider.of<ParkingLotProvider>(context).findById(name);
+    final screenSize = MediaQuery.of(context).size.height;
     var count = report.locReportsCount;
 
     sortedReport = (report.locReports)

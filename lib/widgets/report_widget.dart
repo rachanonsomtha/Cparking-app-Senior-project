@@ -1,4 +1,5 @@
 import 'package:cparking/loader/color_loader_3.dart';
+import 'package:cparking/provider/report_provider.dart';
 import 'package:cparking/screens/report_detail_screen.dart';
 import 'package:flutter/material.dart';
 import '../provider/report.dart';
@@ -9,6 +10,7 @@ import 'package:smooth_star_rating/smooth_star_rating.dart';
 import '../provider/parkingLotProvider.dart';
 //rating
 import '../widgets/lifeTimeBar.dart';
+import 'dart:math';
 
 class ReportItem extends StatefulWidget {
   // final report = Provider.of<ReportsProvider>(context, listen: false);
@@ -50,10 +52,10 @@ class _ReportItemState extends State<ReportItem> {
     double rating = 2.5;
     final authData = Provider.of<Auth>(context, listen: false);
     final report = Provider.of<Report>(context);
-    Provider.of<Auth>(context).fetchUserDataFromUserId(report.userName);
-
     DateTime dateTime = DateTime.parse(report.dateTime.toString());
     final loc = Provider.of<ParkingLotProvider>(context).findById(report.loc);
+    Provider.of<Auth>(context).fetchUserDataFromUserId(report.userName);
+    final reportData = Provider.of<Auth>(context);
 
     double remainingTime = ratioCalculate(
       DateTime.parse(report.dateTime),
@@ -84,7 +86,7 @@ class _ReportItemState extends State<ReportItem> {
                   );
                 },
                 child: ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(12)),
+                  // borderRadius: BorderRadius.all(Radius.circular(12)),
                   child: Container(
                     height: MediaQuery.of(context).size.height / 6,
                     child: Image.network(
@@ -134,13 +136,13 @@ class _ReportItemState extends State<ReportItem> {
                           fontSize: 12,
                         ),
                       ),
-                      // Text(
-                      //   'Username: ${authData.tempUserData.userName}',
-                      //   style: TextStyle(
-                      //     color: Theme.of(context).primaryColorDark,
-                      //     fontSize: 12,
-                      //   ),
-                      // ),
+                      Text(
+                        'Username: ${authData.tempUserData.userName}',
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColorDark,
+                          fontSize: 12,
+                        ),
+                      ),
                       Container(
                         width: 100,
                         child: SmoothStarRating(

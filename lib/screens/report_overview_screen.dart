@@ -1,13 +1,14 @@
+import 'package:cparking/screens/report_detail_screen.dart';
+
 import '../provider/report_provider.dart';
 import '../widgets/report_widget.dart';
 import 'package:provider/provider.dart';
+import '../loader/color_loader_2.dart';
 import '../loader/color_loader_3.dart';
 
 import '../widgets/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flare_flutter/flare_actor.dart';
-import '../provider/parkingLot.dart';
-import '../provider/parkingLotProvider.dart';
 
 class ReportOverViewScreen extends StatefulWidget {
   static const routeName = '/report-screen';
@@ -56,40 +57,27 @@ class _ReportOverViewScreenState extends State<ReportOverViewScreen> {
     print('kuy');
   }
 
-  Widget _buildCoverImage(Size screenSize, ParkLot loc) {
-    return Container(
-      height: screenSize.height / 2.5,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: NetworkImage(loc.imageUrl),
-          fit: BoxFit.cover,
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final report = Provider.of<ReportsProvider>(context);
     final name = ModalRoute.of(context).settings.arguments as String;
-    final loc = Provider.of<ParkingLotProvider>(context).findById(name);
-    final screenSize = MediaQuery.of(context).size.height;
+
     var count = report.locReportsCount;
 
     return Scaffold(
       // backgroundColor: Color.fromRGBO(67, 66, 114, 100),
-      // appBar: AppBar(
-      //   title: Text(
-      //     'Reports from : $name',
-      //     style: TextStyle(
-      //       fontFamily: 'Lato',
-      //     ),
-      //   ),
-      //   leading: IconButton(
-      //     icon: Icon(Icons.arrow_back_ios),
-      //     onPressed: () => Navigator.of(context).pop(),
-      //   ),
-      // ),
+      appBar: AppBar(
+        title: Text(
+          'Reports from : $name',
+          style: TextStyle(
+            fontFamily: 'Lato',
+          ),
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
       // drawer: AppDrawer(),
       body: count == 0 && !_isLoading
           ? Center(

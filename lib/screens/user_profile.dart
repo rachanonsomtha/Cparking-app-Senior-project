@@ -8,6 +8,8 @@ import 'package:path/path.dart';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import '../provider/auth.dart';
+import 'package:path/path.dart';
 
 class UserProfile extends StatefulWidget {
   String userName;
@@ -26,7 +28,7 @@ class _UserProfileState extends State<UserProfile> {
   bool _isGetimage = false;
   File _image;
   String _uploadedFileURL;
-  
+
   var _editedUserProfile = UserData(
     id: null,
     profileImageUrl: '',

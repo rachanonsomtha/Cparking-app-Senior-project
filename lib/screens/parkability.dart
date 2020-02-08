@@ -4,6 +4,7 @@
 import 'package:provider/provider.dart';
 import '../provider/report.dart';
 import 'package:flutter/material.dart';
+import '../widgets/drawer.dart';
 import 'dart:async';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -11,10 +12,12 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:transparent_image/transparent_image.dart';
+import '../loader/color_loader_2.dart';
 import '../loader/color_loader_3.dart';
 
 //provider
 import '../provider/report_provider.dart';
+import 'package:provider/provider.dart';
 import '../provider/parkingLotProvider.dart';
 import '../provider/auth.dart';
 import '../provider/report_provider.dart';

@@ -48,14 +48,11 @@ class _ReportItemState extends State<ReportItem> {
   @override
   Widget build(BuildContext context) {
     // print('eiei');
-
     double rating = 2.5;
     final authData = Provider.of<Auth>(context, listen: false);
     final report = Provider.of<Report>(context);
     DateTime dateTime = DateTime.parse(report.dateTime.toString());
     final loc = Provider.of<ParkingLotProvider>(context).findById(report.loc);
-    Provider.of<Auth>(context).fetchUserDataFromUserId(report.userName);
-    final reportData = Provider.of<Auth>(context);
 
     double remainingTime = ratioCalculate(
       DateTime.parse(report.dateTime),
@@ -80,17 +77,21 @@ class _ReportItemState extends State<ReportItem> {
               width: MediaQuery.of(context).size.height / 8,
               child: GestureDetector(
                 onTap: () {
-                  Navigator.of(context).pushNamed(
-                    ReportDetailScreen.routeName,
-                    arguments: report.id,
-                  );
+                  Provider.of<Auth>(context)
+                      .fetchUserDataFromUserId(report.userName)
+                      .then((_) {
+                    Navigator.of(context).pushNamed(
+                      ReportDetailScreen.routeName,
+                      arguments: report.id,
+                    );
+                  });
                 },
                 child: ClipRRect(
                   // borderRadius: BorderRadius.all(Radius.circular(12)),
                   child: Container(
                     height: MediaQuery.of(context).size.height / 6,
                     child: Image.network(
-                      reportData.userData.profileImageUrl,
+                      report.imageUrl.toString(),
                       fit: BoxFit.cover,
                       loadingBuilder: (BuildContext context, Widget child,
                           ImageChunkEvent loadingProgress) {

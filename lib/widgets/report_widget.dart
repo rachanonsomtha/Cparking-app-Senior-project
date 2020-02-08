@@ -90,7 +90,7 @@ class _ReportItemState extends State<ReportItem> {
                   child: Container(
                     height: MediaQuery.of(context).size.height / 6,
                     child: Image.network(
-                      report.imageUrl.toString(),
+                      reportData.userData.profileImageUrl,
                       fit: BoxFit.cover,
                       loadingBuilder: (BuildContext context, Widget child,
                           ImageChunkEvent loadingProgress) {

@@ -8,7 +8,7 @@ class ParkingLotProvider with ChangeNotifier {
   List<ParkLot> _parkingLots = [
     ParkLot(
       id: '301',
-      title: 'ลานจอดหน้าตึก30ปี#1',
+      title: 'ตึกสามสิบปี#1',
       max: 3,
       imageUrl:
           'https://firebasestorage.googleapis.com/v0/b/cparking-ecee0.appspot.com/o/30%231.jpg?alt=media&token=28ca734c-55b6-480a-a7ea-28a81743fdb4',
@@ -70,7 +70,7 @@ class ParkingLotProvider with ChangeNotifier {
     ),
     ParkLot(
       id: '302',
-      title: 'ลานจอดหน้าตึก30ปี#2',
+      title: 'ตึกสามสิบปี#2',
       max: 10,
       imageUrl:
           'https://firebasestorage.googleapis.com/v0/b/cparking-ecee0.appspot.com/o/30%232.jpg?alt=media&token=156a6a36-5736-4a6a-b7de-c780dfe1ff92',
@@ -132,7 +132,7 @@ class ParkingLotProvider with ChangeNotifier {
     ),
     ParkLot(
       id: 'SUR1',
-      title: 'ลานจอดอาจารย์โยธา#1',
+      title: 'ตึกเซอร์เวย์#1',
       max: 10,
       imageUrl:
           'https://firebasestorage.googleapis.com/v0/b/cparking-ecee0.appspot.com/o/SUR%231.jpg?alt=media&token=2b300451-4815-4787-8a43-1f843c05be12',
@@ -194,7 +194,7 @@ class ParkingLotProvider with ChangeNotifier {
     ),
     ParkLot(
       id: 'SUR2',
-      title: 'ลานจอดอาจารย์โยธา#2',
+      title: 'ตึกเซอร์เวย์#2',
       max: 12,
       imageUrl:
           'https://firebasestorage.googleapis.com/v0/b/cparking-ecee0.appspot.com/o/SUR%232.jpg?alt=media&token=bfa057bd-045d-4204-b31c-b79c9e6a4aa5',
@@ -256,7 +256,7 @@ class ParkingLotProvider with ChangeNotifier {
     ),
     ParkLot(
       id: 'FEILD1',
-      title: 'ลานจอดสนามฮ้อกกี้#1',
+      title: 'สนามฮ้อกกี้#1',
       max: 19,
       imageUrl:
           'https://firebasestorage.googleapis.com/v0/b/cparking-ecee0.appspot.com/o/FEILD%231.jpg?alt=media&token=a6b92650-99a9-4db9-8c7c-3a361475a8a9',
@@ -318,7 +318,7 @@ class ParkingLotProvider with ChangeNotifier {
     ),
     ParkLot(
       id: 'VIT1',
-      title: 'ลานจอดตึกประลอง#1',
+      title: 'วิษณุ#1',
       max: 20,
       imageUrl:
           'https://firebasestorage.googleapis.com/v0/b/cparking-ecee0.appspot.com/o/VIT%231.jpg?alt=media&token=8d761dac-c294-4b2e-84d3-a99bf10b5261',
@@ -380,7 +380,7 @@ class ParkingLotProvider with ChangeNotifier {
     ),
     ParkLot(
       id: 'VIT2',
-      title: 'ลานจอดตึกประลอง#2',
+      title: 'วิษณุ#2',
       max: 15,
       imageUrl:
           'https://firebasestorage.googleapis.com/v0/b/cparking-ecee0.appspot.com/o/VIT%232.jpg?alt=media&token=9dd573a1-5197-44cc-94d2-a320cc7de883',

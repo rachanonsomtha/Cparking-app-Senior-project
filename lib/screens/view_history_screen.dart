@@ -211,7 +211,7 @@ class _ViewHistoryScreenState extends State<ViewHistoryScreen> {
     final name = ModalRoute.of(context).settings.arguments as String;
     final historyData = Provider.of<ReportsProvider>(context);
     final loc = Provider.of<ParkingLotProvider>(context).findById(name);
-    Provider.of<ReportsProvider>(context).fetchReportFromLocation(name);
+    // Provider.of<ReportsProvider>(context).fetchReportFromLocation(name);
     int currentReportCount = historyData.locReportsCount;
 
     final screenSize = MediaQuery.of(context).size;

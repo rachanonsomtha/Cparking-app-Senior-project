@@ -157,9 +157,6 @@ class _ParkabilityState extends State<Parkability> {
                         row = 9;
                         if (hourMark >= 17) {
                           row = 10;
-                          if (hourMark == 18) {
-                            row = 11;
-                          }
                         }
                       }
                     }

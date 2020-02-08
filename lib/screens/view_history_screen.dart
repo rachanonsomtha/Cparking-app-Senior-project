@@ -186,21 +186,21 @@ class _ViewHistoryScreenState extends State<ViewHistoryScreen> {
   void didChangeDependencies() {
     final name = ModalRoute.of(context).settings.arguments as String;
 
-    if (_isInit) {
-      setState(() {
-        _isLoading = true;
-      });
-      Provider.of<ReportsProvider>(context)
-          .fetchReportFromLocation(name)
-          .then((_) {
-        setState(() {
-          _isLoading = false;
-        });
-      });
-    }
-    setState(() {
-      _isInit = false;
-    });
+    // if (_isInit) {
+    //   setState(() {
+    //     _isLoading = true;
+    //   });
+    //   Provider.of<ReportsProvider>(context)
+    //       .fetchReportFromLocation(name)
+    //       .then((_) {
+    //     setState(() {
+    //       _isLoading = false;
+    //     });
+    //   });
+    // }
+    // setState(() {
+    //   _isInit = false;
+    // });
 
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();

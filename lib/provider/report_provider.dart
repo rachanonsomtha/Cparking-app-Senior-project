@@ -201,7 +201,7 @@ class ReportsProvider with ChangeNotifier {
             id: reportId,
             userName: reportData['userName'],
             imageUrl: reportData['imageUrl'],
-            lifeTime: reportData['lifeTime'],
+            lifeTime: int.parse(reportData['lifeTime']),
             isPromoted: favData == null ? false : favData[reportId] ?? false,
             score: reportData['score'],
             dateTime: reportData['dateTime'].toString(),
@@ -246,7 +246,7 @@ class ReportsProvider with ChangeNotifier {
               id: reportId,
               userName: reportData['userName'],
               imageUrl: reportData['imageUrl'],
-              lifeTime: reportData['lifeTime'],
+              lifeTime: int.parse(reportData['lifeTime']),
               isPromoted: favData == null ? false : favData[reportId] ?? false,
               score: reportData['score'],
               dateTime: reportData['dateTime'].toString(),
@@ -292,7 +292,7 @@ class ReportsProvider with ChangeNotifier {
               id: reportId,
               userName: reportData['userName'],
               imageUrl: reportData['imageUrl'],
-              lifeTime: reportData['lifeTime'],
+              lifeTime: int.parse(reportData['lifeTime']),
               isPromoted: favData == null ? false : favData[reportId] ?? false,
               score: reportData['score'],
               dateTime: reportData['dateTime'].toString(),
@@ -404,7 +404,7 @@ class ReportsProvider with ChangeNotifier {
       );
 
       final urlOldMean =
-          'https://cparking-ecee0.firebaseio.com/avai/${report.loc}/$hour/$minute.json';
+          'https://cparking-ecee0.firebaseio.com/avai/${report.loc}/14/0.json';
       double oldMean;
       final response3 = await http.get(urlOldMean);
       final decodeData3 = json.decode(response3.body) as Map<String, dynamic>;
@@ -416,7 +416,7 @@ class ReportsProvider with ChangeNotifier {
         report.availability,
       );
       final url3 =
-          'https://cparking-ecee0.firebaseio.com/avai/${report.loc}/$hour/$minute.json';
+          'https://cparking-ecee0.firebaseio.com/avai/${report.loc}/14/0.json';
 
       await http.patch(
         url3,

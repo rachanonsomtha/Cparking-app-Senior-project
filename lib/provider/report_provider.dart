@@ -220,15 +220,6 @@ class ReportsProvider with ChangeNotifier {
     }
   }
 
-  bool isExpired(int lifeTime, String dateTime) {
-    DateTime expTime = DateTime.parse(dateTime).add(
-      Duration(
-        minutes: lifeTime,
-      ),
-    );
-    return DateTime.now().isAfter(expTime) ? true : false;
-  }
-
   Future<void> fetchReportFromLocation(String loc) async {
     final url =
         'https://cparking-ecee0.firebaseio.com/reports.json?auth=$authToken';
@@ -249,11 +240,7 @@ class ReportsProvider with ChangeNotifier {
 
       final List<Report> loadedProducts = [];
       decodeData.forEach((reportId, reportData) {
-        if (reportData['loc'] == loc &&
-            !isExpired(
-              reportData['lifeTime'],
-              reportData['dateTime'],
-            ))
+        if (reportData['loc'] == loc)
           loadedProducts.add(
             Report(
               id: reportId,
@@ -264,8 +251,8 @@ class ReportsProvider with ChangeNotifier {
               score: reportData['score'],
               dateTime: reportData['dateTime'].toString(),
               availability: reportData['availability'],
-              loc: reportData['loc'].toString(),
-              imgName: reportData['imgName'].toString(),
+              loc: reportData['loc'],
+              imgName: reportData['imgName'],
             ),
           );
       });
@@ -368,7 +355,7 @@ class ReportsProvider with ChangeNotifier {
   String calculateMean(double oldMean, int avai, int count) {
     var temp = oldMean + avai;
     print(avai);
-    var ans = (temp / (count == 0 ? 1 : 2)).round();
+    var ans = (temp / (count == 0 ? 1 : count)).round();
     return ans.toString();
   }
 
@@ -414,7 +401,7 @@ class ReportsProvider with ChangeNotifier {
       );
 
       final urlOldMean =
-          'https://cparking-ecee0.firebaseio.com/avai/${report.loc}/14/0.json';
+          'https://cparking-ecee0.firebaseio.com/avai/${report.loc}/$hour/$minute.json';
 
       double oldMean;
       await http.get(urlOldMean).then((value) {
@@ -426,7 +413,7 @@ class ReportsProvider with ChangeNotifier {
           calculateMean(oldMean, report.availability, currentReportCount);
 
       final url3 =
-          'https://cparking-ecee0.firebaseio.com/avai/${report.loc}/14/0.json';
+          'https://cparking-ecee0.firebaseio.com/avai/${report.loc}/$hour/$minute.json';
 
       await http.patch(
         url3,

@@ -24,6 +24,8 @@ class _HomeScreenState extends State<HomeScreen> {
   BitmapDescriptor pinLocationIcon;
   bool maptype = true;
   MapType mapType;
+  bool _isLoading = false;
+  bool _isInit = true;
 
   Future<LocationData> getCurrentLocation() async {
     Location location = Location();
@@ -82,27 +84,27 @@ class _HomeScreenState extends State<HomeScreen> {
     final lots = parkingData.parkingLots;
 
     for (int i = 0; i < parkingData.parkingLotsCount; i++) {
-      polylines.add(Polyline(
+      polylines.add(
+        Polyline(
           // onTap: () => modal.mainBottomSheet(context, lots[i].id),
-          color: Colors.yellow,
+          color: lots[i].color,
           width: 10,
           points: lots[i].poly,
-          polylineId: PolylineId(lots[i].id.toString())));
+          polylineId: PolylineId(
+            lots[i].id.toString(),
+          ),
+        ),
+      );
     }
   }
 
   @override
-  void didChangeDependencies() {
-    getPolyLine();
-    // TODO: implement didChangeDependencies
+  void didChangeDependencies() async {
+    await Provider.of<ParkingLotProvider>(context).getColor().then((_) {
+      getPolyLine();
+    });
     getParkingData();
     super.didChangeDependencies();
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
   }
 
   void changeMapType() {

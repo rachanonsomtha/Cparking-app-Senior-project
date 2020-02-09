@@ -4,23 +4,19 @@
 import 'package:provider/provider.dart';
 import '../provider/report.dart';
 import 'package:flutter/material.dart';
-import '../widgets/drawer.dart';
 import 'dart:async';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:path/path.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:transparent_image/transparent_image.dart';
-import '../loader/color_loader_2.dart';
 import '../loader/color_loader_3.dart';
-
+import '../provider/parkingLot.dart';
 //provider
 import '../provider/report_provider.dart';
 import 'package:provider/provider.dart';
 import '../provider/parkingLotProvider.dart';
 import '../provider/auth.dart';
-import '../provider/report_provider.dart';
 
 class Parkability extends StatefulWidget {
   static const routeName = '/park-ability';
@@ -118,7 +114,10 @@ class _ParkabilityState extends State<Parkability> {
   }
 
   Future getImage() async {
-    _image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    _image = await ImagePicker.pickImage(
+      source: ImageSource.camera,
+      imageQuality: 50,
+    );
 
     setState(() {
       _image = _image;
@@ -187,12 +186,12 @@ class _ParkabilityState extends State<Parkability> {
     return col + (row * 4);
   }
 
-  Future uploadFile(context, name, currentReportCount) async {
+  Future uploadFile(context, name, currentReportCount, ParkLot lot) async {
     try {
-      StorageReference storageReference = FirebaseStorage.instance
-          .ref()
-          .child('reports/$name/${basename(_image.path)}');
-      var imagename = basename(_image.path);
+      var imagename = UniqueKey().toString();
+
+      StorageReference storageReference =
+          FirebaseStorage.instance.ref().child('reports/$name/$imagename');
       StorageUploadTask uploadTask = storageReference.putFile(_image);
       setState(() {
         _isLoading = true;
@@ -202,13 +201,13 @@ class _ParkabilityState extends State<Parkability> {
         _isLoading = false;
       });
       storageReference.getDownloadURL().then((fileURL) {
-        // print(fileURL);
+        print(getAndSetlifeTime());
         setState(() {
           _uploadedFileURL = fileURL;
           _editReport = Report(
             id: _editReport.id,
             userName: _editReport.userName,
-            lifeTime: getAndSetlifeTime(),
+            lifeTime: lot.lifeTime[getAndSetlifeTime()],
             dateTime: _editReport.dateTime,
             imageUrl: _uploadedFileURL,
             isPromoted: _editReport.isPromoted,
@@ -387,8 +386,8 @@ class _ParkabilityState extends State<Parkability> {
                           child: FlatButton(
                             color: Colors.grey,
                             onPressed: () async {
-                              await uploadFile(
-                                  context, name, currentReportCount);
+                              await uploadFile(context, name,
+                                  currentReportCount, parkingInfo);
                             },
                             child: Text('Confirm report'),
                           ),

@@ -11,6 +11,8 @@ import '../loader/color_loader_3.dart';
 import '../widgets/simpleLine.dart';
 import '../provider/parkingLot.dart';
 import '../provider/parkingLotProvider.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 math.Random random = new math.Random();
 List<double> _generateRandomData(int count) {
@@ -30,8 +32,10 @@ class ViewHistoryScreen extends StatefulWidget {
 
 class _ViewHistoryScreenState extends State<ViewHistoryScreen> {
   double rating = 2.5;
-  bool _isLoading = false;
+  bool _isLoading = true;
   bool _isInit = true;
+  double percentage;
+  int now;
 
   var data = _generateRandomData(11);
 
@@ -106,7 +110,7 @@ class _ViewHistoryScreenState extends State<ViewHistoryScreen> {
     );
   }
 
-  Widget _buildHistoryDetails() {
+  Widget _buildHistoryDetails(ParkLot loc) {
     return Container(
       padding: EdgeInsets.only(
         top: 20,
@@ -148,7 +152,7 @@ class _ViewHistoryScreenState extends State<ViewHistoryScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           Icon(Icons.directions_car),
-                          Text('11/18'),
+                          Text('$now / ${loc.max.round()}'),
                         ],
                       ),
                     ),
@@ -165,7 +169,7 @@ class _ViewHistoryScreenState extends State<ViewHistoryScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           Icon(Icons.multiline_chart),
-                          Text('38 %'),
+                          Text('${percentage.round()} %'),
                         ],
                       ),
                     ),
@@ -183,6 +187,9 @@ class _ViewHistoryScreenState extends State<ViewHistoryScreen> {
   @override
   void didChangeDependencies() {
     final name = ModalRoute.of(context).settings.arguments as String;
+    final loc = Provider.of<ParkingLotProvider>(context).findById(name);
+
+    getPercentage(name, loc);
 
     // if (_isInit) {
     //   setState(() {
@@ -202,6 +209,28 @@ class _ViewHistoryScreenState extends State<ViewHistoryScreen> {
 
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
+  }
+
+  Future<void> getPercentage(String name, ParkLot lot) async {
+    setState(() {
+      _isLoading = true;
+    });
+    String url;
+    // final time = DateTime.now();
+
+    // String hour = (time.hour).toString();
+    // String minute = setMinute(time.minute);
+    url = 'https://cparking-ecee0.firebaseio.com/avai/$name/14/0.json';
+    print(url);
+    final response = await http.get(url);
+    // print(lot.color);
+    final decodeData = json.decode(response.body) as Map<String, dynamic>;
+    now = int.parse(decodeData['mean']);
+    print(now);
+    percentage = (int.parse(decodeData['mean']) / lot.max) * 100;
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
@@ -245,13 +274,13 @@ class _ViewHistoryScreenState extends State<ViewHistoryScreen> {
                         : Column(
                             children: <Widget>[
                               _buildStarAndCount(currentReportCount),
-                              _buildHistoryDetails(),
+                              _buildHistoryDetails(loc),
                             ],
                           ),
-                    Container(
-                      height: 200,
-                      child: PointsLineChart.withSampleData(),
-                    ),
+                    // Container(
+                    //   height: 200,
+                    //   child: PointsLineChart.withSampleData(),
+                    // ),
                   ],
                 ),
               ),

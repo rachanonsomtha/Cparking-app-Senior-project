@@ -93,7 +93,7 @@ class _ReportOverViewScreenState extends State<ReportOverViewScreen> {
           ),
         ),
       );
-    var count1 = sortedReport.length;
+
     List<Report> sortReport = sortedReport.reversed.toList();
 
     return Scaffold(
@@ -111,7 +111,7 @@ class _ReportOverViewScreenState extends State<ReportOverViewScreen> {
         ),
       ),
       // drawer: AppDrawer(),
-      body: count1 == 0 && !_isLoading
+      body: count == 0 && !_isLoading
           ? Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

@@ -114,7 +114,10 @@ class _ParkabilityState extends State<Parkability> {
   }
 
   Future getImage() async {
-    _image = await ImagePicker.pickImage(source: ImageSource.camera);
+    _image = await ImagePicker.pickImage(
+      source: ImageSource.camera,
+      imageQuality: 50,
+    );
 
     setState(() {
       _image = _image;

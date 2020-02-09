@@ -5,7 +5,7 @@ class ColorLoader3 extends StatefulWidget {
   final double radius;
   final double dotRadius;
 
-  ColorLoader3({this.radius = 25.0, this.dotRadius = 5.0});
+  ColorLoader3({this.radius = 20.0, this.dotRadius = 5.0});
 
   @override
   _ColorLoader3State createState() => _ColorLoader3State();

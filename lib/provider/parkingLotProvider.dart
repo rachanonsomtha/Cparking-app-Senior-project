@@ -4,6 +4,8 @@ import './parkingLot.dart';
 import 'package:firebase_storage/firebase_storage.dart'; // For File Upload To Firestore
 import '../provider/report.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class ParkingLotProvider with ChangeNotifier {
   List<ParkLot> _parkingLots = [
@@ -22,6 +24,7 @@ class ParkingLotProvider with ChangeNotifier {
         LatLng(18.795426, 98.952577),
         LatLng(18.795452, 98.952580),
       ].toList(),
+      color: Colors.grey,
       lifeTime: [
         15,
         29,
@@ -84,6 +87,7 @@ class ParkingLotProvider with ChangeNotifier {
         LatLng(18.795334, 98.952568),
         LatLng(18.795376, 98.952570),
       ].toList(),
+      color: Colors.grey,
       lifeTime: [
         15,
         29,
@@ -146,6 +150,7 @@ class ParkingLotProvider with ChangeNotifier {
         LatLng(18.795038, 98.952612),
         LatLng(18.795091, 98.952610),
       ].toList(),
+      color: Colors.grey,
       lifeTime: [
         15,
         29,
@@ -208,6 +213,7 @@ class ParkingLotProvider with ChangeNotifier {
         LatLng(18.795018, 98.952924),
         LatLng(18.795068, 98.952916),
       ].toList(),
+      color: Colors.grey,
       lifeTime: [
         15,
         29,
@@ -270,6 +276,7 @@ class ParkingLotProvider with ChangeNotifier {
         LatLng(18.794853, 98.952598),
         LatLng(18.794916, 98.952638),
       ].toList(),
+      color: Colors.grey,
       lifeTime: [
         15,
         29,
@@ -332,6 +339,7 @@ class ParkingLotProvider with ChangeNotifier {
         LatLng(18.795172, 98.951824),
         LatLng(18.795263, 98.951819),
       ].toList(),
+      color: Colors.grey,
       lifeTime: [
         15,
         29,
@@ -394,6 +402,7 @@ class ParkingLotProvider with ChangeNotifier {
         LatLng(18.795423, 98.951949),
         LatLng(18.795417, 98.951893),
       ].toList(),
+      color: Colors.grey,
       lifeTime: [
         15,
         29,
@@ -442,6 +451,56 @@ class ParkingLotProvider with ChangeNotifier {
       ].toList(),
     ),
   ];
+
+  String setMinute(int time) {
+    //Real envi
+
+    String min;
+    if (time <= 30) {
+      min = '0';
+    }
+    if (time >= 31) {
+      min = '30';
+    }
+
+    return min;
+  }
+
+  Future<void> getColor() async {
+    String url;
+    final time = DateTime.now();
+
+    String hour = (time.hour).toString();
+    String minute = setMinute(time.minute);
+    _parkingLots.forEach((lot) async {
+      url =
+          'https://cparking-ecee0.firebaseio.com/avai/${lot.id}/14/0.json'; // for developing environment only
+      final response = await http.get(url);
+      // print(lot.color);
+      final decodeData = json.decode(response.body) as Map<String, dynamic>;
+      double _parkingMax = lot.max;
+
+      lot.color = setColor(int.parse(decodeData['mean']), _parkingMax);
+    });
+  }
+
+  Color setColor(int avai, double max) {
+    double factor;
+    Color colorFactor;
+    factor = avai / max;
+    if (factor >= 0) {
+      colorFactor = Colors.red;
+      if (factor >= 0.3) {
+        colorFactor = Colors.yellow;
+        if (factor >= 0.5) {
+          colorFactor = Colors.green;
+        }
+      }
+    }
+
+    return colorFactor;
+  }
+
   Future<String> getLocImage(String title) async {
     var imageFile;
     StorageReference ref =

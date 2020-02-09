@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 class ParkLot with ChangeNotifier {
   @required
@@ -17,6 +18,7 @@ class ParkLot with ChangeNotifier {
   List poly;
   @required
   List<int> lifeTime;
+  Color color;
 
   ParkLot({
     this.id,
@@ -27,5 +29,6 @@ class ParkLot with ChangeNotifier {
     this.lon,
     this.poly,
     this.lifeTime,
+    this.color,
   });
 }

@@ -54,6 +54,7 @@ class AppDrawer extends StatelessWidget {
             onTap: () => authData.logOut(),
           ),
           ListTile(
+            enabled: false,
             title: Text('V:0.0.1'),
             onTap: () {},
           ),

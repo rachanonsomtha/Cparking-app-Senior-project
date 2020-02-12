@@ -8,6 +8,7 @@ import 'package:path/path.dart';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import '../loader/color_loader_3.dart';
 import '../provider/auth.dart';
 import 'package:path/path.dart';
 
@@ -313,14 +314,6 @@ class _UserProfileState extends State<UserProfile> {
     final _userData = Provider.of<Auth>(context);
 
     return Scaffold(
-      // extendBody: true,
-      // appBar: AppBar(
-      //   leading: IconButton(
-      //     color: Colors.transparent,
-      //     icon: Icon(Icons.arrow_back_ios, color: Colors.white,),
-      //     onPressed: () => Navigator.of(context).pop(),
-      //   ),
-      // ),
       backgroundColor: Colors.white,
       body: Stack(
         children: <Widget>[
@@ -356,20 +349,33 @@ class _UserProfileState extends State<UserProfile> {
                     height: 20,
                   ),
                   _buildSeparator(screenSize),
-                  SizedBox(height: 10.0),
+                  SizedBox(
+                    height: 50,
+                  ),
                   !_isGetimage
                       ? SizedBox(
                           height: 10,
                         )
                       : Center(
-                          child: FlatButton(
-                            color: Colors.grey,
-                            onPressed: () async {
-                              await uploadProfilePicture(
-                                  context, _userData.userId);
-                            },
-                            child: Text('Update Profile Picture'),
-                          ),
+                          child: _isLoading
+                              ? ColorLoader3()
+                              : _image != null && !_isLoading
+                                  ? FlatButton(
+                                      color: Colors.green,
+                                      onPressed: () async {
+                                        setState(() {
+                                          _isLoading = true;
+                                        });
+                                        await uploadProfilePicture(
+                                            context, _userData.userId);
+                                        setState(() {
+                                          _isLoading = false;
+                                          _image = null;
+                                        });
+                                      },
+                                      child: Text('Update Profile Picture'),
+                                    )
+                                  : Text('Profile update complete'),
                         ),
                   // _buildGetInTouch(context),
                   SizedBox(height: 8.0),

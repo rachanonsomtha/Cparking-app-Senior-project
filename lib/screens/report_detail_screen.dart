@@ -183,7 +183,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                 ),
               ),
               Text(
-                userData.score.toString(),
+                'Score: ${userData.score.toString()}',
                 style: TextStyle(
                   fontFamily: 'Raleway',
                   fontSize: 16,

@@ -128,11 +128,13 @@ class _ParkabilityState extends State<Parkability> {
     //Real envi
     // var hourMark = dateTime.hour;
     // var minuteMark = dateTime.minute;
+    // var weekDay = dateTime.weekday;
     // Developing environment
     var hourMark = 8;
     var minuteMark = 20;
+    var weekDay = 5;
 
-    int row, col;
+    int row, col, alpha;
 
     if (hourMark >= 7) {
       row = 0;
@@ -180,6 +182,23 @@ class _ParkabilityState extends State<Parkability> {
         }
       }
     }
+
+    // if (weekDay >= 1) {
+    //   alpha = 1;
+    //   if (weekDay >= 2) {
+    //     alpha = 2;
+    //     if (weekDay >= 3) {
+    //       alpha = 3;
+    //       if (weekDay >= 4) {
+    //         alpha = 4;
+    //         if (weekDay >= 5) {
+    //           alpha = 5;
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
+    
     return col + (row * 4);
   }
 

@@ -129,7 +129,7 @@ class _ViewHistoryScreenState extends State<ViewHistoryScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     Icon(Icons.place),
-                    Text('ตึก 30 ปี คณะวิศวกรรมศาสตร์ มหาวิทยาลัยเชียงใหม่'),
+                    Text('คณะวิศวกรรมศาสตร์ มหาวิทยาลัยเชียงใหม่'),
                   ],
                 ),
               ),
@@ -220,7 +220,7 @@ class _ViewHistoryScreenState extends State<ViewHistoryScreen> {
 
     // String hour = (time.hour).toString();
     // String minute = setMinute(time.minute);
-    url = 'https://cparking-ecee0.firebaseio.com/avai/$name/14/0.json';
+    url = 'https://cparking-ecee0.firebaseio.com/avai/$name/1/14/0.json';
     print(url);
     final response = await http.get(url);
     // print(lot.color);
@@ -259,7 +259,7 @@ class _ViewHistoryScreenState extends State<ViewHistoryScreen> {
                       child: Row(
                         children: <Widget>[
                           IconButton(
-                            color: Colors.black54,
+                            color: Colors.white70,
                             icon: Icon(Icons.arrow_back_ios),
                             onPressed: () => Navigator.of(context).pop(),
                           )

@@ -11,6 +11,7 @@ import '../provider/parkingLotProvider.dart';
 //rating
 import '../widgets/lifeTimeBar.dart';
 import 'dart:math';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ReportItem extends StatefulWidget {
   // final report = Provider.of<ReportsProvider>(context, listen: false);
@@ -185,13 +186,14 @@ class _ReportItemState extends State<ReportItem> {
                                       padding: EdgeInsets.all(10),
                                       child: report.isPromoted &&
                                               _isanimate != 'favorite'
-                                          ? Icon(
-                                              Icons.thumb_down,
-                                            )
-                                          : FlareActor(
+                                          ? FlareActor(
                                               'assets/flare/HearthAnimation.flr',
                                               fit: BoxFit.contain,
                                               animation: _isanimate,
+                                            )
+                                          : Icon(
+                                              FontAwesomeIcons.heart,
+                                              size: 32,
                                             ),
                                     ),
                                   ),
@@ -217,14 +219,14 @@ class _ReportItemState extends State<ReportItem> {
                                   }),
                             ),
                           ),
-                          Text(
-                            '${report.isPromoted && _isanimate != 'favorite' ? 'Unlike' : 'Like'}',
-                            style: TextStyle(
-                              color: Theme.of(context).primaryColorDark,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12,
-                            ),
-                          ),
+                          // Text(
+                          //   '${report.isPromoted && _isanimate != 'favorite' ? 'Unlike' : 'Like'}',
+                          //   style: TextStyle(
+                          //     color: Theme.of(context).primaryColorDark,
+                          //     fontWeight: FontWeight.bold,
+                          //     fontSize: 12,
+                          //   ),
+                          // ),
                         ],
                       ),
               ],

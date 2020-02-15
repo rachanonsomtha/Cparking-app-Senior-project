@@ -58,6 +58,9 @@ class Report with ChangeNotifier {
         'https://cparking-ecee0.firebaseio.com/userPromoted/$userId/$id.json?auth=$authToken';
     final scoreUrl =
         'https://cparking-ecee0.firebaseio.com/reports/$id.json?auth=$authToken';
+    final url2 =
+        'https://cparking-ecee0.firebaseio.com/users/$userId/profile.json?auth=$authToken';
+
     try {
       final response = await http.put(
         url,
@@ -68,12 +71,37 @@ class Report with ChangeNotifier {
       if (response.statusCode >= 400) {
         _setNewPromoteValue(oldStatus);
       }
-      await http.patch(
+      await http
+          .patch(
         scoreUrl,
         body: json.encode({
           'score': score,
         }),
-      );
+      )
+          .then((_) async {
+        final response2 = await http.get(url2);
+        final decodeData2 = json.decode(response2.body) as Map<String, dynamic>;
+
+        decodeData2.forEach((id, userData) async {
+          final url =
+              'https://cparking-ecee0.firebaseio.com/users/$userId/profile/$id.json?';
+
+          int newScore = userData['score']; 
+
+          try {
+            await http.patch(
+              url,
+              body: json.encode({
+                'score': !isPromoted
+                    ? newScore == 0 ? 0 : newScore - 1
+                    : newScore + 1
+              }),
+            );
+          } catch (error) {
+            print(error);
+          }
+        });
+      });
     } catch (error) {
       _setNewPromoteValue(oldStatus);
     }

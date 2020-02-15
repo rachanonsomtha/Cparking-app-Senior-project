@@ -414,23 +414,23 @@ class ReportsProvider with ChangeNotifier {
       );
 
       final urlOldMean =
-          'https://cparking-ecee0.firebaseio.com/avai/${report.loc}/14/0.json';
+          'https://cparking-ecee0.firebaseio.com/avai/${report.loc}/1/14/0.json';
 
       double oldMean;
-      double count;
+      int count;
       await http.get(urlOldMean).then((value) {
         var data = json.decode(value.body) as Map<String, dynamic>;
         oldMean = double.parse(data['mean']);
-        count = double.parse(data['count']);
+        count = int.parse(data['count']);
       });
       print('OldCount: $count');
       count += 1;
 
       String newMean =
-          calculateMean(oldMean, report.availability, currentReportCount);
+          calculateMean(oldMean, report.availability, count);
 
       final url3 =
-          'https://cparking-ecee0.firebaseio.com/avai/${report.loc}/14/0.json';
+          'https://cparking-ecee0.firebaseio.com/avai/${report.loc}/1/14/0.json';
 
       await http.patch(
         url3,

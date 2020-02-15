@@ -8,7 +8,8 @@ class Modal {
     String name = s;
     DateTime now = DateTime.now();
 
-    bool _isEnable = (now.hour >= 7 && now.hour <= 23) ? true : false;
+    bool _isEnable =
+        (now.hour >= 7 && now.hour <= 17 && now.weekday <= 5) ? true : false;
     showModalBottomSheet(
         context: context,
         builder: (BuildContext bc) {

@@ -18,7 +18,7 @@ class Modal {
               spacing: 3,
               children: <Widget>[
                 ListTile(
-                  enabled: _isEnable,
+                  enabled: true,
                   leading: Icon(Icons.queue),
                   subtitle: _isEnable
                       ? Text("Report time 7am - 6pm")

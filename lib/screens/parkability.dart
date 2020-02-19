@@ -50,21 +50,11 @@ class _ParkabilityState extends State<Parkability> {
   final _lifeTimeFocusNode = FocusNode();
 
   var _isLoading = false;
-  bool _isInit = true;
   var _isUploadImage = false;
   var _locPicloaded = false;
   var _isPickedImage = false;
 
   int _currentValue = 0; // Number slider value
-
-  int _lifeTime;
-
-  final snackBar = SnackBar(
-    content: Text('Upload image complete'),
-    duration: Duration(
-      seconds: 3,
-    ),
-  );
 
   @override
   void didChangeDependencies() {
@@ -132,29 +122,87 @@ class _ParkabilityState extends State<Parkability> {
     });
   }
 
-  void setMinute(int time) {
-    //Real envi
+  int getAndSetlifeTime() {
     var dateTime = DateTime.now();
-    var time = dateTime.minute;
-    var hourMark = 14;
-    var minuteMark = 0;
-    var weekDay = 1;
 
-    String min;
-    if (time <= 30) {
-      min = '0';
+    //Real envi
+    // var hourMark = dateTime.hour;
+    // var minuteMark = dateTime.minute;
+    // var weekDay = dateTime.weekday;
+    // Developing environment
+    var hourMark = 8;
+    var minuteMark = 20;
+    var weekDay = 5;
+
+    int row, col, alpha;
+
+    if (hourMark >= 7) {
+      row = 0;
+      if (hourMark >= 8) {
+        row = 1;
+        if (hourMark >= 9) {
+          row = 2;
+          if (hourMark >= 10) {
+            row = 3;
+            if (hourMark >= 11) {
+              row = 4;
+              if (hourMark >= 12) {
+                row = 5;
+                if (hourMark >= 13) {
+                  row = 6;
+                  if (hourMark >= 14) {
+                    row = 7;
+                    if (hourMark >= 15) {
+                      row = 8;
+                      if (hourMark >= 16) {
+                        row = 9;
+                        if (hourMark >= 17) {
+                          row = 10;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
-    if (time >= 31) {
-      min = '30';
+
+    if (minuteMark >= 0) {
+      col = 0;
+      if (minuteMark >= 16) {
+        col = 1;
+        if (minuteMark >= 31) {
+          col = 2;
+          if (minuteMark >= 46) {
+            col = 3;
+          }
+        }
+      }
     }
+
+    // if (weekDay >= 1) {
+    //   alpha = 1;
+    //   if (weekDay >= 2) {
+    //     alpha = 2;
+    //     if (weekDay >= 3) {
+    //       alpha = 3;
+    //       if (weekDay >= 4) {
+    //         alpha = 4;
+    //         if (weekDay >= 5) {
+    //           alpha = 5;
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
+
+    return col + (row * 4);
   }
 
-  Future uploadFile(
-      context, name, currentReportCount, ParkLot lot, int lifeTime) async {
-    // Provider.of<ReportsProvider>(context).getLifeTime(name).then((value) {
-    //   lifeTime = value;
-    //   print(lifeTime);
-    // });
+  Future uploadFile(context, name, currentReportCount, ParkLot lot) async {
     try {
       var imagename = UniqueKey().toString();
 
@@ -169,13 +217,13 @@ class _ParkabilityState extends State<Parkability> {
         _isLoading = false;
       });
       storageReference.getDownloadURL().then((fileURL) {
-        // print(getAndSetlifeTime());
+        print(getAndSetlifeTime());
         setState(() {
           _uploadedFileURL = fileURL;
           _editReport = Report(
             id: _editReport.id,
             userName: _editReport.userName,
-            lifeTime: lifeTime,
+            lifeTime: lot.lifeTime[getAndSetlifeTime()],
             dateTime: _editReport.dateTime,
             imageUrl: _uploadedFileURL,
             isPromoted: _editReport.isPromoted,
@@ -248,19 +296,8 @@ class _ParkabilityState extends State<Parkability> {
 
   @override
   Widget build(BuildContext context) {
-    // getAndSetlifeTime();
+    getAndSetlifeTime();
     final name = ModalRoute.of(context).settings.arguments as String;
-    if (_isInit) {
-      Provider.of<ReportsProvider>(context).getLifeTime(name).then((value) {
-        setState(() {
-          _lifeTime = Provider.of<ReportsProvider>(context).lifeTime;
-        });
-      });
-      setState(() {
-        _isInit = false;
-      });
-    }
-
     final historyData = Provider.of<ReportsProvider>(context);
     Provider.of<ReportsProvider>(context).fetchReportFromLocation(name);
     int currentReportCount = historyData.locReportsCount;
@@ -410,8 +447,8 @@ class _ParkabilityState extends State<Parkability> {
                         child: FlatButton(
                           color: Colors.grey,
                           onPressed: () async {
-                            await uploadFile(context, name, currentReportCount,
-                                parkingInfo, _lifeTime);
+                            await uploadFile(
+                                context, name, currentReportCount, parkingInfo);
                           },
                           child: Text('Confirm report'),
                         ),

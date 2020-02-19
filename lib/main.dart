@@ -1,4 +1,3 @@
-import 'package:cparking/provider/report.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -11,8 +10,6 @@ import './screens/splash-screen.dart';
 import './screens/auth_screen.dart';
 import './provider/auth.dart';
 import './provider/parkingLotProvider.dart';
-import './provider/report_provider.dart';
-import './provider/report.dart';
 import './screens/user_previous_reports.dart';
 
 // import './screens/user_profile_screen.dart';
@@ -21,6 +18,9 @@ import './screens/report_detail_screen.dart';
 import './screens/user_profile.dart';
 
 import './screens/view_history_screen.dart';
+import 'package:flutter/services.dart';
+import 'package:introduction_screen/introduction_screen.dart';
+
 // import 'package:firebase/firebase.dart';
 // import 'package:firebase/firestore.dart' as fs;
 
@@ -30,6 +30,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -113,4 +114,125 @@ class CompanyColors {
       900: const Color(0xFF000000),
     },
   );
+}
+
+class OnBoardingPage extends StatelessWidget {
+  const OnBoardingPage({Key key}) : super(key: key);
+
+  Widget build(BuildContext context) {
+    const bodyStyle = TextStyle(
+      fontSize: 20.0,
+      color: Colors.black,
+    );
+    const pageDecoration = const PageDecoration(
+      titleTextStyle: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w700),
+      bodyTextStyle: bodyStyle,
+      descriptionPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
+      pageColor: Colors.white,
+      imagePadding: EdgeInsets.zero,
+    );
+
+    void _onIntroEnd(context) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => HomeScreen()),
+      );
+    }
+
+    Widget _buildImage(String assetName) {
+      return Align(
+        child: Image.asset('images/$assetName.jpg', width: 350.0),
+        alignment: Alignment.topLeft,
+      );
+    }
+
+    return IntroductionScreen(
+      pages: [
+        PageViewModel(
+          title: "Fractional shares",
+          body:
+              "Instead of having to buy an entire share, invest any amount you want.",
+          image: _buildImage('img1'),
+          decoration: pageDecoration,
+        ),
+        PageViewModel(
+          title: "Learn as you go",
+          body:
+              "Download the Stockpile app and master the market with our mini-lesson.",
+          image: _buildImage('img2'),
+          decoration: pageDecoration,
+        ),
+        PageViewModel(
+          title: "Kids and teens",
+          body:
+              "Kids and teens can track their stocks 24/7 and place trades that you approve.",
+          image: _buildImage('img3'),
+          decoration: pageDecoration,
+        ),
+        PageViewModel(
+          title: "Another title page",
+          body: "Another beautiful body text for this example onboarding",
+          image: _buildImage('img2'),
+          footer: RaisedButton(
+            onPressed: () {/* Nothing */},
+            child: const Text(
+              'FooButton',
+              style: TextStyle(color: Colors.white),
+            ),
+            color: Colors.lightBlue,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+          ),
+          decoration: pageDecoration,
+        ),
+        PageViewModel(
+          title: "Title of last page",
+          bodyWidget: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Text(
+                "Click on ",
+                style: bodyStyle,
+              ),
+              Icon(Icons.edit),
+              Text(
+                " to edit a post",
+                style: bodyStyle,
+              ),
+            ],
+          ),
+          image: _buildImage('img1'),
+          decoration: pageDecoration,
+        ),
+      ],
+      onDone: () => _onIntroEnd(context),
+      //onSkip: () => _onIntroEnd(context), // You can override onSkip callback
+      showSkipButton: true,
+      skipFlex: 0,
+      nextFlex: 0,
+      skip: const Text(
+        'Skip',
+        style: TextStyle(
+          fontWeight: FontWeight.w600,
+          color: Colors.black,
+        ),
+      ),
+      next: const Icon(Icons.arrow_forward),
+      done: const Text(
+        'Done',
+        style: TextStyle(
+          fontWeight: FontWeight.w600,
+          color: Colors.black,
+        ),
+      ),
+      dotsDecorator: const DotsDecorator(
+        size: Size(10.0, 10.0),
+        color: Color(0xFFBDBDBD),
+        activeSize: Size(22.0, 10.0),
+        activeShape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(25.0)),
+        ),
+      ),
+    );
+  }
 }

@@ -474,7 +474,7 @@ class ParkingLotProvider with ChangeNotifier {
     String minute = setMinute(time.minute);
     _parkingLots.forEach((lot) async {
       url =
-          'https://cparking-ecee0.firebaseio.com/avai/${lot.id}/14/0.json'; // for developing environment only
+          'https://cparking-ecee0.firebaseio.com/avai/${lot.id}/1/14/0.json'; // for developing environment only
       final response = await http.get(url);
       // print(lot.color);
       final decodeData = json.decode(response.body) as Map<String, dynamic>;

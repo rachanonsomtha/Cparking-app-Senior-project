@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:introduction_screen/introduction_screen.dart';
 import '../widgets/drawer.dart';
 import '../model/bottomSheet.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -6,6 +7,7 @@ import 'dart:async';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import '../provider/parkingLotProvider.dart';
+import '../screens/introduction_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home-screeen';
@@ -122,50 +124,65 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          title: Text('C-Parking'),
-        ),
-        drawer: AppDrawer(),
-        // drawer: AppDrawer(),
-        body: Stack(
-          alignment: Alignment.bottomRight,
-          children: <Widget>[
-            GoogleMap(
-              // myLocationEnabled: true,
-              polylines: Set.from(polylines),
-              markers: Set.from(markers),
-              mapType: mapType,
-              initialCameraPosition: CameraPosition(
-                target: LatLng(18.795484, 98.952698),
-                zoom: 18,
-              ),
-              onMapCreated: (GoogleMapController controller) {
-                _controller.complete(controller);
-              },
+      appBar: AppBar(
+        centerTitle: true,
+        elevation: 0,
+        title: Text('C-Parking'),
+        actions: <Widget>[
+          // action button
+          IconButton(
+            icon: Icon(
+              Icons.help_outline,
             ),
-          ],
-        ),
-        floatingActionButton: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: FloatingActionButton(
-                heroTag: UniqueKey(),
-                child: Icon(Icons.place),
-                onPressed: _goMyLoc,
-              ),
+            onPressed: () {
+            },
+          )
+        ],
+      ),
+
+      // action button
+
+      drawer: AppDrawer(),
+      // drawer: AppDrawer(),
+      body: Stack(
+        alignment: Alignment.bottomRight,
+        children: <Widget>[
+          GoogleMap(
+            // myLocationEnabled: true,
+            polylines: Set.from(polylines),
+            markers: Set.from(markers),
+            mapType: mapType,
+            initialCameraPosition: CameraPosition(
+              target: LatLng(18.795484, 98.952698),
+              zoom: 18,
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: FloatingActionButton(
-                heroTag: UniqueKey(),
-                child: Icon(Icons.map),
-                onPressed: changeMapType,
-              ),
+            onMapCreated: (GoogleMapController controller) {
+              _controller.complete(controller);
+            },
+          ),
+        ],
+      ),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: FloatingActionButton(
+              heroTag: UniqueKey(),
+              child: Icon(Icons.place),
+              onPressed: _goMyLoc,
             ),
-          ],
-        ));
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: FloatingActionButton(
+              heroTag: UniqueKey(),
+              child: Icon(Icons.map),
+              onPressed: changeMapType,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

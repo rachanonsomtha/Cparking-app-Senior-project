@@ -56,7 +56,6 @@ class _ReportOverViewScreenState extends State<ReportOverViewScreen> {
         _isLoading = false;
       });
     });
-    print('kuy');
   }
 
   // calculate displayed lifetime bar for sorting

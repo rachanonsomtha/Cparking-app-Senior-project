@@ -59,6 +59,13 @@ class _ParkabilityState extends State<Parkability> {
 
   int _lifeTime;
 
+  final snackBar = SnackBar(
+    content: Text('Upload image complete'),
+    duration: Duration(
+      seconds: 3,
+    ),
+  );
+
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
@@ -181,10 +188,15 @@ class _ParkabilityState extends State<Parkability> {
           // print(_uploadedFileURL + "eiei");
         });
       }).then((_) async {
-        await Provider.of<ReportsProvider>(context, listen: false).addReport(
+        await Provider.of<ReportsProvider>(context, listen: false)
+            .addReport(
           _editReport,
           currentReportCount,
-        );
+        )
+            .then((_) {
+          _showDialog();
+          // Scaffold.of(context).showSnackBar(snackBar);
+        });
       });
 // print('File Uploaded');
       _image = null;
@@ -206,15 +218,32 @@ class _ParkabilityState extends State<Parkability> {
         ),
       );
     }
-    final snackBar = SnackBar(
-      content: Text('Upload image complete'),
-      duration: Duration(
-        seconds: 1,
-      ),
-    );
 
     // Navigator.of(context).pop();
     // Scaffold.of(context).showSnackBar(snackBar);
+  }
+
+  void _showDialog() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Report complete"),
+          content: new Text("Thank you for your time"),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -240,6 +269,7 @@ class _ParkabilityState extends State<Parkability> {
         Provider.of<ParkingLotProvider>(context, listen: false).findById(name);
     final authData = Provider.of<Auth>(context, listen: false);
     final report = Provider.of<ReportsProvider>(context, listen: false);
+    final screenSize = MediaQuery.of(context).size;
     // final locUrl = Provider.of<ParkingLotProvider>(context, listen: false)
     //     .getLocImage(name);
     // print(locUrl.toString());
@@ -259,115 +289,136 @@ class _ParkabilityState extends State<Parkability> {
                 dotRadius: 5,
               ),
             )
-          : Padding(
-              padding: const EdgeInsets.all(10),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      height: 200,
-                      width: double.infinity,
-                      child: FadeInImage.memoryNetwork(
-                        placeholder: kTransparentImage,
-                        image: parkingInfo.imageUrl,
+          : SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    height: screenSize.height / 3,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: NetworkImage(parkingInfo.imageUrl),
                         fit: BoxFit.cover,
                       ),
                     ),
-                    Column(
-                      children: <Widget>[
-                        Container(
-                          width: 300,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              _image == null
-                                  ? Container(
-                                      width: 100,
-                                      height: 100,
-                                      margin: EdgeInsets.all(10),
-                                      child: FloatingActionButton(
-                                        elevation: 1,
-                                        backgroundColor: Colors.grey,
-                                        onPressed: getImage,
-                                        tooltip: 'Add Image',
-                                        child: Icon(
-                                          Icons.camera_alt,
-                                          color: Colors.white,
-                                          size: 50,
-                                        ),
+                  ),
+                  Column(
+                    children: <Widget>[
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Divider(
+                        indent: 10,
+                        endIndent: 10,
+                        thickness: 3,
+                        color: Colors.white,
+                      ),
+                      Text(
+                        'Press to upload your image',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                      Container(
+                        width: 300,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            _image == null
+                                ? Container(
+                                    width: 100,
+                                    height: 100,
+                                    margin: EdgeInsets.all(10),
+                                    child: FloatingActionButton(
+                                      elevation: 1,
+                                      backgroundColor: Colors.grey,
+                                      onPressed: getImage,
+                                      tooltip: 'Add Image',
+                                      child: Icon(
+                                        Icons.camera_alt,
+                                        color: Colors.white,
+                                        size: 50,
                                       ),
-                                    )
-                                  : Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: <Widget>[
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                  width: 1,
-                                                  color: Colors.grey,
-                                                ),
-                                              ),
-                                              height: 200,
-                                              width: 200,
-                                              child: Image.file(
-                                                _image,
-                                                fit: BoxFit.cover,
+                                    ),
+                                  )
+                                : Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                width: 1,
+                                                color: Colors.grey,
                                               ),
                                             ),
-                                          ]),
-                                    ),
-                            ],
+                                            height: 200,
+                                            width: 200,
+                                            child: Image.file(
+                                              _image,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ]),
+                                  ),
+                          ],
+                        ),
+                      ),
+                      Divider(
+                        indent: 10,
+                        endIndent: 10,
+                        thickness: 3,
+                        color: Colors.white,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Text(
+                          "Parkability: $_currentValue",
+                          style: TextStyle(
+                            fontSize: 20,
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: Text(
-                            "Parkability: $_currentValue",
-                            style: TextStyle(fontSize: 20),
-                          ),
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width / 3,
+                        child: NumberPicker.integer(
+                            initialValue: _currentValue,
+                            minValue: 0,
+                            maxValue: int.parse(
+                              parkingInfo.max.toStringAsFixed(0),
+                            ),
+                            onChanged: (newValue) {
+                              _editReport = Report(
+                                id: _editReport.id,
+                                userName: _editReport.userName,
+                                lifeTime: _editReport.lifeTime,
+                                dateTime: _editReport.dateTime,
+                                imageUrl: _editReport.imageUrl,
+                                isPromoted: _editReport.isPromoted,
+                                availability: newValue,
+                                score: _editReport.score,
+                                loc: name,
+                                imgName: _editReport.imgName,
+                              );
+                              // print(_editReport.imageUrl);
+                              setState(() => _currentValue = newValue);
+                            }),
+                      ),
+                      Center(
+                        child: FlatButton(
+                          color: Colors.grey,
+                          onPressed: () async {
+                            await uploadFile(context, name, currentReportCount,
+                                parkingInfo, _lifeTime);
+                          },
+                          child: Text('Confirm report'),
                         ),
-                        Container(
-                          width: MediaQuery.of(context).size.width / 3,
-                          child: NumberPicker.integer(
-                              initialValue: _currentValue,
-                              minValue: 0,
-                              maxValue: int.parse(
-                                parkingInfo.max.toStringAsFixed(0),
-                              ),
-                              onChanged: (newValue) {
-                                _editReport = Report(
-                                  id: _editReport.id,
-                                  userName: _editReport.userName,
-                                  lifeTime: _editReport.lifeTime,
-                                  dateTime: _editReport.dateTime,
-                                  imageUrl: _editReport.imageUrl,
-                                  isPromoted: _editReport.isPromoted,
-                                  availability: newValue,
-                                  score: _editReport.score,
-                                  loc: name,
-                                  imgName: _editReport.imgName,
-                                );
-                                // print(_editReport.imageUrl);
-                                setState(() => _currentValue = newValue);
-                              }),
-                        ),
-                        Center(
-                          child: FlatButton(
-                            color: Colors.grey,
-                            onPressed: () async {
-                              await uploadFile(context, name,
-                                  currentReportCount, parkingInfo, _lifeTime);
-                            },
-                            child: Text('Confirm report'),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
     );

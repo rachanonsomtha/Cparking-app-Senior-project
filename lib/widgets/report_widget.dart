@@ -58,7 +58,7 @@ class _ReportItemState extends State<ReportItem> {
 
     double remainingTime = ratioCalculate(
       DateTime.parse(report.dateTime),
-      new Duration(minutes: report.lifeTime),
+      new Duration(minutes: loc.lifeTime[0]),
     );
     // print(dateTime.minute);
     return Card(

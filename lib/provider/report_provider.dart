@@ -14,6 +14,8 @@ class ReportsProvider with ChangeNotifier {
 
   List<Report> _reportsLoc = [];
 
+  int _lifeTime;
+
   String authToken;
   String userId;
   Map<String, String> headers = new HashMap();
@@ -50,6 +52,10 @@ class ReportsProvider with ChangeNotifier {
 
   int get locReportsCount {
     return _reportsLoc.length;
+  }
+
+  int get lifeTime {
+    return _lifeTime;
   }
 
   bool isOwnedby(Report report) {
@@ -92,6 +98,14 @@ class ReportsProvider with ChangeNotifier {
 
   Report findById(String id) {
     return _reports.firstWhere((rep) => rep.id == id);
+  }
+
+  Future<int> getLifeTime(String name) async {
+    final url = 'https://cparking-ecee0.firebaseio.com/avai/$name/1/14/0.json';
+    await http.get(url).then((decodeData) {
+      var data = json.decode(decodeData.body) as Map<String, dynamic>;
+      _lifeTime = int.parse(data['lifeTime']);
+    });
   }
 
   // Future<void> fetchAndGetProducts() async {
@@ -426,8 +440,7 @@ class ReportsProvider with ChangeNotifier {
       print('OldCount: $count');
       count += 1;
 
-      String newMean =
-          calculateMean(oldMean, report.availability, count);
+      String newMean = calculateMean(oldMean, report.availability, count);
 
       final url3 =
           'https://cparking-ecee0.firebaseio.com/avai/${report.loc}/1/14/0.json';

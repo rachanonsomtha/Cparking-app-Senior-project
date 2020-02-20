@@ -6,7 +6,6 @@ import '../provider/auth.dart';
 import 'package:provider/provider.dart';
 import '../screens/home.dart';
 import '../screens/user_previous_reports.dart';
-import '../screens/auth_screen.dart';
 // import '../screens/user_profile_screen.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -52,9 +51,7 @@ class AppDrawer extends StatelessWidget {
           _createDrawerItem(
             icon: Icons.exit_to_app,
             text: 'Logout',
-            onTap: () => authData.logOut().then((_) {
-              Navigator.of(context).pushNamed(AuthScreen.routeName);
-            }),
+            onTap: () => authData.logOut(),
           ),
           ListTile(
             enabled: false,

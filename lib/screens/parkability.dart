@@ -181,10 +181,26 @@ class _ParkabilityState extends State<Parkability> {
           // print(_uploadedFileURL + "eiei");
         });
       }).then((_) async {
-        await Provider.of<ReportsProvider>(context, listen: false).addReport(
-          _editReport,
-          currentReportCount,
-        );
+        await Provider.of<ReportsProvider>(context, listen: false)
+            .addReport(
+              _editReport,
+              currentReportCount,
+            )
+            .then(
+              (_) => AlertDialog(
+                title: new Text("Report complete. Thank you"),
+                content: new Text("Dev Inw"),
+                actions: <Widget>[
+                  // usually buttons at the bottom of the dialog
+                  new FlatButton(
+                    child: new Text("Close"),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
+            );
       });
 // print('File Uploaded');
       _image = null;

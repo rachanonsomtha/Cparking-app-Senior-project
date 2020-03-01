@@ -62,23 +62,6 @@ class ReportsProvider with ChangeNotifier {
     return report.userName == userId ? true : false;
   }
 
-  // effect all pages scenarios
-  // void showFavouritesOnly() {
-  //   _showFavourtiesOnly = true;
-  //   notifyListeners();
-  // }
-
-  // void showAll() {
-  //   _showFavourtiesOnly = false;
-  //   notifyListeners();
-  // }
-  // Product findById(String id) {
-  //   return _items.firstWhere((prod) => prod.id == id);
-  // }
-
-  ///update products
-  ///
-
   void updateProduct(String id, Report newProduct) {
     final prodIndex = _reports.indexWhere((prod) => prod.id == id);
     if (prodIndex >= 0) {
@@ -100,80 +83,12 @@ class ReportsProvider with ChangeNotifier {
     return _reports.firstWhere((rep) => rep.id == id);
   }
 
-  Future<int> getLifeTime(String name) async {
+  Future<void> getLifeTime(String name) async {
     final url = 'https://cparking-ecee0.firebaseio.com/avai/$name/1/14/0.json';
     await http.get(url).then((decodeData) {
       var data = json.decode(decodeData.body) as Map<String, dynamic>;
       _lifeTime = int.parse(data['lifeTime']);
     });
-  }
-
-  // Future<void> fetchAndGetProducts() async {
-  //   const url = 'https://myshop-c8a90.firebaseio.com/products.json';
-  //   try {
-  //     final response = await http.get(url);
-  //     final decodeData = json.decode(response.body) as Map<String, dynamic>;
-  //     final List<Report> loadedProducts = [];
-  //     decodeData.forEach((prodId, prodData) {
-  //       loadedProducts.add(Report(
-  //         id: prodId,
-  //         title: prodData['title'],
-  //         description: prodData['description'],
-  //         price: prodData['price'],
-  //         isFavorite: prodData['isFavourite'],
-  //         imageUrl: prodData['imageUrl'],
-  //       ));
-  //     });
-  //     _items = loadedProducts;
-  //     notifyListeners();
-  //     print(json.decode(response.body));
-  //   } catch (error) {
-  //     print(error);
-  //     throw error;
-  //   }
-  // }
-
-  int setHour(int time) {
-    //Real envi
-
-    int row;
-    if (time >= 7) {
-      row = 7;
-      if (time >= 8) {
-        row = 8;
-        if (time >= 9) {
-          row = 9;
-          if (time >= 10) {
-            row = 10;
-            if (time >= 11) {
-              row = 11;
-              if (time >= 12) {
-                row = 12;
-                if (time >= 13) {
-                  row = 13;
-                  if (time >= 14) {
-                    row = 14;
-                    if (time >= 15) {
-                      row = 15;
-                      if (time >= 16) {
-                        row = 16;
-                        if (time >= 17) {
-                          row = 17;
-                          if (time == 18) {
-                            row = 18;
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    return row;
   }
 
   String setMinute(int time) {

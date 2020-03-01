@@ -134,7 +134,7 @@ class _ReportItemState extends State<ReportItem> {
                         ),
                       ),
                       Text(
-                        'Time: ${dateTime.hour}:${dateTime.minute}',
+                        'Time: ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}',
                         style: TextStyle(
                           color: Theme.of(context).primaryColorDark,
                           fontSize: 12,

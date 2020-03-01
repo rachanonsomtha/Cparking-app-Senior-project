@@ -27,13 +27,14 @@ class _UserPreviousReportsState extends State<UserPreviousReports> {
       setState(() {
         _isLoading = true;
       });
-      await Provider.of<ReportsProvider>(context).fetchReport();
-      // Provider.of<Auth>(context).fetchUserProfileData();
-      await Provider.of<ReportsProvider>(context)
-          .fetchReportFromUserId(userData.userData.reports)
-          .then((_) {
-        setState(() {
-          _isLoading = false;
+      Provider.of<Auth>(context).fetchUserProfileData().whenComplete(() async {
+        await Provider.of<ReportsProvider>(context).fetchReport();
+        await Provider.of<ReportsProvider>(context)
+            .fetchReportFromUserId(userData.userData.reports)
+            .then((_) {
+          setState(() {
+            _isLoading = false;
+          });
         });
       });
     }

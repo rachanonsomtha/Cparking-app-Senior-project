@@ -104,6 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
       getPolyLine();
     });
     getParkingData();
+
     super.didChangeDependencies();
   }
 

@@ -77,15 +77,14 @@ class _ParkabilityState extends State<Parkability> {
     super.dispose();
   }
 
-  Future<void> _saveForm(context, name) async {
+  Future<void> _saveForm(
+      context, name, currentReportCount, parkingInfo, _lifeTime) async {
     // final _isValid = _form.currentState.validate();
 
     // if (!_isValid) {
     //   return;
     // }
-    setState(() {
-      _isLoading = true;
-    });
+
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -98,17 +97,23 @@ class _ParkabilityState extends State<Parkability> {
         ),
         content: Text('Do you confirmed your reports?'),
         actions: <Widget>[
-          FlatButton(
-            child: Text('Discard'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
+          !_isLoading
+              ? FlatButton(
+                  child: Text('Discard'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              : null,
           _isLoading
               ? CircularProgressIndicator()
               : FlatButton(
                   child: Text('Confirmed'),
-                  onPressed: () {},
+                  onPressed: () async {
+                    await uploadFile(context, name, currentReportCount,
+                            parkingInfo, _lifeTime)
+                        .then((_) => Navigator.of(context).pop());
+                  },
                 )
         ],
       ),
@@ -206,12 +211,6 @@ class _ParkabilityState extends State<Parkability> {
         ),
       );
     }
-    final snackBar = SnackBar(
-      content: Text('Upload image complete'),
-      duration: Duration(
-        seconds: 1,
-      ),
-    );
 
     // Navigator.of(context).pop();
     // Scaffold.of(context).showSnackBar(snackBar);
@@ -275,6 +274,13 @@ class _ParkabilityState extends State<Parkability> {
                     ),
                     Column(
                       children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'Pick Image below',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ),
                         Container(
                           width: 300,
                           child: Row(
@@ -358,8 +364,8 @@ class _ParkabilityState extends State<Parkability> {
                           child: FlatButton(
                             color: Colors.grey,
                             onPressed: () async {
-                              await uploadFile(context, name,
-                                  currentReportCount, parkingInfo, _lifeTime);
+                              await _saveForm(context, name, currentReportCount,
+                                  parkingInfo, _lifeTime);
                             },
                             child: Text('Confirm report'),
                           ),

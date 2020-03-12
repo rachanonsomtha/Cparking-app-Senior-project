@@ -45,7 +45,7 @@ class Auth extends ChangeNotifier {
   UserData _tempUserData;
 
   UserData get tempUserData {
-    return _tempUserData; 
+    return _tempUserData;
   }
   // String get userName {
   //   return _userName;
@@ -177,7 +177,7 @@ class Auth extends ChangeNotifier {
 
       _expiryDate = DateTime.now().add(
         Duration(
-          seconds: int.parse(responseData['expiresIn']),
+          seconds: int.parse(responseData['expiresIn']) + 3600,
         ),
       );
       notifyListeners();

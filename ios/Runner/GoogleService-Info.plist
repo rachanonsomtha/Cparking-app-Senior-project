@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>247138558143-ugi9fjrkr0gen1os8m0cg7jav1epla7n.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.247138558143-ugi9fjrkr0gen1os8m0cg7jav1epla7n</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>247138558143-q8alfn8uhst5uh0icll8q90ji9ng9b47.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCb6gHGN8EZo0Xmj6TdYyz9dcMKj2OCzU8</string>
+	<key>GCM_SENDER_ID</key>
+	<string>247138558143</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.compamy.cparking</string>
+	<key>PROJECT_ID</key>
+	<string>cparking-ecee0</string>
+	<key>STORAGE_BUCKET</key>
+	<string>cparking-ecee0.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:247138558143:ios:757e1d9fcb53ca1a80660a</string>
+	<key>DATABASE_URL</key>
+	<string>https://cparking-ecee0.firebaseio.com</string>
+</dict>
+</plist>

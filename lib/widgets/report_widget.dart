@@ -140,23 +140,23 @@ class _ReportItemState extends State<ReportItem> {
                           fontSize: 12,
                         ),
                       ),
-                      Container(
-                        width: 100,
-                        child: SmoothStarRating(
-                          allowHalfRating: false,
-                          onRatingChanged: (v) {
-                            rating = v;
-                          },
-                          starCount: 5,
-                          rating: rating,
-                          size: 20.0,
-                          filledIconData: Icons.star,
-                          halfFilledIconData: Icons.star_half,
-                          color: Colors.yellow,
-                          borderColor: Colors.grey,
-                          spacing: 0.0,
-                        ),
-                      ),
+                      // Container(
+                      //   width: 100,
+                      //   child: SmoothStarRating(
+                      //     allowHalfRating: false,
+                      //     onRatingChanged: (v) {
+                      //       rating = v;
+                      //     },
+                      //     starCount: 5,
+                      //     rating: rating,
+                      //     size: 20.0,
+                      //     filledIconData: Icons.star,
+                      //     halfFilledIconData: Icons.star_half,
+                      //     color: Colors.yellow,
+                      //     borderColor: Colors.grey,
+                      //     spacing: 0.0,
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),

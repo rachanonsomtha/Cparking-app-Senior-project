@@ -8,14 +8,14 @@ class LifeTimeBar extends StatelessWidget {
   Color colorFactor;
 
   void _colorFactor() {
-    if (factor >= 0.3) {
+    if (factor < 0.3) {
       colorFactor = Colors.red;
-      if (factor >= 0.5) {
-        colorFactor = Colors.yellow;
-        if (factor >= 0.8) {
-          colorFactor = Colors.green;
-        }
-      }
+    }
+    if (factor >= 0.3 && factor < 0.6) {
+      colorFactor = Colors.yellow;
+    }
+    if (factor >= 0.6) {
+      colorFactor = Colors.green;
     }
   }
 

@@ -54,11 +54,10 @@ class _ReportItemState extends State<ReportItem> {
     final authData = Provider.of<Auth>(context, listen: false);
     final report = Provider.of<Report>(context);
     DateTime dateTime = DateTime.parse(report.dateTime.toString());
-    final loc = Provider.of<ParkingLotProvider>(context).findById(report.loc);
 
     double remainingTime = ratioCalculate(
       DateTime.parse(report.dateTime),
-      new Duration(minutes: loc.lifeTime[0]),
+      new Duration(minutes: report.lifeTime),
     );
     // print(dateTime.minute);
     return Card(
@@ -208,6 +207,7 @@ class _ReportItemState extends State<ReportItem> {
                                         .scoreManagement(
                                       authData.token,
                                       authData.userId,
+                                      report.userName,
                                     )
                                         .then((_) {
                                       setState(() {

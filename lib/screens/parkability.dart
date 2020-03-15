@@ -110,9 +110,9 @@ class _ParkabilityState extends State<Parkability> {
               : FlatButton(
                   child: Text('Confirmed'),
                   onPressed: () async {
+                    Navigator.of(context).pop();
                     await uploadFile(context, name, currentReportCount,
-                            parkingInfo, _lifeTime)
-                        .then((_) => Navigator.of(context).pop());
+                        parkingInfo, _lifeTime);
                   },
                 )
         ],

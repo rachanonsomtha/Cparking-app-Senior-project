@@ -131,7 +131,7 @@ class Auth extends ChangeNotifier {
 
       decodeData.forEach((id, userData) async {
         final url =
-            'https://cparking-ecee0.firebaseio.com//users/$userId/profile/$id.json';
+            'https://cparking-ecee0.firebaseio.com/users/$userId/profile/$id.json';
         try {
           await http.patch(
             url,

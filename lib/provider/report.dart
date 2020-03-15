@@ -40,7 +40,8 @@ class Report with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> scoreManagement(String authToken, String userId) async {
+  Future<void> scoreManagement(
+      String authToken, String userId, String thisUser) async {
     bool oldStatus = isPromoted;
     int oldScore = score;
     // print(isPromoted);
@@ -59,7 +60,7 @@ class Report with ChangeNotifier {
     final scoreUrl =
         'https://cparking-ecee0.firebaseio.com/reports/$id.json?auth=$authToken';
     final url2 =
-        'https://cparking-ecee0.firebaseio.com/users/$userId/profile.json?auth=$authToken';
+        'https://cparking-ecee0.firebaseio.com/users/$thisUser/profile.json?auth=$authToken';
 
     try {
       final response = await http.put(
@@ -84,9 +85,9 @@ class Report with ChangeNotifier {
 
         decodeData2.forEach((id, userData) async {
           final url =
-              'https://cparking-ecee0.firebaseio.com/users/$userId/profile/$id.json?';
+              'https://cparking-ecee0.firebaseio.com/users/$thisUser/profile/$id.json?';
 
-          int newScore = userData['score']; 
+          int newScore = userData['score'];
 
           try {
             await http.patch(

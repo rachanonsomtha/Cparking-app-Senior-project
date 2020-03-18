@@ -194,9 +194,6 @@ class Auth extends ChangeNotifier {
         },
       );
       fetchUserProfileData();
-      // print('kuy');
-      // print(_userName);
-
       final url2 =
           'https://cparking-ecee0.firebaseio.com/users/$userId/profile.json';
       try {

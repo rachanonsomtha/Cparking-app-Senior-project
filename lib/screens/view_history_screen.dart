@@ -190,24 +190,6 @@ class _ViewHistoryScreenState extends State<ViewHistoryScreen> {
     final loc = Provider.of<ParkingLotProvider>(context).findById(name);
 
     getPercentage(name, loc);
-
-    // if (_isInit) {
-    //   setState(() {
-    //     _isLoading = true;
-    //   });
-    //   Provider.of<ReportsProvider>(context)
-    //       .fetchReportFromLocation(name)
-    //       .then((_) {
-    //     setState(() {
-    //       _isLoading = false;
-    //     });
-    //   });
-    // }
-    // setState(() {
-    //   _isInit = false;
-    // });
-
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
   }
 

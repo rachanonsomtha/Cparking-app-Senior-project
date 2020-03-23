@@ -130,7 +130,7 @@ class _ParkabilityState extends State<Parkability> {
     });
   }
 
-  void setMinute(int time) {
+  void setMinute() {
     //Real envi
     var dateTime = DateTime.now();
     var time = dateTime.minute;
@@ -139,12 +139,22 @@ class _ParkabilityState extends State<Parkability> {
     var weekDay = 1;
 
     String min;
-    if (time <= 30) {
+    if (time <= 9) {
       min = '0';
-    }
-    if (time >= 31) {
+    } else if (time <= 19) {
+      min = '10';
+    } else if (time <= 29) {
+      min = '20';
+    } else if (time <= 39) {
       min = '30';
+    } else if (time <= 49) {
+      min = '40';
+    } else if (time <= 59) {
+      min = '50';
     }
+
+    
+
   }
 
   Future uploadFile(
@@ -363,10 +373,11 @@ class _ParkabilityState extends State<Parkability> {
                         Center(
                           child: FlatButton(
                             color: Colors.grey,
-                            onPressed: () async {
-                              await _saveForm(context, name, currentReportCount,
-                                  parkingInfo, _lifeTime);
-                            },
+                            // onPressed: () async {
+                            //   await _saveForm(context, name, currentReportCount,
+                            //       parkingInfo, _lifeTime);
+                            // },
+                            onPressed: () => setMinute(),
                             child: Text('Confirm report'),
                           ),
                         ),

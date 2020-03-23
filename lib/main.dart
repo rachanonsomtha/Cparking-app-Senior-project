@@ -1,4 +1,5 @@
 import 'package:cparking/provider/report.dart';
+import 'package:cparking/screens/onboarding_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -11,8 +12,6 @@ import './screens/splash-screen.dart';
 import './screens/auth_screen.dart';
 import './provider/auth.dart';
 import './provider/parkingLotProvider.dart';
-import './provider/report_provider.dart';
-import './provider/report.dart';
 import './screens/user_previous_reports.dart';
 
 // import './screens/user_profile_screen.dart';
@@ -21,6 +20,9 @@ import './screens/report_detail_screen.dart';
 import './screens/user_profile.dart';
 
 import './screens/view_history_screen.dart';
+import 'package:flutter/services.dart';
+import './screens/onboarding_screen.dart';
+
 // import 'package:firebase/firebase.dart';
 // import 'package:firebase/firestore.dart' as fs;
 
@@ -28,8 +30,13 @@ void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   // This widget is the root of your application.
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -63,7 +70,7 @@ class MyApp extends StatelessWidget {
             //rgba(120, 132, 158, 1)
             accentColor: Colors.white,
             primaryColorDark: Colors.black,
-            // primaryColor:   Color(#003c7e),
+            // primaryColor:   Color(#0037e),
             fontFamily: 'Raleway',
           ),
           home: auth.isAuth
@@ -77,6 +84,7 @@ class MyApp extends StatelessWidget {
                           : AuthScreen(),
                 ),
           routes: {
+            OnBoardingPage.routeName: (ctx) => OnBoardingPage(),
             HomeScreen.routeName: (ctx) => HomeScreen(),
             Parkability.routeName: (ctx) => Parkability(),
             UserProfile.routeName: (ctx) => UserProfile(),
@@ -84,6 +92,7 @@ class MyApp extends StatelessWidget {
             UserPreviousReports.routeName: (ctx) => UserPreviousReports(),
             ReportDetailScreen.routeName: (ctx) => ReportDetailScreen(),
             ViewHistoryScreen.routeName: (ctx) => ViewHistoryScreen(),
+            AuthScreen.routeName: (ctx) => AuthScreen(),
             // SimpleLineChart.routeName: (ctx) => SimpleLineChart(null),
             // AuthScreen.routeName: (ctx) => AuthScreen(),
           },

@@ -6,6 +6,8 @@ import 'dart:async';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import '../provider/parkingLotProvider.dart';
+import '../widgets/custom_dialog.dart';
+import '../provider/auth.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home-screeen';
@@ -100,10 +102,23 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void didChangeDependencies() async {
-    await Provider.of<ParkingLotProvider>(context).getColor().then((_) {
+    await Provider.of<ParkingLotProvider>(context).getColor().whenComplete(() {
       getPolyLine();
+      getParkingData();
     });
-    getParkingData();
+
+    bool _isFirst = Provider.of<Auth>(context).isFirstTime;
+    // _isFirst
+    //     ? showDialog(
+    //         context: context,
+    //         builder: (BuildContext context) => CustomDialog(
+    //           title: "Success",
+    //           description:
+    //               "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    //           buttonText: "Okay",
+    //         ),
+    //       )
+    //     : null;
 
     super.didChangeDependencies();
   }

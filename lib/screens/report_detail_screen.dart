@@ -102,7 +102,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                 ),
               ),
               Text(
-                'Time :${dateTime.hour}:${dateTime.minute} ',
+                'Time :${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')} ',
                 style: TextStyle(
                   fontFamily: 'Raleway',
                   fontSize: 16,

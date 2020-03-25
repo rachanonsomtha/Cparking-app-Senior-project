@@ -12,7 +12,6 @@ class Auth extends ChangeNotifier {
   DateTime _expiryDate;
   String _userId;
   Timer _authTimer;
-  bool _isFirstTime;
   // String _userName;
 
   UserData _userData;
@@ -51,10 +50,6 @@ class Auth extends ChangeNotifier {
   // String get userName {
   //   return _userName;
   // }
-
-  bool get isFirstTime {
-    return _isFirstTime;
-  }
 
   Future<void> fetchUserDataFromUserId(String userIds) async {
     print(userId);
@@ -182,7 +177,7 @@ class Auth extends ChangeNotifier {
 
       _expiryDate = DateTime.now().add(
         Duration(
-          seconds: int.parse(responseData['expiresIn']) + 9000,
+          seconds: int.parse(responseData['expiresIn']) + 3600,
         ),
       );
       notifyListeners();
@@ -190,28 +185,11 @@ class Auth extends ChangeNotifier {
       ///Shared perf here...
 
       final prefs = await SharedPreferences.getInstance();
-      bool firstTime = prefs.getBool('first_time');
-
-      if (firstTime != null && !firstTime) {
-        // Not first time
-        // return new Timer(_duration, navigationPageHome);
-        prefs.setBool('first_time', false);
-        _isFirstTime = false;
-        notifyListeners();
-      } else {
-        // First time
-        prefs.setBool('first_time', false);
-        _isFirstTime = true;
-        notifyListeners();
-        // return new Timer(_duration, navigationPageWel);
-      }
-      print(firstTime);
       final userData = json.encode(
         {
           'token': _token,
           'userId': _userId,
           'expiryDate': _expiryDate.toIso8601String(),
-          'firstTime': _isFirstTime,
           // 'userName': _userName,
         },
       );
@@ -257,7 +235,6 @@ class Auth extends ChangeNotifier {
     }
     _token = extractedUserData['token'];
     _userId = extractedUserData['userId'];
-    _isFirstTime = extractedUserData['firstTime'];
     fetchUserProfileData();
     // _userName = extractedUserData['userName'];
     _expiryDate = expiryDate;

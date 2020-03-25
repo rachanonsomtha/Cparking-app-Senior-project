@@ -1,5 +1,3 @@
-import 'package:cparking/screens/auth_screen.dart';
-import 'package:cparking/screens/onboarding_screen.dart';
 import 'package:cparking/screens/user_profile.dart';
 import 'package:flutter/material.dart';
 // import 'package:step5/routes/Routes.dart';
@@ -51,18 +49,10 @@ class AppDrawer extends StatelessWidget {
               }),
           Divider(),
           _createDrawerItem(
-              icon: Icons.exit_to_app,
-              text: 'Logout',
-              onTap: () {
-                authData.logOut();
-              }),
-          Divider(),
-          _createDrawerItem(
-              icon: Icons.help_outline,
-              text: 'Help',
-              onTap: () {
-                Navigator.of(context).pushNamed(OnBoardingPage.routeName);
-              }),
+            icon: Icons.exit_to_app,
+            text: 'Logout',
+            onTap: () => authData.logOut(),
+          ),
           ListTile(
             enabled: false,
             title: Text('V:0.0.1'),

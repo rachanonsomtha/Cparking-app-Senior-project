@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import './home.dart';
-
-import 'dart:async';
 import 'package:flutter/material.dart';
 
 class OnBoardingPage extends StatefulWidget {

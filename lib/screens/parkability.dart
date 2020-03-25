@@ -14,9 +14,12 @@ import '../loader/color_loader_3.dart';
 import '../provider/parkingLot.dart';
 //provider
 import '../provider/report_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 import '../provider/parkingLotProvider.dart';
 import '../provider/auth.dart';
+import 'dart:convert';
+import 'package:intl/intl.dart';
+import 'dart:collection';
 
 class Parkability extends StatefulWidget {
   static const routeName = '/park-ability';
@@ -152,9 +155,8 @@ class _ParkabilityState extends State<Parkability> {
     } else if (time <= 59) {
       min = '50';
     }
-
-    
-
+    print(min);
+    Provider.of<ReportsProvider>(context).getSlope(null, null);
   }
 
   Future uploadFile(

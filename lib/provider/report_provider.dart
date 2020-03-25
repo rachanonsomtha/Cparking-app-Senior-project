@@ -89,6 +89,17 @@ class ReportsProvider with ChangeNotifier {
     });
   }
 
+  ////
+  Future<void> getSlope(List<String> x, List<String> y) async {
+    final url = 'https://cparking-ecee0.firebaseio.com/avai/301/1/7.json';
+    final response = await http.get(url);
+    final decodeData = json.decode(response.body) as Map<String, dynamic>;
+    // decodeData.forEach((key, data) {
+    //   print(data['mean']);
+    // });
+    print(decodeData.length);
+  }
+
   String setMinute(int time) {
     //Real envi
 

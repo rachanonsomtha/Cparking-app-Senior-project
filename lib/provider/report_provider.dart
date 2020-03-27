@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:http/http.dart' as http;
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
@@ -89,26 +91,48 @@ class ReportsProvider with ChangeNotifier {
     });
   }
 
-  ////
-  Future<void> getSlope(List<String> x, List<String> y) async {
+  Future<int> getSlope(
+      String day, String minute, String hour, double lotCount, int avai) async {
     final url = 'https://cparking-ecee0.firebaseio.com/avai/301/1/7.json';
     final response = await http.get(url);
+    List<int> yList = [1, 2, 3, 4, 5, 6];
+    List<int> meanList = [];
     final decodeData = json.decode(response.body) as Map<String, dynamic>;
-    // decodeData.forEach((key, data) {
-    //   print(data['mean']);
-    // });
-    print(decodeData.length);
+    decodeData.forEach((key, value) {
+      meanList.add(int.parse(value['mean']));
+    });
+    double y = 0;
+    double xy = 0;
+    int count = 0;
+
+    meanList.forEach((number) {
+      y += number;
+      xy += yList[count] * meanList[count];
+      count += 1;
+    });
+    //Calculation linear regression
+    final slope = (xy - (21 * y) / 6) / (91 - (pow(21, 2) / 6));
+    // print('eiei equation');
+    int temp = (((avai / lotCount) * slope) * 60).roundToDouble().abs().toInt();
+    return temp;
   }
 
   String setMinute(int time) {
     //Real envi
 
     String min;
-    if (time <= 30) {
+    if (time <= 0) {
       min = '0';
-    }
-    if (time >= 31) {
+    } else if (time <= 10) {
+      min = '10';
+    } else if (time <= 20) {
+      min = '20';
+    } else if (time <= 30) {
       min = '30';
+    } else if (time <= 40) {
+      min = '40';
+    } else if (time <= 50) {
+      min = '50';
     }
 
     return min;
@@ -174,7 +198,6 @@ class ReportsProvider with ChangeNotifier {
     final favUrl =
         'https://cparking-ecee0.firebaseio.com/userPromoted/$userId.json?auth=$authToken';
     //fetch and decode data
-
     try {
       final response = await http.get(url);
       final decodeData = json.decode(response.body) as Map<String, dynamic>;

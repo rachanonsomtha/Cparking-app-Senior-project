@@ -18,7 +18,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
 
   Widget _buildImage(String assetName) {
     return Align(
-      child: Image.asset('assets/$assetName.jpg', width: 350.0),
+      child: Image.asset('assets/onboard/$assetName.jpg', width: 350.0),
       alignment: Alignment.bottomCenter,
     );
   }

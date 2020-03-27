@@ -57,6 +57,7 @@ class _ParkabilityState extends State<Parkability> {
   var _isUploadImage = false;
   var _locPicloaded = false;
   var _isPickedImage = false;
+  bool isTimeOk = true;
 
   int _currentValue = 0; // Number slider value
 
@@ -71,7 +72,6 @@ class _ParkabilityState extends State<Parkability> {
   @override
   void initState() {
     // TODO: implement initState
-
     super.initState();
   }
 
@@ -80,47 +80,47 @@ class _ParkabilityState extends State<Parkability> {
     super.dispose();
   }
 
-  Future<void> _saveForm(
-      context, name, currentReportCount, parkingInfo, _lifeTime) async {
-    // final _isValid = _form.currentState.validate();
+  Future<void> _saveForm(context, name, currentReportCount, parkingInfo) async {
+    await setMinute(parkingInfo)
+        .then((value) => {
+              _lifeTime = value,
+            })
+        .then((value) => {
+              showDialog(
+                context: context,
+                builder: (ctx) => AlertDialog(
+                  title: Text(
+                    'Confirmed?',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  content: Text('Do you confirmed your reports?'),
+                  actions: <Widget>[
+                    !_isLoading
+                        ? FlatButton(
+                            child: Text('Discard'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          )
+                        : null,
+                    _isLoading
+                        ? CircularProgressIndicator()
+                        : FlatButton(
+                            child: Text('Confirmed'),
+                            onPressed: () async {
+                              Navigator.of(context).pop();
+                              await uploadFile(context, name,
+                                  currentReportCount, parkingInfo);
+                            },
+                          )
+                  ],
+                ),
+              )
+            });
 
-    // if (!_isValid) {
-    //   return;
-    // }
-
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(
-          'Confirmed?',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        content: Text('Do you confirmed your reports?'),
-        actions: <Widget>[
-          !_isLoading
-              ? FlatButton(
-                  child: Text('Discard'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                )
-              : null,
-          _isLoading
-              ? CircularProgressIndicator()
-              : FlatButton(
-                  child: Text('Confirmed'),
-                  onPressed: () async {
-                    Navigator.of(context).pop();
-                    await uploadFile(context, name, currentReportCount,
-                        parkingInfo, _lifeTime);
-                  },
-                )
-        ],
-      ),
-    );
     // Navigator.of(context).pop();
   }
 
@@ -133,25 +133,35 @@ class _ParkabilityState extends State<Parkability> {
     });
   }
 
-  void setMinute(int time) {
+  Future<int> setMinute(ParkLot lot) async {
     //Real envi
     var dateTime = DateTime.now();
-    var time = dateTime.minute;
-    var hourMark = 14;
-    var minuteMark = 0;
-    var weekDay = 1;
+    var minute = dateTime.minute;
 
     String min;
-    if (time <= 30) {
+    if (minute <= 0) {
       min = '0';
-    }
-    if (time >= 31) {
+    } else if (minute <= 10) {
+      min = '10';
+    } else if (minute <= 20) {
+      min = '20';
+    } else if (minute <= 30) {
       min = '30';
+    } else if (minute <= 40) {
+      min = '40';
+    } else if (minute <= 50) {
+      min = '50';
     }
+
+    return await Provider.of<ReportsProvider>(context).getSlope(
+        dateTime.day.toString(),
+        min,
+        dateTime.hour.toString(),
+        lot.max,
+        _editReport.availability);
   }
 
-  Future uploadFile(
-      context, name, currentReportCount, ParkLot lot, int lifeTime) async {
+  Future uploadFile(context, name, currentReportCount, ParkLot lot) async {
     // Provider.of<ReportsProvider>(context).getLifeTime(name).then((value) {
     //   lifeTime = value;
     //   print(lifeTime);
@@ -176,7 +186,7 @@ class _ParkabilityState extends State<Parkability> {
           _editReport = Report(
             id: _editReport.id,
             userName: _editReport.userName,
-            lifeTime: lifeTime,
+            lifeTime: _lifeTime,
             dateTime: _editReport.dateTime,
             imageUrl: _uploadedFileURL,
             isPromoted: _editReport.isPromoted,
@@ -240,13 +250,11 @@ class _ParkabilityState extends State<Parkability> {
 
     final parkingInfo =
         Provider.of<ParkingLotProvider>(context, listen: false).findById(name);
-    final authData = Provider.of<Auth>(context, listen: false);
-    final report = Provider.of<ReportsProvider>(context, listen: false);
     // final locUrl = Provider.of<ParkingLotProvider>(context, listen: false)
     //     .getLocImage(name);
     // print(locUrl.toString());
     return Scaffold(
-      backgroundColor: Color.fromRGBO(67, 66, 114, 100),
+      // backgroundColor: Color.fromRGBO(67, 66, 114, 100),
       appBar: AppBar(
         title: Text(parkingInfo.title),
         leading: IconButton(
@@ -367,8 +375,29 @@ class _ParkabilityState extends State<Parkability> {
                           child: FlatButton(
                             color: Colors.grey,
                             onPressed: () async {
-                              await _saveForm(context, name, currentReportCount,
-                                  parkingInfo, _lifeTime);
+                              // setMinute(parkingInfo);
+                              // DateTime.now().day <= 5 || DateTime.now().hour <= 17
+                              isTimeOk
+                                  ? _saveForm(context, name, currentReportCount,
+                                      parkingInfo)
+                                  : showDialog(
+                                      context: context,
+                                      builder: (ctx) => AlertDialog(
+                                        title: Text('An error occurred!'),
+                                        content: Text('Something went wrong.'),
+                                        actions: <Widget>[
+                                          FlatButton(
+                                            child: Text('Okay'),
+                                            onPressed: () {
+                                              Navigator.of(ctx).pop();
+                                            },
+                                          )
+                                        ],
+                                      ),
+                                    );
+
+                              // await _saveForm(context, name, currentReportCount,
+                              //     parkingInfo, _lifeTime);
                             },
                             child: Text('Confirm report'),
                           ),

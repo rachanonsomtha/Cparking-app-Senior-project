@@ -92,15 +92,15 @@ class _AuthCardState extends State<AuthCard> {
       if (_authMode == AuthMode.Login) {
         // Log user in
         await Provider.of<Auth>(context).signIn(
-          _authData['email'],
-          _authData['password'],
+          _authData['email'].trim(),
+          _authData['password'].trim(),
         );
       } else {
         // print(_authData['email']);
         await Provider.of<Auth>(context, listen: false).signUp(
-          _authData['email'],
-          _authData['password'],
-          _authData['username'],
+          _authData['email'].trim(),
+          _authData['password'].trim(),
+          _authData['username'].trim(),
         );
       }
     } on HttpException catch (error) {

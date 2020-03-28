@@ -456,11 +456,18 @@ class ParkingLotProvider with ChangeNotifier {
     //Real envi
 
     String min;
-    if (time <= 30) {
+    if (time <= 0) {
       min = '0';
-    }
-    if (time >= 31) {
+    } else if (time <= 10) {
+      min = '10';
+    } else if (time <= 20) {
+      min = '20';
+    } else if (time <= 30) {
       min = '30';
+    } else if (time <= 40) {
+      min = '40';
+    } else if (time <= 50) {
+      min = '50';
     }
 
     return min;

@@ -6,6 +6,7 @@ import 'dart:async';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import '../provider/parkingLotProvider.dart';
+import '../loader/color_loader_3.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home-screeen';
@@ -18,7 +19,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Modal modal = new Modal();
   Completer<GoogleMapController> _controller = Completer();
   List<Marker> markers = <Marker>[];
-  List<Polyline> polylines = <Polyline>[];
+  List polylines = <Polyline>[];
+  List tempPoly = <Polyline>[];
 
   LocationData currentLocation;
   BitmapDescriptor pinLocationIcon;
@@ -26,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
   MapType mapType;
   bool _isLoading = false;
   bool _isInit = true;
-
+  Timer timer;
   Future<LocationData> getCurrentLocation() async {
     Location location = Location();
     try {
@@ -79,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  void getPolyLine() {
+  Future<void> getPolyLine() async {
     final parkingData = Provider.of<ParkingLotProvider>(context);
     final lots = parkingData.parkingLots;
 
@@ -98,14 +100,69 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  @override
-  void didChangeDependencies() async {
-    await Provider.of<ParkingLotProvider>(context).getColor().then((_) {
-      getPolyLine();
+  void fetch() {
+    setState(() {
+      _isLoading = true;
     });
-    getParkingData();
+    Provider.of<ParkingLotProvider>(context).getColor().whenComplete(() {
+      final parkingData = Provider.of<ParkingLotProvider>(context);
+      final lots = parkingData.parkingLots;
+
+      for (int i = 0; i < parkingData.parkingLotsCount; i++) {
+        tempPoly.add(
+          Polyline(
+            // onTap: () => modal.mainBottomSheet(context, lots[i].id),
+            color: lots[i].color,
+            width: 10,
+            points: lots[i].poly,
+            polylineId: PolylineId(
+              lots[i].id.toString(),
+            ),
+          ),
+        );
+      }
+      setState(() {
+        polylines = tempPoly;
+        _isLoading = false;
+      });
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    setState(() {
+      _isLoading = true;
+    });
+    Provider.of<ParkingLotProvider>(context).getColor().whenComplete(() {
+      getPolyLine().whenComplete(() => {
+            getParkingData(),
+            setState(() {
+              _isLoading = false;
+            })
+          });
+    });
 
     super.didChangeDependencies();
+  }
+
+  @override
+  void initState() {
+    timer = Timer.periodic(
+        Duration(seconds: 10),
+        (Timer t) => {
+              fetch(),
+              print('fetch new polyline')
+              //refresh machanics
+            });
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    // TODO: implement dispose
+    super.dispose();
   }
 
   void changeMapType() {
@@ -132,19 +189,23 @@ class _HomeScreenState extends State<HomeScreen> {
         body: Stack(
           alignment: Alignment.bottomRight,
           children: <Widget>[
-            GoogleMap(
-              // myLocationEnabled: true,
-              polylines: Set.from(polylines),
-              markers: Set.from(markers),
-              mapType: mapType,
-              initialCameraPosition: CameraPosition(
-                target: LatLng(18.795484, 98.952698),
-                zoom: 18,
-              ),
-              onMapCreated: (GoogleMapController controller) {
-                _controller.complete(controller);
-              },
-            ),
+            _isLoading
+                ? Center(
+                    child: ColorLoader3(),
+                  )
+                : GoogleMap(
+                    // myLocationEnabled: true,
+                    polylines: Set.from(polylines),
+                    markers: Set.from(markers),
+                    mapType: mapType,
+                    initialCameraPosition: CameraPosition(
+                      target: LatLng(18.795484, 98.952698),
+                      zoom: 18,
+                    ),
+                    onMapCreated: (GoogleMapController controller) {
+                      _controller.complete(controller);
+                    },
+                  ),
           ],
         ),
         floatingActionButton: Column(

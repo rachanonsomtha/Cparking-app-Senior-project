@@ -213,7 +213,7 @@ class ReportsProvider with ChangeNotifier {
         if (reportData['loc'] == loc &&
             !isExpired(
               reportData['lifeTime'],
-              reportData['dateTime'],
+              reportData['dateTime'].toString(),
             ))
           loadedProducts.add(
             Report(

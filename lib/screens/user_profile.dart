@@ -109,17 +109,6 @@ class _UserProfileState extends State<UserProfile> {
   Widget _buildProfileImage(Auth userData) {
     return Center(
       child: Container(
-        child: GestureDetector(
-          onTap: () {
-            getImage(
-              (userData.userData.userName),
-            );
-          },
-          child: Badge(
-            color: Colors.black87,
-            // value: '2',
-          ),
-        ),
         width: 140.0,
         height: 140.0,
         decoration: BoxDecoration(

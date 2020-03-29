@@ -34,7 +34,6 @@ class Auth extends ChangeNotifier {
   }
 
   UserData get userData {
-    // print(userData.userName);
     return _userData;
   }
 
@@ -47,9 +46,6 @@ class Auth extends ChangeNotifier {
   UserData get tempUserData {
     return _tempUserData;
   }
-  // String get userName {
-  //   return _userName;
-  // }
 
   Future<void> fetchUserDataFromUserId(String userIds) async {
     print(userId);
@@ -59,7 +55,6 @@ class Auth extends ChangeNotifier {
       await http.get(url).then((value) {
         final decodeData = json.decode(value.body) as Map<String, dynamic>;
         decodeData.forEach((userId, userData) {
-          // print(userData['profileImageUrl']);
           _tempUserData = UserData(
             userName: userData['userName'],
             id: userId,
@@ -82,12 +77,8 @@ class Auth extends ChangeNotifier {
 
     // print(userId);
     try {
-      final response = await http.get(url).then((value) {
+      await http.get(url).then((value) {
         final decodeData = json.decode(value.body) as Map<String, dynamic>;
-        // if (decodeData == null) {
-        //   print('null eiei');
-        // }
-
         decodeData.forEach((userId, userData) {
           _userData = UserData(
             userName: userData['userName'],
@@ -96,23 +87,17 @@ class Auth extends ChangeNotifier {
             profileImageUrl: userData['profileImageUrl'],
             reports: [],
           );
-
-          // print(_userData.id);
-          // return _userData;
-          // _userName = userData['userName']; // test fetching
         });
       });
 
-      final response1 = await http.get(url1).then((value) {
+      await http.get(url1).then((value) {
         final decodeData = json.decode(value.body) as Map<String, dynamic>;
 
         decodeData.forEach((userId, userData) {
-          // print(userData);
           (_userData.reports).add(
             userData.toString(),
           );
         });
-        // print(_userData.reports.length);
       });
     } catch (error) {
       print(error);
@@ -173,8 +158,6 @@ class Auth extends ChangeNotifier {
       }
       _token = responseData['idToken'];
       _userId = responseData['localId'];
-      // _userName = responseData['userName'];
-
       _expiryDate = DateTime.now().add(
         Duration(
           seconds: int.parse(responseData['expiresIn']) + 3600,
@@ -208,13 +191,11 @@ class Auth extends ChangeNotifier {
               },
             ),
           );
-          // print(_userName);
         }
       } catch (error) {
         print(error);
       }
       prefs.setString('userData', userData);
-      // print(_token);
     } catch (error) {
       print(error);
       throw error;
@@ -236,7 +217,6 @@ class Auth extends ChangeNotifier {
     _token = extractedUserData['token'];
     _userId = extractedUserData['userId'];
     fetchUserProfileData();
-    // _userName = extractedUserData['userName'];
     _expiryDate = expiryDate;
     notifyListeners();
     _autoLogout();
@@ -258,7 +238,6 @@ class Auth extends ChangeNotifier {
   Future<void> logOut() async {
     _token = null;
     _userId = null;
-    // _userName = null;
     _expiryDate = null;
     if (_authTimer != null) {
       _authTimer.cancel();

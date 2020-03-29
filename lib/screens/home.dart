@@ -151,7 +151,6 @@ class _HomeScreenState extends State<HomeScreen> {
         Duration(seconds: 10),
         (Timer t) => {
               fetch(),
-              print('fetch new polyline')
               //refresh machanics
             });
     // TODO: implement initState

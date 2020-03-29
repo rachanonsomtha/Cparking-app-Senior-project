@@ -308,11 +308,14 @@ class _UserProfileState extends State<UserProfile> {
     );
   }
 
+  Future<void> _fetch(BuildContext context) async {
+    await Provider.of<Auth>(context).fetchUserProfileData();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     final _userData = Provider.of<Auth>(context);
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -337,7 +340,6 @@ class _UserProfileState extends State<UserProfile> {
                     ),
                   ),
                   SizedBox(height: screenSize.height / 5),
-
                   _buildProfileImage(_userData),
                   _buildFullName(
                     (_userData.userData.userName),
@@ -383,7 +385,7 @@ class _UserProfileState extends State<UserProfile> {
                 ],
               ),
             ),
-          ),
+          )
         ],
       ),
     );

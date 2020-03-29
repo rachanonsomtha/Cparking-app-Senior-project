@@ -28,10 +28,16 @@ class _UserPreviousReportsState extends State<UserPreviousReports> {
         _isLoading = true;
       });
       Provider.of<Auth>(context).fetchUserProfileData().whenComplete(() async {
-        await Provider.of<ReportsProvider>(context).fetchReport();
+        await Provider.of<ReportsProvider>(context)
+            .fetchReport()
+            .catchError((error) {
+          print(error);
+        });
         await Provider.of<ReportsProvider>(context)
             .fetchReportFromUserId(userData.userData.reports)
-            .then((_) {
+            .catchError((error) {
+          print(error);
+        }).then((_) {
           setState(() {
             _isLoading = false;
           });
@@ -47,7 +53,15 @@ class _UserPreviousReportsState extends State<UserPreviousReports> {
   }
 
   Future<void> _fetchReport(BuildContext context) async {
+    final userData = Provider.of<Auth>(context);
     await Provider.of<Auth>(context).fetchUserProfileData();
+    await Provider.of<ReportsProvider>(context)
+        .fetchReportFromUserId(userData.userData.reports)
+        .then((_) {
+      setState(() {
+        _isLoading = false;
+      });
+    });
   }
 
   @override

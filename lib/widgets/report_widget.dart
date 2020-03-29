@@ -162,7 +162,11 @@ class _ReportItemState extends State<ReportItem> {
                 _isLoading
                     ? Center(
                         child: Container(
-                          margin: EdgeInsets.all(10),
+                          margin: EdgeInsets.only(
+                            left: 10,
+                            top: 10,
+                            bottom: 10,
+                          ),
                           width: 20,
                           child: ColorLoader3(),
                         ),

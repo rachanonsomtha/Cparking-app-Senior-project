@@ -62,7 +62,7 @@ class MyApp extends StatelessWidget {
             accentColor: Colors.white,
             primaryColorDark: Colors.black,
             // primaryColor:   Color(#003c7e),
-            fontFamily: 'Raleway',
+            fontFamily: 'Lato',
           ),
           home: auth.isAuth
               ? HomeScreen()

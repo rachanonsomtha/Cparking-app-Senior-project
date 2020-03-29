@@ -25,10 +25,14 @@ class _ReportOverViewScreenState extends State<ReportOverViewScreen> {
       setState(() {
         _isLoading = true;
       });
-      Provider.of<ReportsProvider>(context).fetchReport();
+      Provider.of<ReportsProvider>(context).fetchReport().catchError((error) {
+        print(error);
+      });
       Provider.of<ReportsProvider>(context)
           .fetchReportFromLocation(name)
-          .then((_) {
+          .catchError((error) {
+        print(error);
+      }).then((_) {
         setState(() {
           _isLoading = false;
         });
@@ -43,10 +47,14 @@ class _ReportOverViewScreenState extends State<ReportOverViewScreen> {
   }
 
   Future<void> _fetchReport(BuildContext context, String name) async {
-    Provider.of<ReportsProvider>(context).fetchReport();
+    Provider.of<ReportsProvider>(context).fetchReport().catchError((error) {
+      print(error);
+    });
     Provider.of<ReportsProvider>(context)
         .fetchReportFromLocation(name)
-        .then((_) {
+        .catchError((error) {
+      print(error);
+    }).then((_) {
       setState(() {
         _isLoading = false;
       });

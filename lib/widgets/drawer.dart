@@ -33,7 +33,7 @@ class AppDrawer extends StatelessWidget {
           _createDrawerItem(
             icon: Icons.portrait,
             text: 'Profile',
-            onTap: () async {
+            onTap: () {
               // navigateToPage(context, '/');
               Provider.of<Auth>(context).fetchUserProfileData();
               Navigator.of(context).pushNamed(UserProfile.routeName);
@@ -58,12 +58,13 @@ class AppDrawer extends StatelessWidget {
           _createDrawerItem(
             icon: Icons.help_outline,
             text: 'Help',
-            onTap: () =>
-                {Navigator.of(context).pushNamed(OnBoardingPage.routeName)},
+            onTap: () {
+              Navigator.of(context).pushNamed(OnBoardingPage.routeName);
+            },
           ),
           ListTile(
             enabled: false,
-            title: Text('V:0.0.1'),
+            title: Text('V 1.0.0'),
             onTap: () {},
           ),
         ],

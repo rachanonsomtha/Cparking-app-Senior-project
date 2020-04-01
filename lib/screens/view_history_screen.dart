@@ -211,17 +211,47 @@ class _ViewHistoryScreenState extends State<ViewHistoryScreen> {
     super.didChangeDependencies();
   }
 
+  int setMinute(int time) {
+    //Real envi
+
+    int min;
+    if (time >= 0) {
+      min = 0;
+      if (time >= 10) {
+        min = 10;
+        if (time >= 20) {
+          min = 20;
+          if (time >= 30) {
+            min = 30;
+            if (time >= 40) {
+              min = 40;
+              if (time >= 50) {
+                min = 50;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    return min;
+  }
+
   Future<void> getPercentage(String name, ParkLot lot) async {
     setState(() {
       _isLoading = true;
     });
     String url;
-    // final time = DateTime.now();
+    final time = DateTime.now();
 
-    // String hour = (time.hour).toString();
-    // String minute = setMinute(time.minute);
-    url = 'https://cparking-ecee0.firebaseio.com/avai/$name/1/14/0.json';
-    print(url);
+    int day = time.weekday;
+    int hour = time.hour;
+    int minute = setMinute(time.minute);
+    if (day >= 6) day = 5;
+    if (hour >= 18) hour = 17;
+    url =
+        'https://cparking-ecee0.firebaseio.com/avai/$name/${day.toString()}/${hour.toString()}/${minute.toString()}.json';
+    print('getpercentage: $url');
     final response = await http.get(url);
     // print(lot.color);
     final decodeData = json.decode(response.body) as Map<String, dynamic>;

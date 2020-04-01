@@ -458,18 +458,23 @@ class ParkingLotProvider with ChangeNotifier {
     //Real envi
 
     int min;
-    if (time <= 0) {
+    if (time >= 0) {
       min = 0;
-    } else if (time <= 10) {
-      min = 10;
-    } else if (time <= 20) {
-      min = 20;
-    } else if (time <= 30) {
-      min = 30;
-    } else if (time <= 40) {
-      min = 40;
-    } else if (time <= 50) {
-      min = 50;
+      if (time >= 10) {
+        min = 10;
+        if (time >= 20) {
+          min = 20;
+          if (time >= 30) {
+            min = 30;
+            if (time >= 40) {
+              min = 40;
+              if (time >= 50) {
+                min = 50;
+              }
+            }
+          }
+        }
+      }
     }
 
     return min;

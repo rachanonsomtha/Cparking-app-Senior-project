@@ -95,7 +95,6 @@ class ReportsProvider with ChangeNotifier {
       double lotCount, int avai) async {
     final url =
         'https://cparking-ecee0.firebaseio.com/avai/$name/$day/$hour.json';
-    print(url);
     final response = await http.get(url);
     List<int> yList = [1, 2, 3, 4, 5, 6];
     List<int> meanList = [];
@@ -122,22 +121,27 @@ class ReportsProvider with ChangeNotifier {
   String setMinute(int time) {
     //Real envi
 
-    String min;
-    if (time <= 0) {
-      min = '0';
-    } else if (time <= 10) {
-      min = '10';
-    } else if (time <= 20) {
-      min = '20';
-    } else if (time <= 30) {
-      min = '30';
-    } else if (time <= 40) {
-      min = '40';
-    } else if (time <= 50) {
-      min = '50';
+    int min;
+    if (time >= 0) {
+      min = 0;
+      if (time >= 10) {
+        min = 10;
+        if (time >= 20) {
+          min = 20;
+          if (time >= 30) {
+            min = 30;
+            if (time >= 40) {
+              min = 40;
+              if (time >= 50) {
+                min = 50;
+              }
+            }
+          }
+        }
+      }
     }
 
-    return min;
+    return min.toString();
   }
 
   Future<void> fetchReport() async {
@@ -378,7 +382,6 @@ class ReportsProvider with ChangeNotifier {
 
       final urlOldMean =
           'https://cparking-ecee0.firebaseio.com/avai/${report.loc}/$day/$hour/$minute.json';
-
       double oldMean;
       int count;
       await http.get(urlOldMean).then((value) {

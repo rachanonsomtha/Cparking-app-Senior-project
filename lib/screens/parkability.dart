@@ -133,26 +133,31 @@ class _ParkabilityState extends State<Parkability> {
   Future<int> setMinute(ParkLot lot) async {
     //Real envi
     var dateTime = DateTime.now();
-    var minute = dateTime.minute;
+    int minute = dateTime.minute;
 
-    String min;
-    if (minute <= 0) {
-      min = '0';
-    } else if (minute <= 10) {
-      min = '10';
-    } else if (minute <= 20) {
-      min = '20';
-    } else if (minute <= 30) {
-      min = '30';
-    } else if (minute <= 40) {
-      min = '40';
-    } else if (minute <= 50) {
-      min = '50';
+    int min;
+    if (minute >= 0) {
+      min = 0;
+      if (minute >= 10) {
+        min = 10;
+        if (minute >= 20) {
+          min = 20;
+          if (minute >= 30) {
+            min = 30;
+            if (minute >= 40) {
+              min = 40;
+              if (minute >= 50) {
+                min = 50;
+              }
+            }
+          }
+        }
+      }
     }
 
     return await Provider.of<ReportsProvider>(context).getSlope(
         dateTime.day.toString(),
-        min,
+        min.toString(),
         dateTime.hour.toString(),
         lot.id,
         lot.max,

@@ -91,9 +91,11 @@ class ReportsProvider with ChangeNotifier {
     });
   }
 
-  Future<int> getSlope(
-      String day, String minute, String hour, double lotCount, int avai) async {
-    final url = 'https://cparking-ecee0.firebaseio.com/avai/301/1/7.json';
+  Future<int> getSlope(String day, String minute, String hour, String name,
+      double lotCount, int avai) async {
+    final url =
+        'https://cparking-ecee0.firebaseio.com/avai/$name/$day/$hour.json';
+    print(url);
     final response = await http.get(url);
     List<int> yList = [1, 2, 3, 4, 5, 6];
     List<int> meanList = [];
@@ -114,7 +116,7 @@ class ReportsProvider with ChangeNotifier {
     final slope = (xy - (21 * y) / 6) / (91 - (pow(21, 2) / 6));
     // print('eiei equation');
     int temp = (((avai / lotCount) * slope) * 60).roundToDouble().abs().toInt();
-    return temp;
+    return temp <= 0 ? 60 : temp;
   }
 
   String setMinute(int time) {
@@ -328,7 +330,6 @@ class ReportsProvider with ChangeNotifier {
 
   String calculateMean(double oldMean, int avai, int count) {
     var temp = oldMean + avai;
-    print(avai);
     var ans = (temp / (count == 0 ? 1 : 2)).round();
     return ans.toString();
   }
@@ -344,6 +345,7 @@ class ReportsProvider with ChangeNotifier {
 
     String hour = (time.hour).toString();
     String minute = setMinute(time.minute);
+    String day = time.weekday.toString();
 
     // print(add_date);
     // create products collection in firebase
@@ -375,7 +377,7 @@ class ReportsProvider with ChangeNotifier {
       );
 
       final urlOldMean =
-          'https://cparking-ecee0.firebaseio.com/avai/${report.loc}/1/14/0.json';
+          'https://cparking-ecee0.firebaseio.com/avai/${report.loc}/$day/$hour/$minute.json';
 
       double oldMean;
       int count;
@@ -388,9 +390,10 @@ class ReportsProvider with ChangeNotifier {
       count += 1;
 
       String newMean = calculateMean(oldMean, report.availability, count);
+      print('Newcount: $count');
 
       final url3 =
-          'https://cparking-ecee0.firebaseio.com/avai/${report.loc}/1/14/0.json';
+          'https://cparking-ecee0.firebaseio.com/avai/${report.loc}/$day/$hour/$minute.json';
 
       await http.patch(
         url3,

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import './parkingLot.dart';
@@ -452,22 +454,22 @@ class ParkingLotProvider with ChangeNotifier {
     ),
   ];
 
-  String setMinute(int time) {
+  int setMinute(int time) {
     //Real envi
 
-    String min;
+    int min;
     if (time <= 0) {
-      min = '0';
+      min = 0;
     } else if (time <= 10) {
-      min = '10';
+      min = 10;
     } else if (time <= 20) {
-      min = '20';
+      min = 20;
     } else if (time <= 30) {
-      min = '30';
+      min = 30;
     } else if (time <= 40) {
-      min = '40';
+      min = 40;
     } else if (time <= 50) {
-      min = '50';
+      min = 50;
     }
 
     return min;
@@ -477,11 +479,14 @@ class ParkingLotProvider with ChangeNotifier {
     String url;
     final time = DateTime.now();
 
-    String hour = (time.hour).toString();
-    String minute = setMinute(time.minute);
+    int day = time.weekday;
+    int hour = time.hour;
+    int minute = setMinute(time.minute);
+    if (day >= 6) day = 5;
+    if (hour >= 18) hour = 17;
     _parkingLots.forEach((lot) async {
       url =
-          'https://cparking-ecee0.firebaseio.com/avai/${lot.id}/1/14/0.json'; // for developing environment only
+          'https://cparking-ecee0.firebaseio.com/avai/${lot.id}/${day.toString()}/${hour.toString()}/${minute.toString()}.json';
       final response = await http.get(url);
       // print(lot.color);
       final decodeData = json.decode(response.body) as Map<String, dynamic>;

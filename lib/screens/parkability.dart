@@ -14,12 +14,7 @@ import '../loader/color_loader_3.dart';
 import '../provider/parkingLot.dart';
 //provider
 import '../provider/report_provider.dart';
-import 'package:http/http.dart' as http;
 import '../provider/parkingLotProvider.dart';
-import '../provider/auth.dart';
-import 'dart:convert';
-import 'package:intl/intl.dart';
-import 'dart:collection';
 
 class Parkability extends StatefulWidget {
   static const routeName = '/park-ability';
@@ -57,7 +52,8 @@ class _ParkabilityState extends State<Parkability> {
   var _isUploadImage = false;
   var _locPicloaded = false;
   var _isPickedImage = false;
-  bool isTimeOk = true;
+  bool isTimeOk =
+      DateTime.now().hour <= 17 && DateTime.now().weekday <= 5 ? true : false;
 
   int _currentValue = 0; // Number slider value
 
@@ -81,6 +77,7 @@ class _ParkabilityState extends State<Parkability> {
   }
 
   Future<void> _saveForm(context, name, currentReportCount, parkingInfo) async {
+    print('eiei');
     await setMinute(parkingInfo)
         .then((value) => {
               _lifeTime = value,
@@ -157,15 +154,12 @@ class _ParkabilityState extends State<Parkability> {
         dateTime.day.toString(),
         min,
         dateTime.hour.toString(),
+        lot.id,
         lot.max,
         _editReport.availability);
   }
 
   Future uploadFile(context, name, currentReportCount, ParkLot lot) async {
-    // Provider.of<ReportsProvider>(context).getLifeTime(name).then((value) {
-    //   lifeTime = value;
-    //   print(lifeTime);
-    // });
     try {
       var imagename = UniqueKey().toString();
 
@@ -383,8 +377,8 @@ class _ParkabilityState extends State<Parkability> {
                                   : showDialog(
                                       context: context,
                                       builder: (ctx) => AlertDialog(
-                                        title: Text('An error occurred!'),
-                                        content: Text('Something went wrong.'),
+                                        title: Text('Out of time!'),
+                                        content: Text('Try again next time'),
                                         actions: <Widget>[
                                           FlatButton(
                                             child: Text('Okay'),

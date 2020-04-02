@@ -101,9 +101,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void fetch() {
-    setState(() {
-      _isLoading = true;
-    });
     Provider.of<ParkingLotProvider>(context).getColor().whenComplete(() {
       final parkingData = Provider.of<ParkingLotProvider>(context);
       final lots = parkingData.parkingLots;
@@ -123,7 +120,6 @@ class _HomeScreenState extends State<HomeScreen> {
       }
       setState(() {
         polylines = tempPoly;
-        _isLoading = false;
       });
     });
   }

@@ -492,8 +492,9 @@ class ParkingLotProvider with ChangeNotifier {
     _parkingLots.forEach((lot) async {
       url =
           'https://cparking-ecee0.firebaseio.com/avai/${lot.id}/${day.toString()}/${hour.toString()}/${minute.toString()}.json';
+      print(url);
       final response = await http.get(url);
-      // print(lot.color);
+      print(lot.color);
       final decodeData = json.decode(response.body) as Map<String, dynamic>;
       double _parkingMax = lot.max;
 

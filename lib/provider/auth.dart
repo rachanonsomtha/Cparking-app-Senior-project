@@ -56,6 +56,7 @@ class Auth extends ChangeNotifier {
         final decodeData = json.decode(value.body) as Map<String, dynamic>;
         decodeData.forEach((userId, userData) {
           _tempUserData = UserData(
+            email: userData['email'],
             userName: userData['userName'],
             id: userId,
             score: userData['score'],
@@ -81,6 +82,7 @@ class Auth extends ChangeNotifier {
         final decodeData = json.decode(value.body) as Map<String, dynamic>;
         decodeData.forEach((userId, userData) {
           _userData = UserData(
+            email: userData['email'],
             userName: userData['userName'],
             id: userId,
             score: userData['score'],
@@ -188,6 +190,7 @@ class Auth extends ChangeNotifier {
                 'userName': userName,
                 'score': 0,
                 'profileImageUrl': '',
+                'email': email,
               },
             ),
           );

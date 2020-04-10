@@ -488,13 +488,14 @@ class ParkingLotProvider with ChangeNotifier {
     int hour = time.hour;
     int minute = setMinute(time.minute);
     if (day >= 6) day = 5;
-    if (hour >= 18) hour = 17;
+    if (hour >= 18 || hour <= 6) {
+      hour = 17;
+      minute = 50;
+    }
     _parkingLots.forEach((lot) async {
       url =
           'https://cparking-ecee0.firebaseio.com/avai/${lot.id}/${day.toString()}/${hour.toString()}/${minute.toString()}.json';
-      print(url);
       final response = await http.get(url);
-      print(lot.color);
       final decodeData = json.decode(response.body) as Map<String, dynamic>;
       double _parkingMax = lot.max;
 

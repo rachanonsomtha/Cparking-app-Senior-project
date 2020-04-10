@@ -248,7 +248,10 @@ class _ViewHistoryScreenState extends State<ViewHistoryScreen> {
     int hour = time.hour;
     int minute = setMinute(time.minute);
     if (day >= 6) day = 5;
-    if (hour >= 18) hour = 17;
+    if (hour >= 18 || hour <= 6) {
+      hour = 17;
+      minute = 50;
+    }
     url =
         'https://cparking-ecee0.firebaseio.com/avai/$name/${day.toString()}/${hour.toString()}/${minute.toString()}.json';
     print('getpercentage: $url');

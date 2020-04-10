@@ -77,7 +77,6 @@ class _ParkabilityState extends State<Parkability> {
   }
 
   Future<void> _saveForm(context, name, currentReportCount, parkingInfo) async {
-    print('eiei');
     await setMinute(parkingInfo)
         .then((value) => {
               _lifeTime = value,
@@ -122,7 +121,8 @@ class _ParkabilityState extends State<Parkability> {
   }
 
   Future getImage() async {
-    _image = await ImagePicker.pickImage(source: ImageSource.camera);
+    _image = await ImagePicker.pickImage(
+        source: ImageSource.camera, imageQuality: 30);
 
     setState(() {
       _image = _image;
@@ -154,10 +154,10 @@ class _ParkabilityState extends State<Parkability> {
         }
       }
     }
+    print(min);
 
     return await Provider.of<ReportsProvider>(context).getSlope(
-        dateTime.day.toString(),
-        min.toString(),
+        dateTime.weekday.toString(),
         dateTime.hour.toString(),
         lot.id,
         lot.max,

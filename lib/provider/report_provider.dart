@@ -91,10 +91,11 @@ class ReportsProvider with ChangeNotifier {
     });
   }
 
-  Future<int> getSlope(String day, String minute, String hour, String name,
-      double lotCount, int avai) async {
+  Future<int> getSlope(
+      String day, String hour, String name, double lotCount, int avai) async {
     final url =
         'https://cparking-ecee0.firebaseio.com/avai/$name/$day/$hour.json';
+    print(url);
     final response = await http.get(url);
     List<int> yList = [1, 2, 3, 4, 5, 6];
     List<int> meanList = [];

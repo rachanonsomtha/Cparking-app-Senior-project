@@ -14,8 +14,9 @@ import './screens/user_previous_reports.dart';
 
 // import './screens/user_profile_screen.dart';
 import './screens/report_detail_screen.dart';
-
 import './screens/user_profile.dart';
+import './provider/auth.dart';
+
 
 import './screens/view_history_screen.dart';
 import './screens/onboarding_screen.dart';

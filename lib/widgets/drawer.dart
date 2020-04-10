@@ -1,13 +1,9 @@
 import 'package:cparking/screens/onboarding_screen.dart';
 import 'package:cparking/screens/user_profile.dart';
 import 'package:flutter/material.dart';
-// import 'package:step5/routes/Routes.dart';
-// import '../screens/report_overview_screen.dart';
 import '../provider/auth.dart';
 import 'package:provider/provider.dart';
-import '../screens/home.dart';
 import '../screens/user_previous_reports.dart';
-// import '../screens/user_profile_screen.dart';
 
 class AppDrawer extends StatelessWidget {
   navigateToPage(BuildContext context, String page) {

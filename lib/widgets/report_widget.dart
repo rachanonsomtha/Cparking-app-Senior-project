@@ -49,7 +49,6 @@ class _ReportItemState extends State<ReportItem> {
 
   @override
   Widget build(BuildContext context) {
-    // print('eiei');
     double rating = 2.5;
     final authData = Provider.of<Auth>(context, listen: false);
     final report = Provider.of<Report>(context);

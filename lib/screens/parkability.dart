@@ -76,46 +76,45 @@ class _ParkabilityState extends State<Parkability> {
     super.dispose();
   }
 
-  Future<void> _saveForm(context, name, currentReportCount, parkingInfo) async {
-    await setMinute(parkingInfo)
-        .then((value) => {
-              _lifeTime = value,
-            })
-        .then((value) => {
-              showDialog(
-                context: context,
-                builder: (ctx) => AlertDialog(
-                  title: Text(
-                    'Confirmed?',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  content: Text('Do you confirmed your reports?'),
-                  actions: <Widget>[
-                    !_isLoading
-                        ? FlatButton(
-                            child: Text('Discard'),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          )
-                        : null,
-                    _isLoading
-                        ? CircularProgressIndicator()
-                        : FlatButton(
-                            child: Text('Confirmed'),
-                            onPressed: () async {
-                              Navigator.of(context).pop();
-                              await uploadFile(context, name,
-                                  currentReportCount, parkingInfo);
-                            },
-                          )
-                  ],
-                ),
-              )
-            });
+  Future<void> _saveForm(context, name, currentReportCount, parkingInfo) {
+    // await setMinute(parkingInfo)
+    //     .then((value) => {
+    //           _lifeTime = value,
+    //         })
+    //     .then((_) => {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(
+          'Confirmed?',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        content: Text('Do you confirmed your reports?'),
+        actions: <Widget>[
+          !_isLoading
+              ? FlatButton(
+                  child: Text('Discard'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              : null,
+          _isLoading
+              ? CircularProgressIndicator()
+              : FlatButton(
+                  child: Text('Confirmed'),
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+                    await uploadFile(
+                        context, name, currentReportCount, parkingInfo);
+                  },
+                )
+        ],
+      ),
+    );
 
     // Navigator.of(context).pop();
   }
@@ -155,19 +154,19 @@ class _ParkabilityState extends State<Parkability> {
       }
     }
     print(min);
-
-    return await Provider.of<ReportsProvider>(context).getSlope(
+    int temp = await Provider.of<ReportsProvider>(context).getSlope(
         dateTime.weekday.toString(),
         dateTime.hour.toString(),
         lot.id,
         lot.max,
         _editReport.availability);
+
+    return temp;
   }
 
   Future uploadFile(context, name, currentReportCount, ParkLot lot) async {
     try {
       var imagename = UniqueKey().toString();
-
       StorageReference storageReference =
           FirebaseStorage.instance.ref().child('reports/$name/$imagename');
       StorageUploadTask uploadTask = storageReference.putFile(_image);
@@ -175,6 +174,7 @@ class _ParkabilityState extends State<Parkability> {
         _isLoading = true;
       });
       await uploadTask.onComplete;
+      await setMinute(lot).then((value) => _lifeTime = value);
       setState(() {
         _isLoading = false;
       });

@@ -70,6 +70,35 @@ class Auth extends ChangeNotifier {
     }
   }
 
+  Future<int> getUserReportCount(String userId) async {
+    final url =
+        'https://cparking-ecee0.firebaseio.com/users/$userId/reportsId.json';
+    int count = 0;
+    try {
+      await http.get(url).then((value) {
+        final decodeData = json.decode(value.body) as Map<String, dynamic>;
+        count = decodeData.length;
+      });
+    } catch (error) {
+      throw (error);
+    }
+    return count;
+  }
+
+  Future<int> getUserScore(String userId) async {
+    final url =
+        'https://cparking-ecee0.firebaseio.com/users/$userId/profile.json';
+    int count = 0;
+
+    await http.get(url).then((value) {
+      final decodeData = json.decode(value.body) as Map<String, dynamic>;
+      decodeData.forEach((userId, userData) {
+        count = userData['score'];
+      });
+    });
+    return count;
+  }
+
   Future<void> fetchUserProfileData() async {
     final url =
         'https://cparking-ecee0.firebaseio.com/users/$userId/profile.json';

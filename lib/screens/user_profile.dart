@@ -7,7 +7,7 @@ import 'package:path/path.dart';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import '../loader/color_loader_3.dart';
+import '../provider/report_provider.dart';
 
 class UserProfile extends StatefulWidget {
   String userName;
@@ -189,7 +189,7 @@ class _UserProfileState extends State<UserProfile> {
     );
   }
 
-  Widget _buildStatContainer(Auth userData) {
+  Widget _buildStatContainer(Auth userData, context) {
     return Container(
       height: 60.0,
       margin: EdgeInsets.only(top: 8.0),
@@ -200,11 +200,36 @@ class _UserProfileState extends State<UserProfile> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
           // _buildStatItem("Followers", _followers),
-          _buildStatItem("Posts", (userData.userReportsCount.toString())),
-          _buildStatItem(
-            "Scores",
-            (userData.userData.score.toString()),
+          FutureBuilder(
+            future:
+                Provider.of<Auth>(context).getUserReportCount(userData.userId),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              }
+              return _buildStatItem(
+                "Posts",
+                (snapshot.data.toString()),
+              );
+            },
           ),
+
+          FutureBuilder(
+            future: Provider.of<Auth>(context).getUserScore(userData.userId),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              }
+              return _buildStatItem(
+                "Score",
+                (snapshot.data.toString()),
+              );
+            },
+          ),
+          // _buildStatItem(
+          //   "Scores",
+          //   (userData.userData.score.toString()),
+          // ),
         ],
       ),
     );
@@ -327,7 +352,7 @@ class _UserProfileState extends State<UserProfile> {
                     (_userData.userData.userName),
                   ),
                   _buildStatus(context, _userData),
-                  _buildStatContainer(_userData),
+                  _buildStatContainer(_userData, context),
                   // _buildBio(context),
                   SizedBox(
                     height: 20,

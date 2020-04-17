@@ -1,6 +1,3 @@
-// import 'package:cparking491/widgets/drawer.dart';
-// import 'dart:html';
-
 import 'package:provider/provider.dart';
 import '../provider/report.dart';
 import 'package:flutter/material.dart';
@@ -132,35 +129,13 @@ class _ParkabilityState extends State<Parkability> {
   Future<int> setMinute(ParkLot lot) async {
     //Real envi
     var dateTime = DateTime.now();
-    int minute = dateTime.minute;
 
-    int min;
-    if (minute >= 0) {
-      min = 0;
-      if (minute >= 10) {
-        min = 10;
-        if (minute >= 20) {
-          min = 20;
-          if (minute >= 30) {
-            min = 30;
-            if (minute >= 40) {
-              min = 40;
-              if (minute >= 50) {
-                min = 50;
-              }
-            }
-          }
-        }
-      }
-    }
-    print(min);
     int temp = await Provider.of<ReportsProvider>(context).getSlope(
         dateTime.weekday.toString(),
         dateTime.hour.toString(),
         lot.id,
         lot.max,
         _editReport.availability);
-
     return temp;
   }
 
@@ -174,7 +149,7 @@ class _ParkabilityState extends State<Parkability> {
         _isLoading = true;
       });
       await uploadTask.onComplete;
-      await setMinute(lot).then((value) => _lifeTime = value);
+      _lifeTime = await setMinute(lot);
       setState(() {
         _isLoading = false;
       });

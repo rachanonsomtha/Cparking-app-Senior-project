@@ -480,6 +480,38 @@ class ParkingLotProvider with ChangeNotifier {
     return min;
   }
 
+  Future<List<double>> getLotMeanByWeekday(int weekDay, String loc) async {
+    final url = 'https://cparking-ecee0.firebaseio.com/avai.json';
+    try {
+      final List<int> hour = [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
+
+      final response = await http.get(url);
+      final decode = json.decode(response.body) as Map<String, dynamic>;
+      List<double> meanList2 = [];
+
+      decode.forEach((key, value) {
+        if (key == loc) {
+          hour.forEach((hour) {
+            // print(value[weekDay][hour]);
+            List<int> meanList1 = [];
+
+            final val = value[weekDay][hour] as Map<String, dynamic>;
+            val.forEach((min, value) {
+              meanList1.add(int.parse(value['mean']));
+            });
+            var result = meanList1.reduce((a, b) => a + b) / meanList1.length;
+            meanList2.add(result.round().toDouble());
+          });
+        }
+      });
+      print(meanList2);
+      return meanList2;
+    } catch (error) {
+      print(error);
+      throw (error);
+    }
+  }
+
   Future<void> getColor() async {
     String url;
     final time = DateTime.now();

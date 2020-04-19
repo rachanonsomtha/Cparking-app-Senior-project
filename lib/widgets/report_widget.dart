@@ -100,7 +100,9 @@ class _ReportItemState extends State<ReportItem> {
                           return child;
                         }
                         return Center(
-                          child: ColorLoader3(),
+                          child: CircularProgressIndicator(
+                            backgroundColor: Colors.indigo,
+                          ),
                         );
                       },
                     ),
@@ -167,7 +169,9 @@ class _ReportItemState extends State<ReportItem> {
                             bottom: 10,
                           ),
                           width: 20,
-                          child: ColorLoader3(),
+                          child: CircularProgressIndicator(
+                            backgroundColor: Colors.indigo,
+                          ),
                         ),
                       )
                     : Column(

@@ -1,18 +1,13 @@
-import 'package:cparking/loader/color_loader_3.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
-import 'dart:math';
-import 'package:flutter_sparkline/flutter_sparkline.dart';
 import 'dart:math' as math;
 import 'package:provider/provider.dart';
 import '../provider/report_provider.dart';
-import '../loader/color_loader_3.dart';
-import '../widgets/simpleLine.dart';
 import '../provider/parkingLot.dart';
 import '../provider/parkingLotProvider.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../widgets/bar_chart/bar_chart.dart';
 
 math.Random random = new math.Random();
 List<double> _generateRandomData(int count) {
@@ -302,12 +297,51 @@ class _ViewHistoryScreenState extends State<ViewHistoryScreen> {
                     _buildReportName(loc),
                     _isLoading
                         ? Center(
-                            child: ColorLoader3(),
+                            child: CircularProgressIndicator(
+                              backgroundColor: Colors.indigo,
+                            ),
                           )
                         : Column(
                             children: <Widget>[
                               _buildStarAndCount(currentReportCount),
                               _buildHistoryDetails(loc),
+                              Container(
+                                child: FutureBuilder(
+                                  future:
+                                      Provider.of<ParkingLotProvider>(context)
+                                          .getLotMeanByWeekday(
+                                    DateTime.now().weekday > 5
+                                        ? 5
+                                        : DateTime.now().weekday,
+                                    name,
+                                  ),
+                                  builder: (ctx, snapshot) {
+                                    if (snapshot.hasError) {
+                                      return Container(
+                                        child: Center(
+                                          child: Text(
+                                            "Error...",
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                    if (snapshot.data == null) {
+                                      return Container(
+                                        child: Center(
+                                          child: Text(
+                                            "Loading...",
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      return BarChartSample1(
+                                        loc,
+                                        snapshot.data,
+                                      );
+                                    }
+                                  },
+                                ),
+                              ),
                             ],
                           ),
                     // Container(

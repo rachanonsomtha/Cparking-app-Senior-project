@@ -244,7 +244,9 @@ class _AuthCardState extends State<AuthCard> {
                   height: 20,
                 ),
                 _isLoading
-                    ? ColorLoader3()
+                    ? CircularProgressIndicator(
+                        backgroundColor: Colors.indigo,
+                      )
                     : RaisedButton(
                         child: Text(
                           _authMode == AuthMode.Login ? 'LOGIN' : 'SIGN UP',

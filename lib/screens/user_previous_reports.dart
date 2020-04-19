@@ -112,7 +112,9 @@ class _UserPreviousReportsState extends State<UserPreviousReports> {
             )
           : _isLoading
               ? Center(
-                  child: ColorLoader3(),
+                  child: CircularProgressIndicator(
+                    backgroundColor: Colors.indigo,
+                  ),
                 )
               : RefreshIndicator(
                   onRefresh: () => _fetchReport(context),

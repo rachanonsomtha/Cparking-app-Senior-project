@@ -6,7 +6,9 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: ColorLoader3(),
+        child: CircularProgressIndicator(
+          backgroundColor: Colors.indigo,
+        ),
       ),
     );
   }

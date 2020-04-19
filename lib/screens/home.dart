@@ -186,7 +186,9 @@ class _HomeScreenState extends State<HomeScreen> {
           children: <Widget>[
             _isLoading
                 ? Center(
-                    child: ColorLoader3(),
+                    child: CircularProgressIndicator(
+                      backgroundColor: Colors.indigo,
+                    ),
                   )
                 : GoogleMap(
                     // myLocationEnabled: true,

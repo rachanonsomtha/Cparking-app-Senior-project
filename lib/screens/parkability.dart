@@ -239,8 +239,8 @@ class _ParkabilityState extends State<Parkability> {
       // drawer: AppDrawer(),
       body: _isLoading
           ? Center(
-              child: ColorLoader3(
-                dotRadius: 5,
+              child: CircularProgressIndicator(
+                backgroundColor: Colors.indigo,
               ),
             )
           : Padding(

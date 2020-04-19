@@ -144,7 +144,9 @@ class _ReportOverViewScreenState extends State<ReportOverViewScreen> {
             )
           : _isLoading
               ? Center(
-                  child: ColorLoader3(),
+                  child: CircularProgressIndicator(
+                    backgroundColor: Colors.indigo,
+                  ),
                 )
               : RefreshIndicator(
                   onRefresh: () => _fetchReport(context, name),
